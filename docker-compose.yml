@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  opengenes-backend:
+    build: .
+    image: open-genes-backend:latest
+    volumes:
+      - .:/open-genes-backend
+    hostname: opengenes-backend
+    container_name: open-genes-backend
+    network_mode: 'host'
