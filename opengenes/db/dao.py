@@ -1,7 +1,13 @@
+import os
+import sys
+
 from mysql import connector
+from dotenv import dotenv_values
 
 from opengenes.entities import entities
 
+
+config = dotenv_values(os.path.join(sys.path[1], '.env'))
 
 # TODO(dmtgk): Add relationships integration.
 # TODO(dmtgk): Add versatility to BaseDAO and pydantic entity validation.
@@ -9,13 +15,12 @@ from opengenes.entities import entities
 class BaseDAO:
     def __init__(self):
         # Connect to server.
-        # TODO(dmtgk): Use config.
         self.cnx = connector.connect(
-            host='127.0.0.1',
-            port=3307,
-            user='root',
-            password='secret',
-            database='open_genes',
+            host=config['DB_HOST'],
+            port=config['DB_PORT'],
+            user=config['DB_USER'],
+            password=config['DB_PASSWORD'],
+            database=config['DB_NAME'],
         )
 
 

@@ -6,4 +6,5 @@ WORKDIR /open-genes-backend
 
 ENV PYTHONPATH "${PYTHONPATH}:/open-genes-backend"
 
-RUN pip install -r requirements.txt
+RUN pip install pipenv
+RUN pipenv install --deploy --system
