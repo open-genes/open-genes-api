@@ -1,9 +1,9 @@
-#Workflow for test environment
+#Workflow for demo environment
 
-name: test-CI
+name: demo-CI
 
 # Controls when the workflow will run
-on: push
+on: workflow_dispatch
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -15,15 +15,17 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Build project
+      - name: Checkout project
         uses: actions/checkout@v2
+      - name: Build project
+        run: bash open-genes.sh prod
       - name: Upload project artifacts
         uses: actions/upload-artifact@v2
         with:
           path: .
           name: project
         
-  deploy-test:
+  deploy-demo:
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -43,5 +45,5 @@ jobs:
         env:
           SSH_USER: ${{ secrets.SSH_USER }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
-          PROJECT_PATH: ${{ secrets.PROJECT_TEST_PATH }}
-          DROPLET_ENV: ${{ secrets.DROPLET_TEST_ENV }}
+          PROJECT_PATH: ${{ secrets.PROJECT_DEMO_PATH }}
+          DROPLET_ENV: ${{ secrets.DROPLET_DEMO_ENV }}

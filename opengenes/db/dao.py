@@ -21,6 +21,7 @@ class BaseDAO:
             user=config['DB_USER'],
             password=config['DB_PASSWORD'],
             database=config['DB_NAME'],
+            ssl_disabled=True # TODO(imhelle): Deal with ssl for db connection on droplet
         )
 
 
