@@ -8,6 +8,8 @@ pydantic = "*"
 pandas = "*"
 mysql-connector-python = "*"
 python-dotenv = "*"
+fastapi = "*"
+uvicorn = "*"
 
 [dev-packages]
 
