@@ -66,3 +66,17 @@ class Gene(BaseModel):
 
     age: Optional[Age] = None
     taxon: Optional[Taxon] = None
+
+
+class Disease(BaseModel):
+    # id: int
+    omim_id: Optional[int] = None
+    name_ru: Optional[str] = None
+    name_en: Optional[str] = None
+    created_at: Optional[int] = None
+    updated_at: Optional[int] = None
+    icd_code: Optional[str] = None
+    parent_icd_code: Optional[str] = None
+    icd_name_en: Optional[str] = None
+    icd_name_ru: Optional[str] = None
+    icd_code_visible: Optional[str] = None
