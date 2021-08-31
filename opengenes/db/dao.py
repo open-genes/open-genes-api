@@ -31,7 +31,6 @@ class GeneDAO(BaseDAO):
     def get(
         self,
         ncbi_id: int = None,
-        close: bool = True,
     ) -> entities.Gene:
         cur = self.cnx.cursor(dictionary=True)
         cur.execute(
@@ -39,8 +38,6 @@ class GeneDAO(BaseDAO):
             {'ncbi_id': ncbi_id},
         )
         result = cur.fetchone()
-        if close:
-            self.cnx.close()
         return result
 
     def add(
@@ -78,8 +75,40 @@ class GeneDAO(BaseDAO):
         """
 
         cur = self.cnx.cursor(dictionary=True)
-        cur.execute(query,gene_dict)
+        cur.execute(query, gene_dict)
         self.cnx.commit()
         cur.close()
 
         return self.get(ncbi_id=gene_dict['ncbi_id'])
+
+
+class DiseaseDAO(BaseDAO):
+    """"Disease Table fetcher."""
+    def get(
+        self,
+        icd_code: int = None,
+    ) -> entities.Disease:
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute(
+            "SELECT * FROM `disease` WHERE icd_code= %(icd_code)s;",
+            {'icd_code': icd_code},
+        )
+        result = cur.fetchone()
+        return result
+    
+
+    def update(self, disease: entities.Disease,) -> entities.Disease:
+        disease_dict = disease.dict(exclude_none=True)
+        prep_str = [f"`{k}` = %({k})s" for k in disease_dict.keys()]
+        query = f"""
+            UPDATE disease
+            SET {', '.join(prep_str)}
+            WHERE icd_code=\'{disease_dict['icd_code']}\';
+        """
+
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute(query, disease_dict)
+        self.cnx.commit()
+        cur.close()
+
+        return self.get(icd_code=disease_dict['icd_code'])
