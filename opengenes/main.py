@@ -1,15 +1,20 @@
 import uvicorn
 from fastapi import FastAPI
 
-from opengenes.api import gene
+from opengenes.api import gene, disease
 from opengenes.config import CONFIG
 
 
 def assembling_endpoints(app: FastAPI):
     app.include_router(
         gene.router,
-        prefix="/api/gene",
+        prefix="/api",
         tags=["gene"],
+    )
+    app.include_router(
+        disease.router,
+        prefix="/api",
+        tags=["disease"],
     )
 
 
