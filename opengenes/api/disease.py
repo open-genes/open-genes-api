@@ -2,7 +2,7 @@ from typing import List
 
 from fastapi import APIRouter
 
-from opengenes.api.params import Language
+from opengenes.config import Language
 from opengenes.db.dao import DiseaseDAO
 from opengenes.presenters.disease import Disease, DiseaseCategories
 

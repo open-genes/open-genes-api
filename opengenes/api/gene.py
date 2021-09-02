@@ -2,7 +2,7 @@ from typing import List
 
 from fastapi import APIRouter, HTTPException
 
-from opengenes.api.params import Language
+from opengenes.config import Language
 from opengenes.db.dao import GeneDAO
 from opengenes.presenters.gene import GeneShort, Gene
 
