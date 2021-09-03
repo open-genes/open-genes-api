@@ -18,6 +18,58 @@ class IncreaseLifespan(BaseModel):
     comment: str
 
 
+class GeneAssociatedWithProgeriaSyndromes(BaseModel):
+    progeriaSyndrome: str
+    doi: str
+    pmid: str
+    comment: str
+
+
+class GeneAssociatedWithLongevityEffects(BaseModel):
+    longevityEffect: str
+    allelicPolymorphism: str
+    sex: str
+    allelicVariant: str
+    modelOrganism: str
+    changeType: str
+    dataType: str
+    doi: str
+    pmid: str
+    comment: str
+
+
+class AgeRelatedChangesOfGene(BaseModel):
+    changeType: str
+    sample: str
+    modelOrganism: str
+    organismLine: str
+    ageFrom: str
+    ageTo: str
+    valueForMale: str
+    valueForFemale: str
+    valueForAll: str
+    measurementType: str
+    doi: str
+    pmid: str
+    comment: str
+
+
+class RegulatedGene(BaseModel):
+    id: str
+    symbol: str
+    name: str
+    ncbid: str
+
+
+class ProteinRegulatesOtherGenes(BaseModel):
+    proteinActivity: str
+    regulationType: str
+    doi: str
+    pmid: str
+    comment: str
+    regulatedGene: RegulatedGene
+
+
 class InterventionToGeneImprovesVitalProcesses(BaseModel):
     geneIntervention: str
     vitalProcess: str
@@ -32,11 +84,17 @@ class InterventionToGeneImprovesVitalProcesses(BaseModel):
     comment: str
 
 
+class AdditionalEvidence(BaseModel):
+    doi: str
+    pmid: str
+    comment: str
+
+
 class Researches(BaseModel):
     increaseLifespan: List[IncreaseLifespan]
-    geneAssociatedWithProgeriaSyndromes: Optional[List]
-    geneAssociatedWithLongevityEffects: Optional[List]
-    ageRelatedChangesOfGene: Optional[List]
+    geneAssociatedWithProgeriaSyndromes: Optional[List[GeneAssociatedWithProgeriaSyndromes]]
+    geneAssociatedWithLongevityEffects: Optional[List[GeneAssociatedWithLongevityEffects]]
+    ageRelatedChangesOfGene: Optional[List[AgeRelatedChangesOfGene]]
     interventionToGeneImprovesVitalProcesses: List[InterventionToGeneImprovesVitalProcesses]
-    proteinRegulatesOtherGenes: Optional[List]
-    additionalEvidences: Optional[List]
+    proteinRegulatesOtherGenes: Optional[List[ProteinRegulatesOtherGenes]]
+    additionalEvidences: Optional[List[AdditionalEvidence]]
