@@ -9,4 +9,4 @@ services:
     hostname: opengenes-backend
     container_name: open-genes-backend
     network_mode: 'host'
-    tty: true
+    command: python opengenes/main.py

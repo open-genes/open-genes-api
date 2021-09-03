@@ -1,5 +1,13 @@
 # open-genes-backend
 
+## Architecture
+
+- **opengenes** - root
+  - *main.py* - entry point
+  - **api** - api endpoints
+  - **db** - domain access object (DAO) logic for DB
+  - **entities** - domain entities
+
 ## Init production stand
 
 ```
@@ -20,7 +28,7 @@ with local env
 pipenv install --deploy --system
 ```
 
-## Init virtual stand
+## Init containerized stand
 
 ### Up docker image
 

@@ -5,6 +5,7 @@ from mysql import connector
 from dotenv import dotenv_values
 
 from opengenes.entities import entities
+from opengenes.config import CONFIG
 
 
 config = dotenv_values(os.path.join(sys.path[1], '.env'))
@@ -16,11 +17,11 @@ class BaseDAO:
     def __init__(self):
         # Connect to server.
         self.cnx = connector.connect(
-            host=config['DB_HOST'],
-            port=config['DB_PORT'],
-            user=config['DB_USER'],
-            password=config['DB_PASSWORD'],
-            database=config['DB_NAME'],
+            host=CONFIG['DB_HOST'],
+            port=CONFIG['DB_PORT'],
+            user=CONFIG['DB_USER'],
+            password=CONFIG['DB_PASSWORD'],
+            database=CONFIG['DB_NAME'],
             ssl_disabled=True # TODO(imhelle): Deal with ssl for db connection on droplet
         )
 
