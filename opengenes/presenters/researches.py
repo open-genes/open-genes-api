@@ -1,54 +1,54 @@
 from typing import List, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class IncreaseLifespan(BaseModel):
-    interventionType: str
-    interventionResult: str
-    modelOrganism: str
-    organismLine: str
+    interventionType: str = Field(title="Intervention type")
+    interventionResult: str = Field(title="Intervention result")
+    modelOrganism: str = Field(title="Model organism")
+    organismLine: str = Field(title="Organism line")
     age: str
     genotype: str
-    valueForMale: str
-    valueForFemale: str
-    valueForAll: str
+    valueForMale: str = Field(title="Value for male")
+    valueForFemale: str = Field(title="Value for female")
+    valueForAll: str = Field(title="Value for all")
     doi: str
     pmid: str
     comment: str
 
 
 class GeneAssociatedWithProgeriaSyndromes(BaseModel):
-    progeriaSyndrome: str
+    progeriaSyndrome: str = Field(title="Progeria syndrome")
     doi: str
     pmid: str
     comment: str
 
 
 class GeneAssociatedWithLongevityEffects(BaseModel):
-    longevityEffect: str
-    allelicPolymorphism: str
+    longevityEffect: str = Field(title="Longevity effect")
+    allelicPolymorphism: str = Field(title="Allelic polymorphism")
     sex: str
-    allelicVariant: str
-    modelOrganism: str
-    changeType: str
-    dataType: str
+    allelicVariant: str = Field(title="Allelic variant")
+    modelOrganism: str = Field(title="Model organism")
+    changeType: str = Field(title="Change type")
+    dataType: str = Field(title="Data type")
     doi: str
     pmid: str
     comment: str
 
 
 class AgeRelatedChangesOfGene(BaseModel):
-    changeType: str
+    changeType: str = Field(title="Change type")
     sample: str
-    modelOrganism: str
-    organismLine: str
-    ageFrom: str
-    ageTo: str
-    valueForMale: str
-    valueForFemale: str
-    valueForAll: str
-    measurementType: str
+    modelOrganism: str = Field(title="Model organism")
+    organismLine: str = Field(title="Organism line")
+    ageFrom: str = Field(title="Age from")
+    ageTo: str = Field(title="Age to")
+    valueForMale: str = Field(title="Value for male")
+    valueForFemale: str = Field(title="Value for female")
+    valueForAll: str = Field(title="Value for all")
+    measurementType: str = Field(title="Measurement type")
     doi: str
     pmid: str
     comment: str
@@ -62,20 +62,20 @@ class RegulatedGene(BaseModel):
 
 
 class ProteinRegulatesOtherGenes(BaseModel):
-    proteinActivity: str
-    regulationType: str
+    proteinActivity: str = Field(title="Protein activity")
+    regulationType: str = Field(title="Regulation type")
     doi: str
     pmid: str
     comment: str
-    regulatedGene: RegulatedGene
+    regulatedGene: RegulatedGene = Field(title="Regulated gene")
 
 
 class InterventionToGeneImprovesVitalProcesses(BaseModel):
-    geneIntervention: str
-    vitalProcess: str
-    modelOrganism: str
-    organismLine: str
-    interventionResult: str
+    geneIntervention: str = Field(title="Gene intervention")
+    vitalProcess: str = Field(title="Vital process")
+    modelOrganism: str = Field(title="Model organism")
+    organismLine: str = Field(title="Organism line")
+    interventionResult: str = Field(title="Intervention result")
     age: str
     genotype: str
     sex: str
@@ -91,10 +91,22 @@ class AdditionalEvidence(BaseModel):
 
 
 class Researches(BaseModel):
-    increaseLifespan: List[IncreaseLifespan]
-    geneAssociatedWithProgeriaSyndromes: Optional[List[GeneAssociatedWithProgeriaSyndromes]]
-    geneAssociatedWithLongevityEffects: Optional[List[GeneAssociatedWithLongevityEffects]]
-    ageRelatedChangesOfGene: Optional[List[AgeRelatedChangesOfGene]]
-    interventionToGeneImprovesVitalProcesses: List[InterventionToGeneImprovesVitalProcesses]
-    proteinRegulatesOtherGenes: Optional[List[ProteinRegulatesOtherGenes]]
-    additionalEvidences: Optional[List[AdditionalEvidence]]
+    increaseLifespan: List[IncreaseLifespan] = Field(title="Increase lifespan")
+    geneAssociatedWithProgeriaSyndromes: Optional[List[GeneAssociatedWithProgeriaSyndromes]] = Field(
+        title="Gene associated with progeria syndromes"
+    )
+    geneAssociatedWithLongevityEffects: Optional[List[GeneAssociatedWithLongevityEffects]] = Field(
+        title="Gene associated with longevity syndromes"
+    )
+    ageRelatedChangesOfGene: Optional[List[AgeRelatedChangesOfGene]] = Field(
+        title="Age related changes of gene"
+    )
+    interventionToGeneImprovesVitalProcesses: List[InterventionToGeneImprovesVitalProcesses] = Field(
+        title="Intervention to gene improves vital processes"
+    )
+    proteinRegulatesOtherGenes: Optional[List[ProteinRegulatesOtherGenes]] = Field(
+        title="Protein regulates other genes"
+    )
+    additionalEvidences: Optional[List[AdditionalEvidence]] = Field(
+        title="Additional evidences"
+    )

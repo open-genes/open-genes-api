@@ -20,7 +20,7 @@ def assembling_endpoints(app: FastAPI):
 
 def init():
     app = FastAPI(
-        debug=True,
+        debug=CONFIG['DEBUG'],
         title='Open Genes backend API',
     )
     assembling_endpoints(app)
@@ -35,5 +35,5 @@ if __name__ == "__main__":
         host=CONFIG['API_HOST'],
         port=int(CONFIG['API_PORT']),
         reload=True,
-        debug=True,
+        debug=CONFIG['DEBUG'],
     )
