@@ -29,6 +29,11 @@ class BaseDAO:
 class GeneDAO(BaseDAO):
     """"Gene Table fetcher."""
 
+    def get_list(self):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute("SELECT ncbi_id, symbol FROM `gene`")
+        return cur.fetchall()
+
     def get(
         self,
         ncbi_id: int = None,
