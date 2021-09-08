@@ -22,7 +22,7 @@ class GeneShort(BaseModel):
     homologueTaxon: str = Field(title="An organism the gene is conservative in")
     aliases: List[str] = Field(title="Gene symbols in the other nomenclatures")
     diseases: DiseaseShort = Field(title="Association with diseases (eDGAR)")
-    functionalClusters: List[FunctionalCluster] = Field(title="Age-related processes and systems the gene involved in")
+    functionalClusters: List[FunctionalCluster] = Field(title="Age-related processes/systems the gene involved in")
     expressionChange: str = Field(title="Age-dependent changes of gene expression")
     timestamp: int = Field(title="Unix time of the latest changes")
     ensembl: str = Field(title="Ensembl id")
@@ -48,7 +48,7 @@ class Gene(BaseModel):
     descriptionNCBI: str = Field(title="Gene description (NCBI)")
     proteinDescriptionUniProt: str = Field(title="Protein description (UniProt)")
     commentCause: dict = Field(title="Gene selection criteria")
-    functionalClusters: List[FunctionalCluster] = Field(title="Age-related processes and systems the gene involved in")
+    functionalClusters: List[FunctionalCluster] = Field(title="Age-related processes/systems the gene involved in")
     researches: Researches = Field(title="Researches", description="Researches confirming the association of the gene with life expectancy and aging")
     expression: List[Expression] = Field(title="Gene expression in organs and tissues (NCBI)")
     functions: List[Function]
