@@ -2,111 +2,120 @@ from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
-
+# Effect of modulation of gene activity on a lifespan
+# (This research model will be fully re-worked soon.
+# So it's better to mark all class fields as deprecated)
 class IncreaseLifespan(BaseModel):
     interventionType: str = Field(title="Intervention type")
     interventionResult: str = Field(title="Intervention result")
     modelOrganism: str = Field(title="Model organism")
     organismLine: str = Field(title="Organism line")
-    age: str
-    genotype: str
+    age: str = Field(title="Age of a model organisms")
+    genotype: str = Field(
+        title="Genotype", 
+        description="Genotype designations: \n-/- homozygotes with a weakened gene function, \n+/- heterozygotes with a weakened gene function, \n++/++ homozygotes with enhanced gene function, \n++/+ heterozygotes with enhanced gene function."
+    )
     valueForMale: str = Field(title="Value for male")
     valueForFemale: str = Field(title="Value for female")
     valueForAll: str = Field(title="Value for all")
-    doi: str
-    pmid: str
-    comment: str
+    doi: str= Field(title="Publication id in DOI format")
+    pmid: str = Field(title="Publication id in PMC/PMID format"))
+    comment: str = Field(title="Additional description")
 
-
-class GeneAssociatedWithProgeriaSyndromes(BaseModel):
-    progeriaSyndrome: str = Field(title="Progeria syndrome")
-    doi: str
-    pmid: str
-    comment: str
-
-
-class GeneAssociatedWithLongevityEffects(BaseModel):
-    longevityEffect: str = Field(title="Longevity effect")
-    allelicPolymorphism: str = Field(title="Allelic polymorphism")
-    sex: str
-    allelicVariant: str = Field(title="Allelic variant")
-    modelOrganism: str = Field(title="Model organism")
-    changeType: str = Field(title="Change type")
-    dataType: str = Field(title="Data type")
-    doi: str
-    pmid: str
-    comment: str
-
-
+# Age-related changes in the gene expression or protein activity
 class AgeRelatedChangesOfGene(BaseModel):
-    changeType: str = Field(title="Change type")
-    sample: str
+    changeType: str = Field(title="Changes type")
+    sample: str = Field(title="Sample", description="Tissue or cell type the measurement was performed")
     modelOrganism: str = Field(title="Model organism")
-    organismLine: str = Field(title="Organism line")
-    ageFrom: str = Field(title="Age from")
-    ageTo: str = Field(title="Age to")
-    valueForMale: str = Field(title="Value for male")
-    valueForFemale: str = Field(title="Value for female")
-    valueForAll: str = Field(title="Value for all")
-    measurementType: str = Field(title="Measurement type")
-    doi: str
-    pmid: str
-    comment: str
+    organismLine: str = Field(title="Line")
+    ageFrom: str = Field(title="Age of the youngest group of model organisms")
+    ageTo: str = Field(title="Age of the oldest group of model organisms")
+    valueForMale: str = Field(title="Values in percentage increase or decrease of expression levels for males")
+    valueForFemale: str = Field(title="Values in percentage increase or decrease of expression levels for females")
+    valueForAll: str = Field(title="Values in percentage increase or decrease of expression levels for both groups")
+    measurementType: str = Field(title="A measurement unit for an age of model organisms")
+    doi: str= Field(title="Publication id in DOI format")
+    pmid: str = Field(title="Publication id in PMC/PMID format"))
+    comment: str = Field(title="Additional description")
 
-
-class RegulatedGene(BaseModel):
-    id: str
-    symbol: str
-    name: str
-    ncbid: str
-
-
-class ProteinRegulatesOtherGenes(BaseModel):
-    proteinActivity: str = Field(title="Protein activity")
-    regulationType: str = Field(title="Regulation type")
-    doi: str
-    pmid: str
-    comment: str
-    regulatedGene: RegulatedGene = Field(title="Regulated gene")
-
-
+# Effect of modulation of gene activity on the age-related process
 class InterventionToGeneImprovesVitalProcesses(BaseModel):
-    geneIntervention: str = Field(title="Gene intervention")
-    vitalProcess: str = Field(title="Vital process")
+    geneIntervention: str = Field(title="Method", description="Any targeted and specific effect that results a change of gene activity")
+    vitalProcess: str = Field(title="Process", description="The process, which is amplified or weakened as a result of targeting a gene"
     modelOrganism: str = Field(title="Model organism")
     organismLine: str = Field(title="Organism line")
     interventionResult: str = Field(title="Intervention result")
-    age: str
-    genotype: str
-    sex: str
-    doi: str
-    pmid: str
-    comment: str
+    age: str = Field(title="Age of a model organisms")
+    genotype: str = Field(
+        title="Genotype", 
+        description="Genotype designations: \n-/- homozygotes with a weakened gene function, \n+/- heterozygotes with a weakened gene function, \n++/++ homozygotes with enhanced gene function, \n++/+ heterozygotes with enhanced gene function."
+    )
+    sex: str = Field(title="Biological sex")
+    doi: str= Field(title="Publication id in DOI format")
+    pmid: str =  str = Field(title="Publication id in PMC/PMID format")
+    comment: str = Field(title="Additional description")
 
+# Gene product participation in the regulation of genes associated with aging
+class ProteinRegulatesOtherGenes(BaseModel):
+    proteinActivity: str = Field(title="Protein activity")
+    regulationType: str = Field(title="Regulation type")
+    doi: str= Field(title="Publication id in DOI format")
+    pmid: str = Field(title="Publication id in PMC/PMID format")
+    comment: str = Field(title="Additional description")
+    regulatedGene: RegulatedGene = Field(title="Regulated gene")
 
+# Gene association with accelerated aging in humans
+class GeneAssociatedWithProgeriaSyndromes(BaseModel):
+    progeriaSyndrome: str = Field(title="Progeria syndrome")
+    doi: str = Field(title="Publication id in DOI format")
+    pmid: str = Field(title="Publication id in PMC/PMID format")
+    comment: str = Field(title="Additional description")
+
+# Genomic, transcriptomic, and proteomic associations with lifespan/age-related phenotype
+class GeneAssociatedWithLongevityEffects(BaseModel):
+    longevityEffect: str = Field(title="A trait associated with polymorphism")
+    allelicPolymorphism: str = Field(title="Allelic polymorphism", description="SNP id or another or another designation for gene polymorphism")
+    sex: str = Field(title="Biological sex")
+    allelicVariant: str = Field(title="Allelic variant", description="Polymorphic gene variant associated with the trait")
+    modelOrganism: str = Field(title="Model organism")
+    changeType: str = Field(title="Characteristics of the transcriptome / proteome)"
+    dataType: str = Field(title="Data type")
+    doi: str = Field(title="Publication id in DOI format")
+    pmid: str = Field(title="Publication id in PMC/PMID format")
+    comment: str = Field(title="Additional description")
+
+# Other evidence for the gene's association with aging
 class AdditionalEvidence(BaseModel):
-    doi: str
-    pmid: str
-    comment: str
+    doi: str= Field(title="Publication id in DOI format")
+    pmid: str = Field(title="Publication id in PMC/PMID format")
+    comment: str = Field(title="Additional description")
 
+
+class RegulatedGene(BaseModel):
+    id: str = Field(title="Gene id in Open Genes database")
+    symbol: str = Field(title="Gene symbol (HGNC)")
+    name: str = Field(title="Gene name")
+    ncbid: str = Field(title="Entrez Gene id")
 
 class Researches(BaseModel):
-    increaseLifespan: List[IncreaseLifespan] = Field(title="Increase lifespan")
-    geneAssociatedWithProgeriaSyndromes: Optional[List[GeneAssociatedWithProgeriaSyndromes]] = Field(
-        title="Gene associated with progeria syndromes"
-    )
-    geneAssociatedWithLongevityEffects: Optional[List[GeneAssociatedWithLongevityEffects]] = Field(
-        title="Gene associated with longevity syndromes"
+    increaseLifespan: List[IncreaseLifespan] = Field(
+        title="Effect of modulation of gene activity on a lifespan"
     )
     ageRelatedChangesOfGene: Optional[List[AgeRelatedChangesOfGene]] = Field(
-        title="Age related changes of gene"
+        title="Age-related changes in the gene expression or protein activity"
     )
     interventionToGeneImprovesVitalProcesses: List[InterventionToGeneImprovesVitalProcesses] = Field(
-        title="Intervention to gene improves vital processes"
+        title="Effect of modulation of gene activity on the age-related process"
     )
     proteinRegulatesOtherGenes: Optional[List[ProteinRegulatesOtherGenes]] = Field(
-        title="Protein regulates other genes"
+        title="Gene product participation in the regulation of genes associated with aging"
+    )
+    geneAssociatedWithProgeriaSyndromes: Optional[List[GeneAssociatedWithProgeriaSyndromes]] = Field(
+        title="# Gene association with accelerated aging in humans"
+    )
+    geneAssociatedWithLongevityEffects: Optional[List[GeneAssociatedWithLongevityEffects]] = Field(
+        title="Genomic, transcriptomic, and proteomic associations with lifespan/age-related phenotype"
     )
     additionalEvidences: Optional[List[AdditionalEvidence]] = Field(
-        title="Additional evidences"
+        title="Other evidence for the gene's association with aging"
     )
