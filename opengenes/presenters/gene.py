@@ -52,7 +52,7 @@ class Gene(BaseModel):
     researches: Researches = Field(title="Researches", description="Researches confirming the association of the gene with life expectancy and aging")
     expression: List[Expression] = Field(title="Gene expression in organs and tissues (NCBI)")
     functions: List[Function]
-    proteinClasses: List[str] = Field(title="Protein classes (Human Protein Atlas)", description="Human Protein Atlas protein classification")
+    proteinClasses: List[str] = Field(title="Protein classes", description="Protein classification by their function")
     expressionChange: int = Field(title="Age-dependent changes of gene expression")
     band: str = Field(title="Location on chromosome — cytogenetic band")
     locationStart: str = Field(title="Location on chromosome — start")
