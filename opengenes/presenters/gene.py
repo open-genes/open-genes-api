@@ -13,61 +13,57 @@ from opengenes.presenters.researches import Researches
 
 class GeneShort(BaseModel):
     id: int
-    symbol: str
-    name: str
-    ncbiId: str
-    uniprot: str
-    origin: Origin
-    familyOrigin: FamilyOrigin = Field(title="Family origin")
-    homologueTaxon: str = Field(title="Homologue taxon")
-    aliases: List[str]
-    diseases: DiseaseShort
-    functionalClusters: List[FunctionalCluster] = Field(title="Functional clusters")
-    expressionChange: str = Field(title="Expression change")
-    timestamp: int
-    ensembl: str
-    methylationCorrelation: str = Field(title="Methylation correlation")
-    diseaseCategories: dict = Field(title="Disease categories")
-    commentCause: dict = Field(title="Comment cause")
+    symbol: str = Field(title="Gene symbol (HGNC)")
+    name: str = Field(title="Gene name")
+    ncbiId: str = Field(title="Entrez Gene id")
+    uniprot: str = Field(title="UniProt id")
+    origin: Origin = Field(title="Gene evolutionary origin")
+    familyOrigin: FamilyOrigin = Field(title="Gene family evolutionary origin")
+    homologueTaxon: str = Field(title="An organism the gene is conservative in")
+    aliases: List[str] = Field(title="Gene symbols in the other nomenclatures")
+    diseases: DiseaseShort = Field(title="Association with diseases (eDGAR)")
+    functionalClusters: List[FunctionalCluster] = Field(title="Age-related processes/systems the gene involved in")
+    expressionChange: str = Field(title="Age-dependent changes of gene expression")
+    timestamp: int = Field(title="Unix time of the latest changes")
+    ensembl: str = Field(title="Ensembl id")
+    methylationCorrelation: str = Field(title="Whether gene methylation changes with age (according to Horvath's epigenetic clock)")
+    diseaseCategories: dict = Field(title="Disease categories (ICD)")
+    commentCause: dict = Field(title="Gene selection criteria")
 
 
 class Gene(BaseModel):
     id: int
-    name: str
-    symbol: str
-    aliases: List[str]
-    homologueTaxon: str = Field(title="Homologue taxon")
-    origin: Origin
-    familyOrigin: FamilyOrigin = Field(title="Family origin")
-    diseases: DiseaseShort
+    name: str = Field(title="Gene name")
+    symbol: str = Field(title="Gene symbol (HGNC)")
+    aliases: List[str] = Field(title="Gene symbols in the other nomenclatures")
+    homologueTaxon: str = Field(title="An organism the gene is conservative in")
+    origin: Origin = Field(title="Gene evolutionary origin")
+    familyOrigin: FamilyOrigin = Field(title="Gene family evolutionary origin")
+    diseases: DiseaseShort = Field(title="Association with diseases (eDGAR)")
     diseaseCategories: List[DiseaseCategories] = Field(title="Disease categories")
-    ncbiId: str
-    uniprot: str
-    commentEvolution: str = Field(title="Comment evolution")
-    commentFunction: str = Field(title="Comment function")
-    descriptionNCBI: str
-    descriptionOG: str
-    commentCause: dict = Field(title="Comment cause")
-    commentAging: str = Field(title="Comment aging")
-    commentsReferenceLinks: dict = Field(title="Comment reference links")
-    rating: bool
-    functionalClusters: List[FunctionalCluster] = Field(title="Functional clusters")
-    researches: Researches
-    expression: List[Expression]
+    ncbiId: str = Field(title="Entrez Gene id")
+    uniprot: str = Field(title="UniProt id")
+    commentEvolution: str = Field(title="Gene evolution summary")
+    proteinDescriptionOpenGenes: str = Field(title="Protein description by Open Genes")
+    descriptionNCBI: str = Field(title="Gene description (NCBI)")
+    proteinDescriptionUniProt: str = Field(title="Protein description (UniProt)")
+    commentCause: dict = Field(title="Gene selection criteria")
+    functionalClusters: List[FunctionalCluster] = Field(title="Age-related processes/systems the gene involved in")
+    researches: Researches = Field(title="Researches", description="Researches confirming the association of the gene with life expectancy and aging")
+    expression: List[Expression] = Field(title="Gene expression in organs and tissues (NCBI)")
     functions: List[Function]
-    proteinClasses: List[str] = Field(title="Protein classes")
-    expressionChange: int = Field(title="Expression change")
-    band: str
-    locationStart: str = Field(title="Location start")
-    locationEnd: str = Field(title="Location end")
-    orientation: str
-    accPromoter: str
-    accOrf: str
-    accCds: str
-    terms: dict
-    orthologs: dict
-    why: List[str]
-    timestamp: int
-    human_protein_atlas: HumanProteinAtlas = Field(title="Human protein atlas")
-    ensembl: str
-    methylationCorrelation: str = Field(title="Methylation correlation")
+    proteinClasses: List[str] = Field(title="Protein classes", description="Protein classification by their function")
+    expressionChange: int = Field(title="Age-dependent changes of gene expression")
+    band: str = Field(title="Location on chromosome — cytogenetic band")
+    locationStart: str = Field(title="Location on chromosome — start")
+    locationEnd: str = Field(title="Location on chromosome — end")
+    orientation: str = Field(title="Location on chromosome — Plus or minus strand")
+    accPromoter: str = Field(title="Location on chromosome — Promoter")
+    accOrf: str = Field(title="Location on chromosome — Open Reading Frame")
+    accCds: str = Field(title="Location on chromosome — CoDing Sequence")
+    terms: dict = Field(title="GO terms (Gene Ontology)")
+    orthologs: dict = Field(title="Gene orthologs")
+    timestamp: int = Field(title="Unix time of the latest changes")
+    human_protein_atlas: HumanProteinAtlas = Field(title="Data parsed from Human Protein Atlas")
+    ensembl: str = Field(title="Ensembl id")
+    methylationCorrelation: str = Field(title="Horvath's epigenetic clock", description="Whether gene methylation changes with age (according to Horvath's epigenetic clock)")
