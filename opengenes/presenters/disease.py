@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class DiseaseShort(BaseModel):
@@ -15,4 +15,4 @@ class Disease(BaseModel):
 
 class DiseaseCategories(BaseModel):
     icd_cod: str = Field(title="ICD code for a disease category")
-    icd_category_name: str Field(title="Disease category name")
+    icd_category_name: str = Field(title="Disease category name")
