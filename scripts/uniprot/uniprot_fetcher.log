@@ -1,6 +1,0 @@
-2021-09-03 22:00:55,598 ----------------------------------------------------------------------------------------------------
-2021-09-03 22:00:55,599 GENE SYMBOL: KL
-2021-09-03 22:00:55,599 RESPONSE: {'requestedURL': 'https://www.ebi.ac.uk/proteins/api/proteins?exact_gene=KL&organism=human&isoform=0&reviewed=True', 'errorMessage': ['gene parameter size should be between 3 and 50']}
-2021-09-03 22:02:40,905 ----------------------------------------------------------------------------------------------------
-2021-09-03 22:02:40,905 GENE SYMBOL: AR
-2021-09-03 22:02:40,905 RESPONSE: {'requestedURL': 'https://www.ebi.ac.uk/proteins/api/proteins?exact_gene=AR&organism=human&isoform=0&reviewed=True', 'errorMessage': ['gene parameter size should be between 3 and 50']}

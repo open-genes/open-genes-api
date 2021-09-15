@@ -2,17 +2,13 @@ import os
 import sys
 
 from mysql import connector
-from dotenv import dotenv_values
 
 from opengenes.entities import entities
 from opengenes.config import CONFIG
 
 
-config = dotenv_values(os.path.join(sys.path[1], '.env'))
-
 # TODO(dmtgk): Add relationships integration.
 # TODO(dmtgk): Add versatility to BaseDAO and pydantic entity validation.
-
 class BaseDAO:
     def __init__(self):
         # Connect to server.
@@ -22,12 +18,12 @@ class BaseDAO:
             user=CONFIG['DB_USER'],
             password=CONFIG['DB_PASSWORD'],
             database=CONFIG['DB_NAME'],
-            ssl_disabled=True # TODO(imhelle): Deal with ssl for db connection on droplet
+            ssl_disabled=True  # TODO(imhelle): Deal with ssl for db connection on droplet
         )
 
 
 class GeneDAO(BaseDAO):
-    """"Gene Table fetcher."""
+    """Gene Table fetcher."""
 
     def get_list(self):
         cur = self.cnx.cursor(dictionary=True)
@@ -89,7 +85,7 @@ class GeneDAO(BaseDAO):
 
 
 class DiseaseDAO(BaseDAO):
-    """"Disease Table fetcher."""
+    """Disease Table fetcher."""
     def get(
         self,
         icd_code: int = None,

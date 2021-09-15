@@ -14,12 +14,9 @@ elif [ "$1" = "up" ]
 then
     COMPOSE_ARGS="$1 $2"
     docker-compose $COMPOSE_ARGS
-elif [ "$1" = "prod" ]
+elif [ "$1" = "dev" ]
 then
-    pip3 install pipenv
-    echo export PYTHONPATH=${PYTHONPATH}:${PWD} >> ${HOME}/.bashrc
-    source ${HOME}/.bashrc
-    pipenv install --deploy --system
+    pdm install
 fi
 
 

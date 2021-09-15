@@ -7,6 +7,7 @@ import requests
 import pandas as pd
 from deep_translator import GoogleTranslator
 
+from opengenes.entities import entities
 from opengenes.db import dao
 
 
@@ -55,15 +56,15 @@ for gene_object in dao.GeneDAO().get_list():
     protein = {
         'gene_ncbi_id': gene_object['ncbi_id'],
         'gene_symbol': gene_object['symbol'],
-        'uniprot_summary_en': [],
-        'uniprot_summary_ru': [],
+        'uniprot_summary_en': '',
+        'uniprot_summary_ru': '',
     }
 
     for comment in reference_protein['comments']:
         if comment['type'] == 'FUNCTION':
             for text in comment['text']:
                 text_value = text['value']
-                protein['uniprot_summary_en'].append(text_value)
+                protein['uniprot_summary_en'] += text_value  + ' '
                 if len(text_value) < 5000:
                     translated = TRANSLATOR.translate(text_value)
                 else:
@@ -71,9 +72,14 @@ for gene_object in dao.GeneDAO().get_list():
                     for sentence in text_value.split('.'):
                         translated += ' ' + TRANSLATOR.translate(sentence)
                     translated = translated[1:]  # For the first sentence space.
-                protein['uniprot_summary_ru'].append(translated)
-    proteins_info.append(protein)
+                protein['uniprot_summary_ru'] += translated + ' '
+    dao.GeneDAO().update(
+        gene=entities.Gene(
+            ncbi_id=gene_object['ncbi_id'],
+            uniprot_summary_en=protein['uniprot_summary_en'],
+            uniprot_summary_ru=protein['uniprot_summary_ru'],
+        )
+    )
     counter += 1
     print(f'COUNT: {counter} ', f" GENE: {gene_object['symbol']}")
-pd.DataFrame(proteins_info).to_csv('test.tsv', sep='\t', index=False)
 print(f'DONE. TOTAL COUNT: {counter}')
