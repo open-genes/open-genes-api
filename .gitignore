@@ -1,4 +1,7 @@
 __pycache__
+__pypackages__
 .vscode
 .env
 .idea
+.pdm.toml
+*.log

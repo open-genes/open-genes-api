@@ -63,6 +63,8 @@ class Gene(BaseModel):
     og_summary_en: Optional[str] = None
     og_summary_ru: Optional[str] = None
     methylation_horvath: Optional[int] = None
+    uniprot_summary_en: Optional[str] = None
+    uniprot_summary_ru: Optional[str] = None
 
     age: Optional[Age] = None
     taxon: Optional[Taxon] = None

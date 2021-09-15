@@ -8,24 +8,13 @@
   - **db** - domain access object (DAO) logic for DB
   - **entities** - domain entities
 
-## Init production stand
-
-```
-sh open-genes.sh prod
-```
-
 ## Init development stand
 
-with virtual env
+deps:
+- [pdm](https://pdm.fming.dev/)
 
 ```
-pipenv install
-```
-
-with local env
-
-```
-pipenv install --deploy --system
+sh open-genes.sh dev
 ```
 
 ## Init containerized stand
@@ -58,5 +47,5 @@ sh open-genes.sh run -d
 
 ```
 docker exec -it opengenes-backend bash
-python scripts/<your-script-path>
+pdm run python scripts/<your-script-path>
 ```

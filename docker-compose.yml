@@ -1,12 +1,15 @@
 version: '3'
 
 services:
-  opengenes-backend:
+  open-genes-backend:
     build: .
-    image: open-genes-backend:latest
+    image: open_genes_backend:latest
+    hostname: opengenes
+    container_name: open_genes_backend
     volumes:
-      - .:/open-genes-backend
-    hostname: opengenes-backend
-    container_name: open-genes-backend
-    network_mode: 'host'
-    command: python opengenes/main.py
+      - "./opengenes:/open-genes-backend/opengenes"
+      - "./scripts:/open-genes-backend/scripts"
+      - "./.env:/open-genes-backend/.env"
+      - "./pyproject.toml:/open-genes-backend/pyproject.toml"
+      - "./pdm.lock:/open-genes-backend/pdm.locks"
+    network_mode: "host"

@@ -19,7 +19,7 @@ class IncreaseLifespan(BaseModel):
     valueForFemale: str = Field(title="Value for female")
     valueForAll: str = Field(title="Value for all")
     doi: str= Field(title="Publication id in DOI format")
-    pmid: str = Field(title="Publication id in PMC/PMID format"))
+    pmid: str = Field(title="Publication id in PMC/PMID format")
     comment: str = Field(title="Additional description")
 
 # Age-related changes in the gene expression or protein activity
@@ -35,13 +35,19 @@ class AgeRelatedChangesOfGene(BaseModel):
     valueForAll: str = Field(title="Values in percentage increase or decrease of expression levels for both groups")
     measurementType: str = Field(title="A measurement unit for an age of model organisms")
     doi: str= Field(title="Publication id in DOI format")
-    pmid: str = Field(title="Publication id in PMC/PMID format"))
+    pmid: str = Field(title="Publication id in PMC/PMID format")
     comment: str = Field(title="Additional description")
+
+class RegulatedGene(BaseModel):
+    id: str = Field(title="Gene id in Open Genes database")
+    symbol: str = Field(title="Gene symbol (HGNC)")
+    name: str = Field(title="Gene name")
+    ncbid: str = Field(title="Entrez Gene id")
 
 # Effect of modulation of gene activity on the age-related process
 class InterventionToGeneImprovesVitalProcesses(BaseModel):
     geneIntervention: str = Field(title="Method", description="Any targeted and specific effect that results a change of gene activity")
-    vitalProcess: str = Field(title="Process", description="The process, which is amplified or weakened as a result of targeting a gene"
+    vitalProcess: str = Field(title="Process", description="The process, which is amplified or weakened as a result of targeting a gene")
     modelOrganism: str = Field(title="Model organism")
     organismLine: str = Field(title="Organism line")
     interventionResult: str = Field(title="Intervention result")
@@ -52,7 +58,7 @@ class InterventionToGeneImprovesVitalProcesses(BaseModel):
     )
     sex: str = Field(title="Biological sex")
     doi: str= Field(title="Publication id in DOI format")
-    pmid: str =  str = Field(title="Publication id in PMC/PMID format")
+    pmid: str = Field(title="Publication id in PMC/PMID format")
     comment: str = Field(title="Additional description")
 
 # Gene product participation in the regulation of genes associated with aging
@@ -78,7 +84,7 @@ class GeneAssociatedWithLongevityEffects(BaseModel):
     sex: str = Field(title="Biological sex")
     allelicVariant: str = Field(title="Allelic variant", description="Polymorphic gene variant associated with the trait")
     modelOrganism: str = Field(title="Model organism")
-    changeType: str = Field(title="Characteristics of the transcriptome / proteome)"
+    changeType: str = Field(title="Characteristics of the transcriptome / proteome")
     dataType: str = Field(title="Data type")
     doi: str = Field(title="Publication id in DOI format")
     pmid: str = Field(title="Publication id in PMC/PMID format")
@@ -89,13 +95,6 @@ class AdditionalEvidence(BaseModel):
     doi: str= Field(title="Publication id in DOI format")
     pmid: str = Field(title="Publication id in PMC/PMID format")
     comment: str = Field(title="Additional description")
-
-
-class RegulatedGene(BaseModel):
-    id: str = Field(title="Gene id in Open Genes database")
-    symbol: str = Field(title="Gene symbol (HGNC)")
-    name: str = Field(title="Gene name")
-    ncbid: str = Field(title="Entrez Gene id")
 
 class Researches(BaseModel):
     increaseLifespan: List[IncreaseLifespan] = Field(

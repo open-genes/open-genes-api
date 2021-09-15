@@ -18,4 +18,4 @@ class HumanProteinAtlas(BaseModel):
     SubcellularMainLocation: List[str]
     SubcellularAdditionalLocation: List[str]
     DiseaseInvolvement: List[str] = Field(title="Disease involvement", description="The genes group the gene belongs to associated with a certain type of diseases")
-    Evidence: str = Field(title="Evidence", description="Example: Evidence at protein level"
+    Evidence: str = Field(title="Evidence", description="Example: Evidence at protein level")
