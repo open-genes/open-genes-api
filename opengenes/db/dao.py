@@ -27,8 +27,20 @@ class GeneDAO(BaseDAO):
 
     def get_list(self):
         cur = self.cnx.cursor(dictionary=True)
-        cur.execute("SELECT ncbi_id, symbol FROM `gene`")
+        cur.execute(
+            "SELECT *"
+            "FROM gene "
+            "JOIN phylum p on gene.phylum_id = p.id;"
+        )
         return cur.fetchall()
+
+    def get_origin_for_gene(self, phylum_id):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute(
+            "SELECT id, order FROM phylum WHERE phylum.id = %(phylum_id)s;",
+            {'phylum_id': phylum_id}
+        )
+        return cur.fetchone()
 
     def get(
         self,
@@ -82,6 +94,7 @@ class GeneDAO(BaseDAO):
         cur.close()
 
         return self.get(ncbi_id=gene_dict['ncbi_id'])
+
 
 
 class DiseaseDAO(BaseDAO):

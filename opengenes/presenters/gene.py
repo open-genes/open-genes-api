@@ -2,6 +2,7 @@ from typing import List
 
 from pydantic import BaseModel, Field
 
+from opengenes.db.dao import GeneDAO
 from opengenes.presenters.disease import DiseaseShort, DiseaseCategories
 from opengenes.presenters.expression import Expression
 from opengenes.presenters.functional_cluster import FunctionalCluster
@@ -10,26 +11,24 @@ from opengenes.presenters.human_protein_atlas import HumanProteinAtlas
 from opengenes.presenters.origin import Origin, FamilyOrigin
 from opengenes.presenters.researches import Researches
 
-
 class GeneShort(BaseModel):
     id: int
-    symbol: str = Field(title="Gene symbol (HGNC)")
-    name: str = Field(title="Gene name")
-    ncbiId: str = Field(title="Entrez Gene id")
-    uniprot: str = Field(title="UniProt id")
-    origin: Origin = Field(title="Gene evolutionary origin")
-    familyOrigin: FamilyOrigin = Field(title="Gene family evolutionary origin")
-    homologueTaxon: str = Field(title="An organism the gene is conservative in")
-    aliases: List[str] = Field(title="Gene symbols in the other nomenclatures")
-    diseases: DiseaseShort = Field(title="Association with diseases (eDGAR)")
-    functionalClusters: List[FunctionalCluster] = Field(title="Age-related processes/systems the gene involved in")
-    expressionChange: str = Field(title="Age-dependent changes of gene expression")
-    timestamp: int = Field(title="Unix time of the latest changes")
-    ensembl: str = Field(title="Ensembl id")
-    methylationCorrelation: str = Field(title="Whether gene methylation changes with age (according to Horvath's epigenetic clock)")
-    diseaseCategories: dict = Field(title="Disease categories (ICD)")
-    commentCause: dict = Field(title="Gene selection criteria")
-
+    symbol: str = Field(title="Gene symbol (HGNC)", default=None)
+    name: str = Field(title="Gene name", default=None)
+    ncbiId: str = Field(title="Entrez Gene id", default=None)
+    uniprot: str = Field(title="UniProt id", default=None)
+    origin: Origin = Field(title="Gene evolutionary origin", default=None)
+    # familyOrigin: FamilyOrigin = Field(title="Gene family evolutionary origin")
+    # homologueTaxon: str = Field(title="An organism the gene is conservative in")
+    # aliases: List[str] = Field(title="Gene symbols in the other nomenclatures")
+    # diseases: DiseaseShort = Field(title="Association with diseases (eDGAR)")
+    # functionalClusters: List[FunctionalCluster] = Field(title="Age-related processes/systems the gene involved in")
+    # expressionChange: str = Field(title="Age-dependent changes of gene expression")
+    # timestamp: int = Field(title="Unix time of the latest changes")
+    # ensembl: str = Field(title="Ensembl id")
+    # methylationCorrelation: str = Field(title="Whether gene methylation changes with age (according to Horvath's epigenetic clock)")
+    # diseaseCategories: dict = Field(title="Disease categories (ICD)")
+    # commentCause: dict = Field(title="Gene selection criteria")
 
 class Gene(BaseModel):
     id: int

@@ -5,6 +5,7 @@ from fastapi import APIRouter, HTTPException
 from opengenes.config import Language
 from opengenes.db.dao import GeneDAO
 from opengenes.presenters.gene import GeneShort, Gene
+from opengenes.presenters.origin import Origin
 
 router = APIRouter()
 
@@ -14,7 +15,12 @@ router = APIRouter()
     response_model=List[GeneShort],
 )
 async def get_genes_list(lang: Language):
-    return GeneDAO().get()
+    output = []
+    for gene in GeneDAO().get_list():
+        temp_gene = GeneShort(**gene)
+        temp_gene.origin = Origin(**GeneDAO().get_origin_for_gene(gene['phylum_id']))
+        output.append(temp_gene)
+    return output
 
 
 @router.get(
