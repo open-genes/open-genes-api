@@ -1,6 +1,8 @@
-from pydantic import BaseModel, Field
+from pydantic import Field
+from pydantic.dataclasses import dataclass
 
 
-class Expression(BaseModel):
+@dataclass
+class Expression:
     name: str = Field(title="Name of the tissue or organ")
     exp_rpkm: str = Field(title="Expression value change in RPKM")

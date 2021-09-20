@@ -37,10 +37,22 @@ class GeneDAO(BaseDAO):
     def get_origin_for_gene(self, phylum_id):
         cur = self.cnx.cursor(dictionary=True)
         cur.execute(
-            "SELECT id, order FROM phylum WHERE phylum.id = %(phylum_id)s;",
+            "SELECT * FROM phylum WHERE phylum.id = %(phylum_id)s;",
             {'phylum_id': phylum_id}
         )
         return cur.fetchone()
+
+    def get_name_for_taxon(self, taxon_id):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute(
+            "SELECT name_en FROM taxon WHERE taxon.id = %(taxon_id)s;",
+            {'taxon_id': taxon_id}
+        )
+        result = cur.fetchone()
+        if result:
+            return result['name_en']
+        return None
+
 
     def get(
         self,
@@ -96,6 +108,47 @@ class GeneDAO(BaseDAO):
         return self.get(ncbi_id=gene_dict['ncbi_id'])
 
 
+class FunctionalClusterDAO(BaseDAO):
+    """Functional cluster Table fetcher."""
+    def get_from_gene(self, gene_id):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute(
+            "SELECT functional_cluster_id "
+            "FROM `gene_to_functional_cluster` "
+            "WHERE gene_id= %(gene_id)s;",
+            {'gene_id': gene_id},
+        )
+        return cur.fetchall()
+
+    def get_by_id(self, functional_cluster_id):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute(
+            "SELECT * FROM `functional_cluster` WHERE id= %(functional_cluster_id)s;",
+            {'functional_cluster_id': functional_cluster_id},
+        )
+        return cur.fetchone()
+
+
+class CommentCauseDAO(BaseDAO):
+    """Comment cause Table fetcher."""
+    def get_from_gene(self, gene_id):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute(
+            "SELECT comment_cause_id "
+            "FROM `gene_to_comment_cause` "
+            "WHERE gene_id= %(gene_id)s;",
+            {'gene_id': gene_id},
+        )
+        return cur.fetchall()
+
+    def get_by_id(self, comment_cause_id):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute(
+            "SELECT * FROM `comment_cause` WHERE id= %(comment_cause_id)s;",
+            {'comment_cause_id': comment_cause_id},
+        )
+        return cur.fetchone()
+
 
 class DiseaseDAO(BaseDAO):
     """Disease Table fetcher."""
@@ -111,6 +164,21 @@ class DiseaseDAO(BaseDAO):
         result = cur.fetchone()
         return result
     
+    def get_from_gene(self, gene_id):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute(
+            "SELECT disease_id FROM `gene_to_disease` WHERE gene_id= %(gene_id)s;",
+            {'gene_id': gene_id},
+        )
+        return cur.fetchall()
+
+    def get_by_id(self, disease_id):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute(
+            "SELECT * FROM `disease` WHERE id= %(disease_id)s;",
+            {'disease_id': disease_id},
+        )
+        return cur.fetchone()
 
     def update(self, disease: entities.Disease,) -> entities.Disease:
         disease_dict = disease.dict(exclude_none=True)

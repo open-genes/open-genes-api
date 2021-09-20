@@ -1,6 +1,12 @@
-from pydantic import BaseModel, Field
+from pydantic import Field
+from pydantic.dataclasses import dataclass
 
 
-class FunctionalCluster(BaseModel):
+@dataclass
+class FunctionalCluster:
     id: int
     name: str = Field(title="Name of the age-related process/system the gene involved in")
+
+    def __init__(self, id, name_en, **kwargs):
+        self.id = id
+        self.name = name_en

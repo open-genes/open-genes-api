@@ -18,7 +18,6 @@ async def get_genes_list(lang: Language):
     output = []
     for gene in GeneDAO().get_list():
         temp_gene = GeneShort(**gene)
-        temp_gene.origin = Origin(**GeneDAO().get_origin_for_gene(gene['phylum_id']))
         output.append(temp_gene)
     return output
 
