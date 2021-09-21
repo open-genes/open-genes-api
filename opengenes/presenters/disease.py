@@ -8,7 +8,14 @@ class DiseaseShort:
     icd_id: str = Field(title="ICD code for a disease category")
     name: str = Field(title="Disease name")
 
-    def __init__(self, icd_code, name_en=None, name_ru=None, lang='en', **kwargs):
+    def __init__(
+        self,
+        icd_code,
+        name_en=None,
+        name_ru=None,
+        lang='en',
+        **kwargs
+    ):
         self.icd_id = icd_code
         self.name = name_en if lang=='en' else name_ru
 
