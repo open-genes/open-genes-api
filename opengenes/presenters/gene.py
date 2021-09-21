@@ -48,6 +48,7 @@ class GeneShort:
         updated_at,
         ensembl,
         methylation_horvath,
+        lang,
         **kwargs
     ):
         self.id = id
@@ -61,24 +62,28 @@ class GeneShort:
         self.aliases = list(aliases.split())
         self.diseases = {}
         self.diseaseCategories = {}
+
         for disease_object in DiseaseDAO().get_from_gene(id):
             disease = DiseaseDAO().get_by_id(disease_object['disease_id'])
-            self.diseases[disease_object['disease_id']] = DiseaseShort(**disease)
-            if disease['icd_code_visible'] and disease['icd_name_en']:
-                self.diseaseCategories[disease['icd_code_visible']] = DiseaseCategories(**disease)
+            self.diseases[disease_object['disease_id']] = DiseaseShort(**disease, lang=lang)
+            if disease['icd_code_visible']:
+                self.diseaseCategories[disease['icd_code_visible']] = DiseaseCategories(**disease, lang=lang)
+
         self.functionalClusters = []
         for cluster_object in FunctionalClusterDAO().get_from_gene(id):
             cluster = FunctionalClusterDAO().get_by_id(cluster_object['functional_cluster_id'])
-            self.functionalClusters.append(FunctionalCluster(**cluster))
+            self.functionalClusters.append(FunctionalCluster(**cluster, lang=lang))
+
         self.expressionChange = expressionChange
         self.timestamp = updated_at
         self.ensembl = ensembl
         self.methylationCorrelation = methylation_horvath
+
         commentCause = CommentCauseDAO().get_from_gene(id)
         self.commentCause = {}
         for comment_object in commentCause:
             comment = CommentCauseDAO().get_by_id(comment_object['comment_cause_id'])
-            self.commentCause[comment_object['comment_cause_id']] = CommentCause(**comment)
+            self.commentCause[comment_object['comment_cause_id']] = CommentCause(**comment, lang=lang)
 
 
 @dataclass

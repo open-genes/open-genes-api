@@ -15,10 +15,7 @@ router = APIRouter()
     response_model=List[GeneShort],
 )
 async def get_genes_list(lang: Language):
-    output = []
-    for gene in GeneDAO().get_list():
-        temp_gene = GeneShort(**gene)
-        output.append(temp_gene)
+    output = [GeneShort(**gene, lang=lang.value) for gene in GeneDAO().get_list()]
     return output
 
 
