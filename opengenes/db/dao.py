@@ -25,16 +25,19 @@ class GeneDAO(BaseDAO):
     def get_list(self):
         cur = self.cnx.cursor(dictionary=True)
         cur.execute(
-            "SELECT gene.id as id, max(family_phylum.order) as phylum_order, "
-            "phylum_id, family_phylum_id, taxon_id, aliases, symbol, "
-            "name, uniprot, methylation_horvath, ncbi_id, "
-            "expressionChange, gene.updated_at, ensembl "
-            "FROM gene "
+            "SELECT `gene`.`id`, `gene`.`symbol`, `gene`.`aliases`, "
+            "`gene`.`name`, `gene`.`ncbi_id`, `gene`.`uniprot`, "
+            "`gene`.`expressionChange`, `gene`.`created_at`, "
+            "`gene`.`updated_at`, `gene`.`ensembl`, "
+            "`gene`.`human_protein_atlas`, `gene`.`methylation_horvath`, "
+            "`phylum`.`id` AS `phylum_id`,`family_phylum`.`order`, "
+            "`family_phylum`.`id` AS `family_phylum_id`, `gene`.`taxon_id` as `taxon_id` "
+            "FROM `gene` "
             "LEFT JOIN `phylum` `family_phylum` "
             "ON gene.family_phylum_id = family_phylum.id "
-            "LEFT JOIN `phylum` ON gene.phylum_id = phylum.id "
-            "WHERE gene.isHidden != 1 "
-            "GROUP BY gene.id ORDER BY phylum_order DESC"
+            "LEFT JOIN `phylum` "
+            "ON gene.phylum_id = phylum.id "
+            "WHERE isHidden != 1 GROUP BY `gene`.`id` ORDER BY `family_phylum`.`order` DESC"
         )
         return cur.fetchall()
 
