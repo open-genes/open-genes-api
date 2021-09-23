@@ -10,7 +10,8 @@ class Origin:
         default=None,
     )
     age: str = Field(title="Gene evolutionary age", description="A range of values can be specified.", default=None)
-    order: int = Field(title="Sorting order", description="A field is being used for sorting genes according to age.", default=None)
+    order: int = Field(title="Sorting order", description="A field is being used for sorting genes according to age.",
+                       default=None)
 
     def __init__(
         self,

@@ -20,16 +20,18 @@ class GeneShort:
     name: str = Field(title="Gene name", default=None)
     ncbiId: str = Field(title="Entrez Gene id", default=None)
     uniprot: str = Field(title="UniProt id", default=None)
-    origin: Origin = Field(title="Gene evolutionary origin", default=None)
-    familyOrigin: Origin = Field(title="Gene family evolutionary origin")
+    origin: Optional[Origin] = Field(title="Gene evolutionary origin", default=None)
+    familyOrigin: Optional[Origin] = Field(title="Gene family evolutionary origin")
     homologueTaxon: Optional[str] = Field(title="An organism the gene is conservative in")
     aliases: List[str] = Field(title="Gene symbols in the other nomenclatures")
     diseases: Optional[Dict] = Field(title="Association with diseases (eDGAR)")
-    functionalClusters: Optional[List[FunctionalCluster]] = Field(title="Age-related processes/systems the gene involved in")
+    functionalClusters: Optional[List[FunctionalCluster]] = Field(title="Age-related processes/systems the gene "
+                                                                        "involved in")
     expressionChange: int = Field(title="Age-dependent changes of gene expression")
-    timestamp: int = Field(title="Unix time of the latest changes")
+    timestamp: Optional[int] = Field(title="Unix time of the latest changes")
     ensembl: Optional[str] = Field(title="Ensembl id")
-    methylationCorrelation: Optional[str] = Field(title="Whether gene methylation changes with age (according to Horvath's epigenetic clock)")
+    methylationCorrelation: Optional[str] = Field(title="Whether gene methylation changes with age (according to "
+                                                        "Horvath's epigenetic clock)")
     diseaseCategories: Optional[dict] = Field(title="Disease categories (ICD)")
     commentCause: dict = Field(title="Gene selection criteria")
 
@@ -56,10 +58,25 @@ class GeneShort:
         self.name = name
         self.ncbiId = ncbi_id
         self.uniprot = uniprot
-        self.origin = Origin(**GeneDAO().get_origin_for_gene(phylum_id))
-        self.familyOrigin = Origin(**GeneDAO().get_origin_for_gene(family_phylum_id))
+
+        origin = GeneDAO().get_origin_for_gene(phylum_id)
+        if origin:
+            self.origin = Origin(**origin)
+        else:
+            self.origin = None
+
+        family_origin = GeneDAO().get_origin_for_gene(family_phylum_id)
+        if family_origin:
+            self.familyOrigin = Origin(**family_origin)
+        else:
+            self.familyOrigin = None
+
         self.homologueTaxon = GeneDAO().get_name_for_taxon(taxon_id)
-        self.aliases = list(aliases.split())
+
+        self.aliases = []
+        if aliases:
+            self.aliases = list(aliases.split())
+
         self.diseases = {}
         self.diseaseCategories = {}
 
@@ -79,9 +96,9 @@ class GeneShort:
         self.ensembl = ensembl
         self.methylationCorrelation = methylation_horvath
 
-        commentCause = CommentCauseDAO().get_from_gene(id)
+        comment_сause = CommentCauseDAO().get_from_gene(id)
         self.commentCause = {}
-        for comment_object in commentCause:
+        for comment_object in comment_сause:
             comment = CommentCauseDAO().get_by_id(comment_object['comment_cause_id'])
             self.commentCause[comment_object['comment_cause_id']] = CommentCause(**comment, lang=lang)
 

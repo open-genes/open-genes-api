@@ -1,10 +1,7 @@
-import os
-import sys
-
 from mysql import connector
 
-from opengenes.entities import entities
 from opengenes.config import CONFIG
+from opengenes.entities import entities
 
 
 # TODO(dmtgk): Add relationships integration.
@@ -28,9 +25,16 @@ class GeneDAO(BaseDAO):
     def get_list(self):
         cur = self.cnx.cursor(dictionary=True)
         cur.execute(
-            "SELECT *"
+            "SELECT gene.id as id, max(family_phylum.order) as phylum_order, "
+            "phylum_id, family_phylum_id, taxon_id, aliases, symbol, "
+            "name, uniprot, methylation_horvath, ncbi_id, "
+            "expressionChange, gene.updated_at, ensembl "
             "FROM gene "
-            "JOIN phylum p on gene.phylum_id = p.id;"
+            "LEFT JOIN `phylum` `family_phylum` "
+            "ON gene.family_phylum_id = family_phylum.id "
+            "LEFT JOIN `phylum` ON gene.phylum_id = phylum.id "
+            "WHERE gene.isHidden != 1 "
+            "GROUP BY gene.id ORDER BY phylum_order DESC"
         )
         return cur.fetchall()
 
@@ -52,7 +56,6 @@ class GeneDAO(BaseDAO):
         if result:
             return result['name_en']
         return None
-
 
     def get(
         self,
@@ -90,10 +93,10 @@ class GeneDAO(BaseDAO):
 
         return result
 
-    def update(self, gene: entities.Gene,) -> entities.Gene:
+    def update(self, gene: entities.Gene, ) -> entities.Gene:
         gene_dict = gene.dict(exclude_none=True)
         prep_str = [f"`{k}` = %({k})s" for k in gene_dict.keys()]
-        
+
         query = f"""
             UPDATE gene
             SET {', '.join(prep_str)}
@@ -110,6 +113,7 @@ class GeneDAO(BaseDAO):
 
 class FunctionalClusterDAO(BaseDAO):
     """Functional cluster Table fetcher."""
+
     def get_from_gene(self, gene_id):
         cur = self.cnx.cursor(dictionary=True)
         cur.execute(
@@ -131,6 +135,7 @@ class FunctionalClusterDAO(BaseDAO):
 
 class CommentCauseDAO(BaseDAO):
     """Comment cause Table fetcher."""
+
     def get_from_gene(self, gene_id):
         cur = self.cnx.cursor(dictionary=True)
         cur.execute(
@@ -152,6 +157,7 @@ class CommentCauseDAO(BaseDAO):
 
 class DiseaseDAO(BaseDAO):
     """Disease Table fetcher."""
+
     def get(
         self,
         icd_code: int = None,
@@ -163,7 +169,7 @@ class DiseaseDAO(BaseDAO):
         )
         result = cur.fetchone()
         return result
-    
+
     def get_from_gene(self, gene_id):
         cur = self.cnx.cursor(dictionary=True)
         cur.execute(
@@ -180,7 +186,7 @@ class DiseaseDAO(BaseDAO):
         )
         return cur.fetchone()
 
-    def update(self, disease: entities.Disease,) -> entities.Disease:
+    def update(self, disease: entities.Disease, ) -> entities.Disease:
         disease_dict = disease.dict(exclude_none=True)
         prep_str = [f"`{k}` = %({k})s" for k in disease_dict.keys()]
         query = f"""

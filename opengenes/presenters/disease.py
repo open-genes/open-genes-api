@@ -17,7 +17,7 @@ class DiseaseShort:
         **kwargs
     ):
         self.icd_id = icd_code
-        self.name = name_en if lang=='en' else name_ru
+        self.name = name_en if lang == 'en' else name_ru
 
 
 @dataclass
@@ -42,4 +42,4 @@ class DiseaseCategories:
         **kwargs
     ):
         self.icd_cod = icd_code_visible
-        self.icd_category_name = icd_name_en if lang=='en' else icd_name_ru
+        self.icd_category_name = icd_name_en if lang == 'en' else icd_name_ru
