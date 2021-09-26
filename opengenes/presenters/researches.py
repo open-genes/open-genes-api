@@ -110,7 +110,7 @@ class Researches(BaseModel):
         title="Gene product participation in the regulation of genes associated with aging"
     )
     geneAssociatedWithProgeriaSyndromes: Optional[List[GeneAssociatedWithProgeriaSyndromes]] = Field(
-        title="# Gene association with accelerated aging in humans"
+        title="Gene association with accelerated aging in humans"
     )
     geneAssociatedWithLongevityEffects: Optional[List[GeneAssociatedWithLongevityEffects]] = Field(
         title="Genomic, transcriptomic, and proteomic associations with lifespan/age-related phenotype"

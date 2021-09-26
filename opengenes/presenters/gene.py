@@ -23,7 +23,10 @@ class GeneShort(BaseModel):
     aliases: List[str] = Field(title="Gene symbols in the other nomenclatures")
     diseases: DiseaseShort = Field(title="Association with diseases (eDGAR)")
     functionalClusters: List[FunctionalCluster] = Field(title="Age-related processes/systems the gene involved in")
-    expressionChange: str = Field(title="Age-dependent changes of gene expression")
+    expressionChange: str = Field(
+        title="Age-dependent changes of gene expression",
+        description="Designations: \n0 — no data \n1 — decreases\n2 — increases\n3 — mixed"
+    )
     timestamp: int = Field(title="Unix time of the latest changes")
     ensembl: str = Field(title="Ensembl id")
     methylationCorrelation: str = Field(title="Whether gene methylation changes with age (according to Horvath's epigenetic clock)")
@@ -53,7 +56,10 @@ class Gene(BaseModel):
     expression: List[Expression] = Field(title="Gene expression in organs and tissues (NCBI)")
     functions: List[Function]
     proteinClasses: List[str] = Field(title="Protein classes", description="Protein classification by their function")
-    expressionChange: int = Field(title="Age-dependent changes of gene expression")
+    expressionChange: str = Field(
+        title="Age-dependent changes of gene expression",
+        description="Designations: \n0 — no data \n1 — decreases\n2 — increases\n3 — mixed"
+    )
     band: str = Field(title="Location on chromosome — cytogenetic band")
     locationStart: str = Field(title="Location on chromosome — start")
     locationEnd: str = Field(title="Location on chromosome — end")
@@ -66,4 +72,7 @@ class Gene(BaseModel):
     timestamp: int = Field(title="Unix time of the latest changes")
     human_protein_atlas: HumanProteinAtlas = Field(title="Data parsed from Human Protein Atlas")
     ensembl: str = Field(title="Ensembl id")
-    methylationCorrelation: str = Field(title="Horvath's epigenetic clock", description="Whether gene methylation changes with age (according to Horvath's epigenetic clock)")
+    methylationCorrelation: str = Field(
+        title="Horvath's epigenetic clock",
+        description="Whether gene methylation changes with age (according to Horvath's epigenetic clock)"
+    )
