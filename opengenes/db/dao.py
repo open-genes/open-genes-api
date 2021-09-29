@@ -25,19 +25,82 @@ class GeneDAO(BaseDAO):
     def get_list(self):
         cur = self.cnx.cursor(dictionary=True)
         cur.execute(
-            "SELECT `gene`.`id`, `gene`.`symbol`, `gene`.`aliases`, "
-            "`gene`.`name`, `gene`.`ncbi_id`, `gene`.`uniprot`, "
-            "`gene`.`expressionChange`, `gene`.`created_at`, "
-            "`gene`.`updated_at`, `gene`.`ensembl`, "
-            "`gene`.`human_protein_atlas`, `gene`.`methylation_horvath`, "
-            "`phylum`.`id` AS `phylum_id`,`family_phylum`.`order`, "
-            "`family_phylum`.`id` AS `family_phylum_id`, `gene`.`taxon_id` as `taxon_id` "
-            "FROM `gene` "
-            "LEFT JOIN `phylum` `family_phylum` "
-            "ON gene.family_phylum_id = family_phylum.id "
-            "LEFT JOIN `phylum` "
-            "ON gene.phylum_id = phylum.id "
-            "WHERE isHidden != 1 GROUP BY `gene`.`id` ORDER BY `family_phylum`.`order` DESC"
+            '''
+            SET SESSION group_concat_max_len = 1000000;
+            '''
+        )
+        cur.execute(
+            '''
+        SELECT `gene`.`id`, `gene`.`symbol`, `gene`.`aliases`,
+       `gene`.`name`, `gene`.`ncbi_id`, `gene`.`uniprot`,
+       `gene`.`expressionChange`, `gene`.`created_at`,
+       `gene`.`updated_at`, `gene`.`ensembl`,
+       `gene`.`human_protein_atlas`, `gene`.`methylation_horvath`,
+       `taxon`.`name_en` as taxon_name,
+       JSON_OBJECT(
+           'id', `phylum`.`id`,
+           'name_phylo', `phylum`.`name_phylo`,
+           'order', `phylum`.`order`,
+           'name_mya', `phylum`.`name_mya`
+           ) AS 'origin',
+       JSON_OBJECT(
+           'id', `family_phylum`.`id`,
+           'name_phylo', `family_phylum`.`name_phylo`,
+           'order', `family_phylum`.`order`,
+           'name_mya', `family_phylum`.`name_mya`
+           ) AS 'family_origin',
+       JSON_ARRAYAGG(JSON_OBJECT(
+           'id', `functional_cluster`.`id`,
+           'name', `functional_cluster`.`name_en`
+           )) AS 'functional_clusters',
+       CONCAT('{',
+           GROUP_CONCAT(
+               '"', IFNULL(`cc`.`id`, 'null'),'":"' ,IFNULL(`cc`.`name_ru`, 'null'), '"'
+               SEPARATOR ','
+           ) , '}') AS 'comment_cause',
+       CONCAT('{',
+            GROUP_CONCAT(
+               CONCAT(
+                   '"', IFNULL(d.icd_code_visible, 'None'),'":', JSON_OBJECT(
+                            'icd_id', d.icd_code,
+                            'name', d.name_en
+                        )
+                   )
+                SEPARATOR ','
+           ), '}') AS 'diseases',
+       CONCAT('{',
+            GROUP_CONCAT(
+               CONCAT(
+                   '"', IFNULL(d.icd_code_visible, 'None'),'":', JSON_OBJECT(
+                            'icd_id', d.icd_code_visible,
+                            'icd_category_name', d.icd_name_en
+                        )
+                   )
+                SEPARATOR ','
+           ), '}') AS 'disease_categories'
+        FROM `gene`    
+        LEFT JOIN `phylum` `family_phylum`
+            ON gene.family_phylum_id = family_phylum.id
+        LEFT JOIN `phylum`
+            ON gene.phylum_id = phylum.id
+        LEFT JOIN taxon
+            ON gene.taxon_id = taxon.id
+        LEFT JOIN gene_to_functional_cluster gtfc
+            ON gene.id = gtfc.gene_id
+        LEFT JOIN functional_cluster
+            ON gtfc.functional_cluster_id = functional_cluster.id
+        LEFT JOIN gene_to_comment_cause
+            ON gene.id = gene_to_comment_cause.gene_id
+        LEFT JOIN comment_cause cc
+            ON gene_to_comment_cause.comment_cause_id = cc.id
+        LEFT JOIN gene_to_disease gtd
+            ON gene.id = gtd.gene_id
+        LEFT JOIN disease d
+            ON gtd.disease_id = d.id
+    WHERE isHidden != 1
+    GROUP BY gene.id
+    ORDER BY `family_phylum`.`order` DESC
+            '''
         )
         return cur.fetchall()
 
@@ -48,17 +111,6 @@ class GeneDAO(BaseDAO):
             {'phylum_id': phylum_id}
         )
         return cur.fetchone()
-
-    def get_name_for_taxon(self, taxon_id):
-        cur = self.cnx.cursor(dictionary=True)
-        cur.execute(
-            "SELECT name_en FROM taxon WHERE taxon.id = %(taxon_id)s;",
-            {'taxon_id': taxon_id}
-        )
-        result = cur.fetchone()
-        if result:
-            return result['name_en']
-        return None
 
     def get(
         self,

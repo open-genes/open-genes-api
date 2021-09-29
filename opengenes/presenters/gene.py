@@ -11,6 +11,10 @@ from opengenes.presenters.human_protein_atlas import HumanProteinAtlas
 from opengenes.presenters.origin import Origin
 from opengenes.presenters.researches import Researches
 from opengenes.presenters.comment_cause import CommentCause
+from json import loads
+
+
+BAD_CLUSTER = {"id": None, "name": None}
 
 
 @dataclass
@@ -33,7 +37,7 @@ class GeneShort:
     methylationCorrelation: Optional[str] = Field(title="Whether gene methylation changes with age (according to "
                                                         "Horvath's epigenetic clock)")
     diseaseCategories: Optional[dict] = Field(title="Disease categories (ICD)")
-    commentCause: dict = Field(title="Gene selection criteria")
+    commentCause: Optional[dict] = Field(title="Gene selection criteria")
 
     def __init__(
         self,
@@ -42,14 +46,18 @@ class GeneShort:
         name,
         ncbi_id,
         uniprot,
-        phylum_id,
-        family_phylum_id,
-        taxon_id,
+        origin,
+        family_origin,
+        taxon_name,
         aliases,
+        diseases,
+        disease_categories,
         expressionChange,
         updated_at,
         ensembl,
         methylation_horvath,
+        functional_clusters,
+        comment_cause,
         lang,
         **kwargs
     ):
@@ -58,49 +66,24 @@ class GeneShort:
         self.name = name
         self.ncbiId = ncbi_id
         self.uniprot = uniprot
+        self.origin = Origin(**loads(origin))
+        self.familyOrigin = Origin(**loads(family_origin))
 
-        origin = GeneDAO().get_origin_for_gene(phylum_id)
-        if origin:
-            self.origin = Origin(**origin)
-        else:
-            self.origin = None
-
-        family_origin = GeneDAO().get_origin_for_gene(family_phylum_id)
-        if family_origin:
-            self.familyOrigin = Origin(**family_origin)
-        else:
-            self.familyOrigin = None
-
-        self.homologueTaxon = GeneDAO().get_name_for_taxon(taxon_id)
+        self.homologueTaxon = taxon_name
 
         self.aliases = []
         if aliases:
             self.aliases = list(aliases.split())
 
-        self.diseases = {}
-        self.diseaseCategories = {}
+        self.diseases = loads(diseases)
+        self.diseaseCategories = loads(disease_categories)
 
-        for disease_object in DiseaseDAO().get_from_gene(id):
-            disease = DiseaseDAO().get_by_id(disease_object['disease_id'])
-            self.diseases[disease_object['disease_id']] = DiseaseShort(**disease, lang=lang)
-            if disease['icd_code_visible']:
-                self.diseaseCategories[disease['icd_code_visible']] = DiseaseCategories(**disease, lang=lang)
-
-        self.functionalClusters = []
-        for cluster_object in FunctionalClusterDAO().get_from_gene(id):
-            cluster = FunctionalClusterDAO().get_by_id(cluster_object['functional_cluster_id'])
-            self.functionalClusters.append(FunctionalCluster(**cluster, lang=lang))
-
+        self.functionalClusters = loads(functional_clusters) if BAD_CLUSTER not in loads(functional_clusters) else None
+        self.commentCause = loads(comment_cause)
         self.expressionChange = expressionChange
         self.timestamp = updated_at
         self.ensembl = ensembl
         self.methylationCorrelation = methylation_horvath
-
-        comment_сause = CommentCauseDAO().get_from_gene(id)
-        self.commentCause = {}
-        for comment_object in comment_сause:
-            comment = CommentCauseDAO().get_by_id(comment_object['comment_cause_id'])
-            self.commentCause[comment_object['comment_cause_id']] = CommentCause(**comment, lang=lang)
 
 
 @dataclass
