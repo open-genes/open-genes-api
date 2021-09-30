@@ -13,16 +13,3 @@ class Origin:
     age: Optional[str] = Field(title="Gene evolutionary age", description="A range of values can be specified.", default=None)
     order: Optional[int] = Field(title="Sorting order", description="A field is being used for sorting genes according to age.",
                        default=None)
-
-    def __init__(
-        self,
-        id=None,
-        name_phylo=None,
-        order=None,
-        name_mya=None,
-        **kwargs
-    ):
-        self.id = id
-        self.age = name_mya
-        self.phylum = name_phylo
-        self.order = order

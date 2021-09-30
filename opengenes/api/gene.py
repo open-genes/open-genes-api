@@ -6,6 +6,7 @@ from opengenes.config import Language
 from opengenes.db.dao import GeneDAO
 from opengenes.presenters.gene import GeneShort, Gene
 from opengenes.presenters.origin import Origin
+from json import loads
 
 router = APIRouter()
 
@@ -15,7 +16,9 @@ router = APIRouter()
     response_model=List[GeneShort],
 )
 async def get_genes_list(lang: Language):
-    output = [GeneShort(**gene, lang=lang.value) for gene in GeneDAO().get_list()]
+    output = []
+    for gene in GeneDAO().get_list():
+        output.append(GeneShort(**loads(gene['jsonobj'])))
     return output
 
 

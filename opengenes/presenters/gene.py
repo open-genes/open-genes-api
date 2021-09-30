@@ -39,52 +39,6 @@ class GeneShort:
     diseaseCategories: Optional[dict] = Field(title="Disease categories (ICD)")
     commentCause: Optional[dict] = Field(title="Gene selection criteria")
 
-    def __init__(
-        self,
-        id,
-        symbol,
-        name,
-        ncbi_id,
-        uniprot,
-        origin,
-        family_origin,
-        taxon_name,
-        aliases,
-        diseases,
-        disease_categories,
-        expressionChange,
-        updated_at,
-        ensembl,
-        methylation_horvath,
-        functional_clusters,
-        comment_cause,
-        lang,
-        **kwargs
-    ):
-        self.id = id
-        self.symbol = symbol
-        self.name = name
-        self.ncbiId = ncbi_id
-        self.uniprot = uniprot
-        self.origin = Origin(**loads(origin))
-        self.familyOrigin = Origin(**loads(family_origin))
-
-        self.homologueTaxon = taxon_name
-
-        self.aliases = []
-        if aliases:
-            self.aliases = list(aliases.split())
-
-        self.diseases = loads(diseases)
-        self.diseaseCategories = loads(disease_categories)
-
-        self.functionalClusters = loads(functional_clusters) if BAD_CLUSTER not in loads(functional_clusters) else None
-        self.commentCause = loads(comment_cause)
-        self.expressionChange = expressionChange
-        self.timestamp = updated_at
-        self.ensembl = ensembl
-        self.methylationCorrelation = methylation_horvath
-
 
 @dataclass
 class Gene:
