@@ -1,11 +1,10 @@
 import os
-import sys
+import pathlib
 from enum import Enum
 
-from dotenv import load_dotenv
+from dotenv import dotenv_values
 
-load_dotenv(os.path.join(sys.path[1], '.env'))
-CONFIG = os.environ
+CONFIG = dotenv_values(os.path.join(pathlib.Path(__file__).parent.resolve().parent, '.env'))
 
 class Language(Enum):
     ru = "ru"

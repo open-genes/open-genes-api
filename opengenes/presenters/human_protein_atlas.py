@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field
 class HumanProteinAtlas(BaseModel):
     Gene: str
     GeneSynonym: List[str] = Field(title="Gene synonym")
-    Ensembl: str  = Field(title="Ensembl id")
+    Ensembl: str = Field(title="Ensembl id")
     GeneDescription: str = Field(title="Gene description")
     Uniprot: List[str]
     Chromosome: str

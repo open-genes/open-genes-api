@@ -1,10 +1,8 @@
 import os
 import sys
-import time
 import logging
 
 import requests
-import pandas as pd
 from deep_translator import GoogleTranslator
 
 from opengenes.entities import entities
@@ -27,7 +25,6 @@ logging.basicConfig(
 )
 
 
-proteins_info = []
 counter = 0
 for gene_object in dao.GeneDAO().get_list():
     response_raw = requests.get(
@@ -39,10 +36,10 @@ for gene_object in dao.GeneDAO().get_list():
             'reviewed': True,
         },
         headers={'Accept': 'application/json'}
-        )
-    
+    )
+
     if response_raw.status_code != 200:
-        logging.warning('-'*100)
+        logging.warning('-' * 100)
         logging.warning(f"GENE SYMBOL: {gene_object['symbol']}")
         logging.warning(f"RESPONSE: {response_raw.json()}")
         continue
@@ -50,7 +47,7 @@ for gene_object in dao.GeneDAO().get_list():
     response_json = response_raw.json()
     if len(response_json) < 1:
         continue
-    
+
     reference_protein = response_json[0]
 
     protein = {
@@ -64,7 +61,7 @@ for gene_object in dao.GeneDAO().get_list():
         if comment['type'] == 'FUNCTION':
             for text in comment['text']:
                 text_value = text['value']
-                protein['uniprot_summary_en'] += text_value  + ' '
+                protein['uniprot_summary_en'] += text_value + ' '
                 if len(text_value) < 5000:
                     translated = TRANSLATOR.translate(text_value)
                 else:

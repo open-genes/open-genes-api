@@ -1,6 +1,3 @@
-import os
-import sys
-
 from mysql import connector
 
 from opengenes.entities import entities
@@ -69,7 +66,7 @@ class GeneDAO(BaseDAO):
     def update(self, gene: entities.Gene,) -> entities.Gene:
         gene_dict = gene.dict(exclude_none=True)
         prep_str = [f"`{k}` = %({k})s" for k in gene_dict.keys()]
-        
+
         query = f"""
             UPDATE gene
             SET {', '.join(prep_str)}
@@ -97,7 +94,6 @@ class DiseaseDAO(BaseDAO):
         )
         result = cur.fetchone()
         return result
-    
 
     def update(self, disease: entities.Disease,) -> entities.Disease:
         disease_dict = disease.dict(exclude_none=True)
