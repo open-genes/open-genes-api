@@ -13,13 +13,10 @@ router = APIRouter()
 
 @router.get(
     '/gene/',
-    response_model=List[GeneShort],
+    response_model=List[GeneShort]
 )
 async def get_genes_list(lang: Language):
-    output = []
-    for gene in GeneDAO().get_list():
-        output.append(GeneShort(**loads(gene['jsonobj'])))
-    return output
+    return loads(GeneDAO().get_list()[0]['output'])
 
 
 @router.get(
