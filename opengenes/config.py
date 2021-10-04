@@ -2,9 +2,10 @@ import os
 import pathlib
 from enum import Enum
 
-from dotenv import dotenv_values
+from dotenv import load_dotenv
 
-CONFIG = dotenv_values(os.path.join(pathlib.Path(__file__).parent.resolve().parent, '.env'))
+load_dotenv(os.path.join(pathlib.Path(__file__).parent.resolve().parent, '.env'))
+CONFIG = os.environ
 
 class Language(Enum):
     ru = "ru"
