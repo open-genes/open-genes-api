@@ -40,6 +40,7 @@ class Version(BaseModel):
     minor: str
     build: Optional[str]
     date:Optional[str]
+    revision:Optional[str]
 
 @app.get("/api/version",tags=["version"],summary="Version info",response_model=Version)
 def version()->dict:
