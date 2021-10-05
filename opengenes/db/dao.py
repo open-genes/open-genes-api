@@ -5,6 +5,7 @@ from opengenes.entities import entities
 from opengenes.db.sql_raws.scripts import GENES_QUERY
 
 
+
 # TODO(dmtgk): Add relationships integration.
 # TODO(dmtgk): Add versatility to BaseDAO and pydantic entity validation.
 class BaseDAO:
@@ -23,9 +24,10 @@ class BaseDAO:
 class GeneDAO(BaseDAO):
     """Gene Table fetcher."""
 
-    def get_list(self):
+    def get_list(self, request):
         cur = self.cnx.cursor(dictionary=True)
-        cur.execute(GENES_QUERY)
+        cur.execute('SET SESSION group_concat_max_len = 100000;')
+        cur.execute(request)
         return cur.fetchall()
 
     def get_origin_for_gene(self, phylum_id):
