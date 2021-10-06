@@ -1,18 +1,23 @@
-from pydantic import BaseModel, Field
+from pydantic import Field
+from pydantic.dataclasses import dataclass
+from typing import Optional
 
 
-class DiseaseShort(BaseModel):
+@dataclass
+class DiseaseShort:
     icd_id: str = Field(title="ICD code for a disease category")
     name: str = Field(title="Disease name")
 
 
-class Disease(BaseModel):
+@dataclass
+class Disease:
     id: int
     icd_code: int = Field(title="ICD code for a disease category")
     name: str = Field(title="Disease name")
     icd_name: str = Field(title="Disease name according to ICD")
 
 
-class DiseaseCategories(BaseModel):
+@dataclass
+class DiseaseCategories:
     icd_cod: str = Field(title="ICD code for a disease category")
-    icd_category_name: str = Field(title="Disease category name")
+    icd_category_name: Optional[str] = Field(title="Disease category name")

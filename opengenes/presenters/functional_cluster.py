@@ -1,6 +1,8 @@
-from pydantic import BaseModel, Field
+from pydantic import Field
+from pydantic.dataclasses import dataclass
+from typing import Optional
 
-
-class FunctionalCluster(BaseModel):
-    id: int
-    name: str = Field(title="Name of the age-related process/system the gene involved in")
+@dataclass
+class FunctionalCluster:
+    id: Optional[int]
+    name: Optional[str] = Field(title="Name of the age-related process/system the gene involved in")

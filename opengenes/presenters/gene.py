@@ -1,25 +1,32 @@
-from typing import List
+from typing import List, Optional, Dict
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+from pydantic.dataclasses import dataclass
+from opengenes.db.dao import GeneDAO, DiseaseDAO, FunctionalClusterDAO, CommentCauseDAO
 
 from opengenes.presenters.disease import DiseaseShort, DiseaseCategories
 from opengenes.presenters.expression import Expression
 from opengenes.presenters.functional_cluster import FunctionalCluster
-from opengenes.presenters.functions import Function
 from opengenes.presenters.human_protein_atlas import HumanProteinAtlas
-from opengenes.presenters.origin import Origin, FamilyOrigin
+from opengenes.presenters.origin import Origin
 from opengenes.presenters.researches import Researches
+from opengenes.presenters.comment_cause import CommentCause
+from json import loads
 
 
-class GeneShort(BaseModel):
+BAD_CLUSTER = {"id": None, "name": None}
+
+
+@dataclass
+class GeneShort:
     id: int
-    symbol: str = Field(title="Gene symbol (HGNC)")
-    name: str = Field(title="Gene name")
-    ncbiId: str = Field(title="Entrez Gene id")
-    uniprot: str = Field(title="UniProt id")
-    origin: Origin = Field(title="Gene evolutionary origin")
-    familyOrigin: FamilyOrigin = Field(title="Gene family evolutionary origin")
-    homologueTaxon: str = Field(title="An organism the gene is conservative in")
+    symbol: str = Field(title="Gene symbol (HGNC)", default=None)
+    name: str = Field(title="Gene name", default=None)
+    ncbiId: str = Field(title="Entrez Gene id", default=None)
+    uniprot: str = Field(title="UniProt id", default=None)
+    origin: Optional[Origin] = Field(title="Gene evolutionary origin", default=None)
+    familyOrigin: Optional[Origin] = Field(title="Gene family evolutionary origin")
+    homologueTaxon: Optional[str] = Field(title="An organism the gene is conservative in")
     aliases: List[str] = Field(title="Gene symbols in the other nomenclatures")
     diseases: DiseaseShort = Field(title="Association with diseases (eDGAR)")
     functionalClusters: List[FunctionalCluster] = Field(title="Age-related processes/systems the gene involved in")
@@ -34,14 +41,15 @@ class GeneShort(BaseModel):
     commentCause: dict = Field(title="Gene selection criteria")
 
 
-class Gene(BaseModel):
+@dataclass
+class Gene:
     id: int
     name: str = Field(title="Gene name")
     symbol: str = Field(title="Gene symbol (HGNC)")
     aliases: List[str] = Field(title="Gene symbols in the other nomenclatures")
     homologueTaxon: str = Field(title="An organism the gene is conservative in")
     origin: Origin = Field(title="Gene evolutionary origin")
-    familyOrigin: FamilyOrigin = Field(title="Gene family evolutionary origin")
+    familyOrigin: Origin = Field(title="Gene family evolutionary origin")
     diseases: DiseaseShort = Field(title="Association with diseases (eDGAR)")
     diseaseCategories: List[DiseaseCategories] = Field(title="Disease categories")
     ncbiId: str = Field(title="Entrez Gene id")
@@ -54,7 +62,6 @@ class Gene(BaseModel):
     functionalClusters: List[FunctionalCluster] = Field(title="Age-related processes/systems the gene involved in")
     researches: Researches = Field(title="Researches", description="Researches confirming the association of the gene with life expectancy and aging")
     expression: List[Expression] = Field(title="Gene expression in organs and tissues (NCBI)")
-    functions: List[Function]
     proteinClasses: List[str] = Field(title="Protein classes", description="Protein classification by their function")
     expressionChange: str = Field(
         title="Age-dependent changes of gene expression",
