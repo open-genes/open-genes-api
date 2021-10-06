@@ -28,16 +28,17 @@ class GeneShort:
     familyOrigin: Optional[Origin] = Field(title="Gene family evolutionary origin")
     homologueTaxon: Optional[str] = Field(title="An organism the gene is conservative in")
     aliases: List[str] = Field(title="Gene symbols in the other nomenclatures")
-    diseases: Optional[Dict] = Field(title="Association with diseases (eDGAR)")
-    functionalClusters: Optional[List[FunctionalCluster]] = Field(title="Age-related processes/systems the gene "
-                                                                        "involved in")
-    expressionChange: int = Field(title="Age-dependent changes of gene expression")
-    timestamp: Optional[int] = Field(title="Unix time of the latest changes")
-    ensembl: Optional[str] = Field(title="Ensembl id")
-    methylationCorrelation: Optional[str] = Field(title="Whether gene methylation changes with age (according to "
-                                                        "Horvath's epigenetic clock)")
-    diseaseCategories: Optional[dict] = Field(title="Disease categories (ICD)")
-    commentCause: Optional[dict] = Field(title="Gene selection criteria")
+    diseases: DiseaseShort = Field(title="Association with diseases (eDGAR)")
+    functionalClusters: List[FunctionalCluster] = Field(title="Age-related processes/systems the gene involved in")
+    expressionChange: str = Field(
+        title="Age-dependent changes of gene expression",
+        description="Designations: \n0 — no data \n1 — decreases\n2 — increases\n3 — mixed"
+    )
+    timestamp: int = Field(title="Unix time of the latest changes")
+    ensembl: str = Field(title="Ensembl id")
+    methylationCorrelation: str = Field(title="Whether gene methylation changes with age (according to Horvath's epigenetic clock)")
+    diseaseCategories: dict = Field(title="Disease categories (ICD)")
+    commentCause: dict = Field(title="Gene selection criteria")
 
 
 @dataclass
@@ -62,7 +63,10 @@ class Gene:
     researches: Researches = Field(title="Researches", description="Researches confirming the association of the gene with life expectancy and aging")
     expression: List[Expression] = Field(title="Gene expression in organs and tissues (NCBI)")
     proteinClasses: List[str] = Field(title="Protein classes", description="Protein classification by their function")
-    expressionChange: int = Field(title="Age-dependent changes of gene expression")
+    expressionChange: str = Field(
+        title="Age-dependent changes of gene expression",
+        description="Designations: \n0 — no data \n1 — decreases\n2 — increases\n3 — mixed"
+    )
     band: str = Field(title="Location on chromosome — cytogenetic band")
     locationStart: str = Field(title="Location on chromosome — start")
     locationEnd: str = Field(title="Location on chromosome — end")
@@ -75,4 +79,7 @@ class Gene:
     timestamp: int = Field(title="Unix time of the latest changes")
     human_protein_atlas: HumanProteinAtlas = Field(title="Data parsed from Human Protein Atlas")
     ensembl: str = Field(title="Ensembl id")
-    methylationCorrelation: str = Field(title="Horvath's epigenetic clock", description="Whether gene methylation changes with age (according to Horvath's epigenetic clock)")
+    methylationCorrelation: str = Field(
+        title="Horvath's epigenetic clock",
+        description="Whether gene methylation changes with age (according to Horvath's epigenetic clock)"
+    )

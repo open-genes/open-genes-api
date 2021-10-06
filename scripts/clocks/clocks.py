@@ -38,4 +38,5 @@ def checker():
     print(f'ADDED: {added_counter}')
     print(f'TOTAL: {updated_counter + added_counter}')
 
+
 checker()

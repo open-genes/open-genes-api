@@ -1,6 +1,5 @@
 import re
 import os
-import sys
 
 from mysql import connector
 
@@ -104,7 +103,7 @@ class MySQLGenerator():
     #         # print(res)
 
 
-cnx =  connector.connect(
+cnx = connector.connect(
     host=CONFIG['DB_HOST'],
     port=CONFIG['DB_PORT'],
     user=CONFIG['DB_USER'],

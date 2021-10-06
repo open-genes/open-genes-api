@@ -7,6 +7,7 @@ WORKDIR /open-genes-backend
 COPY opengenes ./opengenes
 COPY scripts ./scripts
 COPY .env .env
+ADD VERSION ./
 
 ENV PYTHONPATH "${PYTHONPATH}:/open-genes-backend"
 

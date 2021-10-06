@@ -4,6 +4,8 @@ from pydantic import BaseModel, Field
 from pydantic.dataclasses import dataclass
 
 
+
+# TODO(cconst8ine)
 # Effect of modulation of gene activity on a lifespan
 # (This research model will be fully re-worked soon.
 # So it's better to mark all class fields as deprecated)
@@ -56,7 +58,7 @@ class RegulatedGene:
 
 # Effect of modulation of gene activity on the age-related process
 @dataclass
-class InterventionToGeneImprovesVitalProcesses(BaseModel):
+class InterventionToGeneImprovesVitalProcesses:
     geneIntervention: str = Field(title="Method",
                                   description="Any targeted and specific effect that results a change of gene activity")
     vitalProcess: str = Field(title="Process",
@@ -80,6 +82,9 @@ class InterventionToGeneImprovesVitalProcesses(BaseModel):
 # Gene product participation in the regulation of genes associated with aging
 @dataclass
 class ProteinRegulatesOtherGenes:
+    """
+    Gene product participation in the regulation of genes associated with aging
+    """
     proteinActivity: str = Field(title="Protein activity")
     regulationType: str = Field(title="Regulation type")
     doi: str = Field(title="Publication id in DOI format")
@@ -88,18 +93,26 @@ class ProteinRegulatesOtherGenes:
     regulatedGene: RegulatedGene = Field(title="Regulated gene")
 
 
+
 # Gene association with accelerated aging in humans
 @dataclass
 class GeneAssociatedWithProgeriaSyndromes:
+    """
+    Gene association with accelerated aging in humans.
+    """
     progeriaSyndrome: str = Field(title="Progeria syndrome")
     doi: str = Field(title="Publication id in DOI format")
     pmid: str = Field(title="Publication id in PMC/PMID format")
     comment: str = Field(title="Additional description")
 
 
+
 # Genomic, transcriptomic, and proteomic associations with lifespan/age-related phenotype
 @dataclass
 class GeneAssociatedWithLongevityEffects:
+    """
+    Genomic, transcriptomic, and proteomic associations with lifespan/age-related phenotype.
+    """
     longevityEffect: str = Field(title="A trait associated with polymorphism")
     allelicPolymorphism: str = Field(title="Allelic polymorphism",
                                      description="SNP id or another or another designation for gene polymorphism")
@@ -114,9 +127,12 @@ class GeneAssociatedWithLongevityEffects:
     comment: str = Field(title="Additional description")
 
 
-@dataclass
 # Other evidence for the gene's association with aging
+@dataclass
 class AdditionalEvidence:
+    """
+    Other evidence for the gene's association with aging.
+    """
     doi: str = Field(title="Publication id in DOI format")
     pmid: str = Field(title="Publication id in PMC/PMID format")
     comment: str = Field(title="Additional description")
@@ -137,7 +153,7 @@ class Researches:
         title="Gene product participation in the regulation of genes associated with aging"
     )
     geneAssociatedWithProgeriaSyndromes: Optional[List[GeneAssociatedWithProgeriaSyndromes]] = Field(
-        title="# Gene association with accelerated aging in humans"
+        title="Gene association with accelerated aging in humans"
     )
     geneAssociatedWithLongevityEffects: Optional[List[GeneAssociatedWithLongevityEffects]] = Field(
         title="Genomic, transcriptomic, and proteomic associations with lifespan/age-related phenotype"

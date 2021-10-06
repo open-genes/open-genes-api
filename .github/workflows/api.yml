@@ -1,0 +1,25 @@
+name: API CI
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2.3.4
+        with:
+          fetch-depth: 0
+      
+      - name: Build
+        run: sh build.sh
+      
+      - name: Docker Login
+        uses: docker/login-action@v1.10.0
+        with:
+          username: opengenes
+          password: ${{ secrets.DOCKER_HUB_PUSH_TOKEN }}
+          
+      - name: Push
+        run: docker push opengenes/api
