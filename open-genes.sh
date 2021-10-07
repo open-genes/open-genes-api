@@ -5,6 +5,8 @@ then
     echo ".env copied"
 fi
 
+[ -f VERSION ] || touch VERSION
+
 if [ "$1" = "run" ]
 then
     COMPOSE_ARGS="$1 $2 --name opengenes-backend opengenes-backend"
