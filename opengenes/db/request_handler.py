@@ -1,9 +1,12 @@
+from opengenes.db.filters import FILTERS
+
+
 class RequestHandler():
 
-    def __init__(self, sql_row):
+    def __init__(self, sql_row:str):
         self.sql_row = sql_row
 
-    def set_pagination(self, page = None, pagesize = None):
+    def set_pagination(self, page:int = None, pagesize:int = None):
         temp_sql_row = self.sql_row
         if page or pagesize:
             if pagesize and not page:
@@ -27,9 +30,16 @@ class RequestHandler():
             )
         self.sql_row = temp_sql_row
 
-    def set_language(self, lang):
+    def set_language(self, lang:str):
         self.sql_row = self.sql_row.replace('_en', '_' + lang)
 
     @property
     def sql(self):
         return self.sql_row
+
+    def add_filters(self, filters:dict):
+        filter_array = []
+        for key, value in filters.items():
+            filter_array.append(FILTERS[key].format(value))
+        temp_filters_row = 'AND'.join(filter_array)
+        self.sql_row = self.sql_row.replace('@FILTERS@', temp_filters_row)
