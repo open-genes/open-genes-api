@@ -16,13 +16,21 @@ router = APIRouter()
 @router.get(
     '/gene/',
 )
-async def get_genes_list(lang: Language, page: int = None, pagesize: int = None):
+async def get_genes_list(
+        lang: Language, page: int = None, pagesize: int = None, diseases: int = None,
+        disease_categories: int = None, functional_clusters: int = None
+):
     sql_handler = RequestHandler(GENES_QUERY)
     sql_handler.set_language(lang.value)
     sql_handler.set_pagination(page, pagesize)
-    filters = {'diseases': '123'}
+    filters = {}
+    if diseases:
+        filters['diseases'] = diseases
+    if disease_categories:
+        filters['disease_categories'] = disease_categories
+    if functional_clusters:
+        filters['functional_clusters'] = functional_clusters
     sql_handler.add_filters(filters)
-    print(sql_handler.sql)
     return loads(GeneDAO().get_list(request=sql_handler.sql)[0]['respJS'])
 
 

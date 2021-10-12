@@ -1,5 +1,5 @@
 FILTERS = {
     'diseases': 'AND `disease`.`id` IN ({})',
-    'diseaseCategories': 'AND `diseaseCategories`.`id` IN ({})',
-    'functionalClusters': 'AND `functionalClusters`.`id` IN ({})'
+    'disease_categories': 'AND `parent_icd_code`.`id` IN ({})',
+    'functional_clusters': 'AND `functionalClusters`.`id` IN ({})'
 }
