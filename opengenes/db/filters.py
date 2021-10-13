@@ -1,5 +1,6 @@
 FILTERS = {
-    'diseases': 'AND `disease`.`id` IN ({})',
-    'disease_categories': 'AND `parent_icd_code`.`id` IN ({})',
-    'functional_clusters': 'AND `functionalClusters`.`id` IN ({})'
+    'diseases': ' `disease`.`id` IN ({}) ',
+    'disease_categories': ' `parent_icd_code`.`id` IN ({}) ',
+    'functional_clusters': ' `functionalClusters`.`id` IN ({}) ',
+    'expression_change': ' `gene`.`expressionChange` IN ({}) ',
 }

@@ -41,5 +41,8 @@ class RequestHandler():
         filter_array = []
         for key, value in filters.items():
             filter_array.append(FILTERS[key].format(value))
-        temp_filters_row = 'AND'.join(filter_array)
+        if filter_array:
+            temp_filters_row = 'AND' + 'AND'.join(filter_array)
+        else:
+            temp_filters_row = ''
         self.sql_row = self.sql_row.replace('@FILTERS@', temp_filters_row)
