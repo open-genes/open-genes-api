@@ -30,7 +30,7 @@ async def get_genes_list(
         filters['disease_categories'] = disease_categories
     if functional_clusters:
         filters['functional_clusters'] = functional_clusters
-    if functional_clusters:
+    if expression_change:
         filters['expression_change'] = expression_change
     sql_handler.add_filters(filters)
     return loads(GeneDAO().get_list(request=sql_handler.sql)[0]['respJS'])
