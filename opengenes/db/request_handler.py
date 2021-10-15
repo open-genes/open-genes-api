@@ -23,7 +23,7 @@ class RequestHandler():
             )
         else:
             temp_sql_row = self.sql_row.replace('@PAGE@', '1')
-            temp_sql_row = temp_sql_row.replace('@PAGESIZE@', 'jsout.fRows')
+            temp_sql_row = temp_sql_row.replace('@PAGESIZE@', 'MAX(jsout.fRows)')
             temp_sql_row = temp_sql_row.replace(
                 '@LIMIT@',
                 ''
