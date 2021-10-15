@@ -17,8 +17,8 @@ router = APIRouter()
     '/gene/',
 )
 async def get_genes_list(
-        lang: Language, page: int = None, pagesize: int = None, diseases: int = None,
-        disease_categories: int = None, functional_clusters: int = None, expression_change: int = None
+        lang: Language, page: int = None, pagesize: int = None, diseases: str = None,
+        disease_categories: str = None, functional_clusters: str = None, expression_change: str = None
 ):
     sql_handler = RequestHandler(GENES_QUERY)
     sql_handler.set_language(lang.value)
@@ -33,6 +33,7 @@ async def get_genes_list(
     if expression_change:
         filters['expression_change'] = expression_change
     sql_handler.add_filters(filters)
+    print(sql_handler.sql)
     return loads(GeneDAO().get_list(request=sql_handler.sql)[0]['respJS'])
 
 
