@@ -18,7 +18,7 @@ class RequestHandler():
             temp_sql_row = temp_sql_row.replace(
                 '@LIMIT@',
                 'LIMIT {} OFFSET {}'.format(
-                    str(pagesize), str(pagesize * (page - pagesize))
+                    str(pagesize), str(pagesize * page - pagesize)
                 )
             )
         else:
