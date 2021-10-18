@@ -1,12 +1,12 @@
 from opengenes.db.filters import FILTERS
 
 
-class RequestHandler():
+class RequestHandler:
 
-    def __init__(self, sql_row:str):
+    def __init__(self, sql_row: str):
         self.sql_row = sql_row
 
-    def set_pagination(self, page:int = None, pagesize:int = None):
+    def set_pagination(self, page: int = None, pagesize: int = None):
         temp_sql_row = self.sql_row
         if page or pagesize:
             if pagesize and not page:
@@ -18,7 +18,7 @@ class RequestHandler():
             temp_sql_row = temp_sql_row.replace(
                 '@LIMIT@',
                 'LIMIT {} OFFSET {}'.format(
-                    str(pagesize), str(pagesize * page - pagesize)
+                    str(pagesize), str(pagesize * (page - 1))
                 )
             )
         else:
@@ -30,14 +30,14 @@ class RequestHandler():
             )
         self.sql_row = temp_sql_row
 
-    def set_language(self, lang:str):
+    def set_language(self, lang: str):
         self.sql_row = self.sql_row.replace('_en', '_' + lang)
 
     @property
     def sql(self):
         return self.sql_row
 
-    def add_filters(self, filters:dict):
+    def add_filters(self, filters: dict):
         filter_array = []
         for key, value in filters.items():
             filter_array.append(FILTERS[key].format(value))
