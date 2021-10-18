@@ -1,5 +1,5 @@
 from json import loads
-from re import fullmatch
+from re import match
 from typing import List
 
 from fastapi import APIRouter, HTTPException
@@ -24,15 +24,16 @@ async def get_genes_list(
     sql_handler.set_language(lang.value)
     sql_handler.set_pagination(page, pagesize)
     filters = {}
-    if diseases and fullmatch(r"(\d,)?\d", diseases):
+    if diseases:
         filters['diseases'] = diseases
-    if disease_categories and fullmatch(r"(\d,)?\d", disease_categories):
+    if disease_categories:
         filters['disease_categories'] = disease_categories
-    if functional_clusters and fullmatch(r"(\d,)?\d", functional_clusters):
+    if functional_clusters:
         filters['functional_clusters'] = functional_clusters
-    if expression_change and fullmatch(r"(\d,)?\d", expression_change):
+    if expression_change:
         filters['expression_change'] = expression_change
-    sql_handler.add_filters(filters)
+    sql_handler.add_filters(sql_handler.validate_filters(filters))
+    print(sql_handler.sql)
     return loads(GeneDAO().get_list(request=sql_handler.sql)[0]['respJS'])
 
 

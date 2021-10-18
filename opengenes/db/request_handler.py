@@ -37,6 +37,17 @@ class RequestHandler:
     def sql(self):
         return self.sql_row
 
+    @staticmethod
+    def validate_filters(filters: dict):
+        output_filters = {}
+        for key, value in filters.items():
+            for element in value.split(','):
+                if not element.isalnum():
+                    break
+            else:
+                output_filters[key] = value
+        return output_filters
+
     def add_filters(self, filters: dict):
         filter_array = []
         for key, value in filters.items():
