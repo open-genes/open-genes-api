@@ -1,6 +1,6 @@
 GENES_QUERY = '''
 SELECT JSON_OBJECT(
-'options',JSON_OBJECT('pagination',JSON_OBJECT('page',@PAGE@,'pageSize',@PAGESIZE@,'pageTotal',CEILING(MAX(jsout.fRows)/@PAGESIZE@)),'objTotal',MAX(jsout.fRows))
+'options',JSON_OBJECT('pagination',JSON_OBJECT('page',@PAGE@,'pageSize',@PAGESIZE@,'pagesTotal',CEILING(MAX(jsout.fRows)/@PAGESIZE@)),'objTotal',MAX(jsout.fRows))
 ,'items',JSON_ARRAYAGG(jsout.jsonobj)) respJS FROM (
 SELECT preout.jsonobj, fRows FROM (
 SELECT count(*) OVER() fRows,

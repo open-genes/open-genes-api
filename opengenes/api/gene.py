@@ -17,8 +17,8 @@ router = APIRouter()
     '/gene/search',
 )
 async def get_genes_list(
-        lang: Language, page: int = None, pagesize: int = None, diseases: str = None,
-        disease_categories: str = None, functional_clusters: str = None, expression_change: str = None
+        lang: Language = Language.en, page: int = None, pagesize: int = None, diseases: str = None,
+        disease_categories: str = None, byAgeRelatedProcess: str = None, expression_change: str = None
 ):
     sql_handler = RequestHandler(GENES_QUERY)
     sql_handler.set_language(lang.value)
@@ -28,8 +28,8 @@ async def get_genes_list(
         filters['diseases'] = diseases
     if disease_categories:
         filters['disease_categories'] = disease_categories
-    if functional_clusters:
-        filters['functional_clusters'] = functional_clusters
+    if byAgeRelatedProcess:
+        filters['functional_clusters'] = byAgeRelatedProcess
     if expression_change:
         filters['expression_change'] = expression_change
     sql_handler.add_filters(sql_handler.validate_filters(filters))
