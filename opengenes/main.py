@@ -1,12 +1,14 @@
-import uvicorn
 from os import getenv
+from typing import Optional
+
+import uvicorn
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
+from pydantic import BaseModel
 
 from opengenes.api import gene, disease
-from opengenes.config import CONFIG,VERSION
-from typing import Optional
-from pydantic import BaseModel
+from opengenes.config import CONFIG, VERSION
 
 
 def assembling_endpoints(app: FastAPI):
@@ -22,6 +24,12 @@ def assembling_endpoints(app: FastAPI):
     )
 
 
+origins = [
+    "http://localhost",
+    "https://localhost",
+]
+
+
 def init():
     app = FastAPI(
         debug=CONFIG['DEBUG'],
@@ -29,6 +37,13 @@ def init():
         root_path=getenv('ROOT_PATH')
     )
     assembling_endpoints(app)
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
     return app
 
 
