@@ -7,7 +7,8 @@ IMAGE="opengenes/api$IMAGE"
 BUILD=`git log HEAD --pretty=oneline --relative .| wc -l`
 REVISION=`git rev-parse --short HEAD`
 DATE=`git rev-list --date=short --pretty=%cd HEAD |sed -n 2p`
-echo "build=\"$BUILD\"\nrevision=\"$REVISION\"\ndate=\"$DATE\"" >VERSION
+BRANCH=`git rev-parse --abbrev-ref HEAD`
+echo "build=\"$BUILD\"\nrevision=\"$REVISION\"\ndate=\"$DATE\"\nbranch=\"$BRANCH\"" >VERSION
 echo VERSION file written with build $BUILD revision $REVISION date $DATE
 echo image $IMAGE
 

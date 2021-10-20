@@ -47,6 +47,7 @@ class Version(BaseModel):
     build: Optional[str]
     date:Optional[str]
     revision:Optional[str]
+    branch:Optional[str]
 
 @app.get("/version",tags=["version"],summary="Version info",response_model=Version)
 def version()->dict:
