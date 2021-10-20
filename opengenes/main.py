@@ -1,6 +1,7 @@
 import uvicorn
 from os import getenv
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 
 from opengenes.api import gene, disease
@@ -26,6 +27,13 @@ def init():
         title='Open Genes backend API',
         root_path=getenv('ROOT_PATH')
     )
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=['*'],
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+
     assembling_endpoints(app)
     return app
 

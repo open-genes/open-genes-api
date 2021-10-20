@@ -39,10 +39,57 @@ async def get_genes_list(
 
 
 @router.get(
-    '/gene/{ncbi_id}',
+    '/gene/by-latest',
+    response_model=List[GeneShort],
+)
+async def get_gene_by_latest(lang: Language = Language.en):
+    raise HTTPException( status_code=404, detail='Not implemented',)
+    return GeneDAO().get()
+
+
+@router.get(
+    '/gene/by-functional_cluster/{ids}',
+    response_model=List[GeneShort],
+)
+async def get_gene_by_functional_cluster(ids: str, lang: Language = Language.en):
+    raise HTTPException( status_code=404, detail='Not implemented',)
+    return GeneDAO().get()
+
+
+@router.get(
+    '/gene/by-selection-criteria/{ids}',
+    response_model=List[GeneShort],
+)
+async def get_gene_by_selection_criteria(ids: str, lang: Language = Language.en):
+    raise HTTPException( status_code=404, detail='Not implemented',)
+    return GeneDAO().get()
+
+
+@router.get(
+    '/gene/by-go-term/{term}',
+    response_model=List[GeneShort],
+)
+async def get_gene_by_go_term(term: str, lang: Language = Language.en):
+    raise HTTPException( status_code=404, detail='Not implemented',)
+    return GeneDAO().get()
+
+
+@router.get(
+    '/gene/by-expression-change/{expression_change}',
+    response_model=List[GeneShort],
+)
+async def get_gene_by_expression_change(expression_change: str, lang: Language = Language.en):
+    raise HTTPException( status_code=404, detail='Not implemented',)
+    return GeneDAO().get()
+
+@router.get(
+    '/gene/{symbol}',
     response_model=Gene,
 )
-async def get_gene_by_id(ncbi_id: int, lang: Language):
+async def get_gene_by_symbol(symbol: str, lang: Language = Language.en):
+    if not symbol.isnumeric():
+        raise HTTPException( status_code=404, detail='Not implemented',)
+        return GeneDAO().get()
     try:
         return GeneDAO().get(ncbi_id=ncbi_id)
     except Exception as e:
@@ -51,50 +98,11 @@ async def get_gene_by_id(ncbi_id: int, lang: Language):
             detail=e.args[0],
         )
 
-
+# dummy endpoint, for docs, actual processing is done in get_gene_by_symbol
 @router.get(
-    '/gene/{symbol}',
+    '/gene/{ncbi_id}',
     response_model=Gene,
 )
-async def get_gene_by_symbol(symbol: str, lang: Language):
-    return GeneDAO().get()
+async def get_gene_by_id(ncbi_id: int, lang: Language = Language.en):
+    return 'dummy'
 
-
-@router.get(
-    '/gene/by-latest',
-    response_model=List[GeneShort],
-)
-async def get_gene_by_latest(lang: Language):
-    return GeneDAO().get()
-
-
-@router.get(
-    '/gene/by-functional_cluster/{ids}',
-    response_model=List[GeneShort],
-)
-async def get_gene_by_functional_cluster(lang: Language, ids: str):
-    return GeneDAO().get()
-
-
-@router.get(
-    '/gene/by-selection-criteria/{ids}',
-    response_model=List[GeneShort],
-)
-async def get_gene_by_selection_criteria(lang: Language, ids: str):
-    return GeneDAO().get()
-
-
-@router.get(
-    '/gene/by-go-term/{term}',
-    response_model=List[GeneShort],
-)
-async def get_gene_by_go_term(lang: Language, term: str):
-    return GeneDAO().get()
-
-
-@router.get(
-    '/gene/by-expression-change/{expression_change}',
-    response_model=List[GeneShort],
-)
-async def get_gene_by_expression_change(lang: Language, expression_change: str):
-    return GeneDAO().get()
