@@ -26,7 +26,7 @@ logging.basicConfig(
 
 
 counter = 0
-for gene_object in dao.GeneDAO().get_list():
+for gene_object in dao.GeneDAO().get_list(request="SELECT ncbi_id, symbol FROM `gene`"):
     response_raw = requests.get(
         'https://www.ebi.ac.uk/proteins/api/proteins',
         params={

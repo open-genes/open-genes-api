@@ -11,5 +11,5 @@ services:
       - "./scripts:/open-genes-backend/scripts"
       - "./.env:/open-genes-backend/.env"
       - "./pyproject.toml:/open-genes-backend/pyproject.toml"
-      - "./pdm.lock:/open-genes-backend/pdm.locks"
+      - "./pdm.lock:/open-genes-backend/pdm.lock"
     network_mode: "host"
