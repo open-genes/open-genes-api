@@ -12,12 +12,10 @@ from pydantic import BaseModel
 def assembling_endpoints(app: FastAPI):
     app.include_router(
         gene.router,
-        prefix="/api",
         tags=["gene"],
     )
     app.include_router(
         disease.router,
-        prefix="/api",
         tags=["disease"],
     )
 
@@ -42,7 +40,7 @@ class Version(BaseModel):
     date:Optional[str]
     revision:Optional[str]
 
-@app.get("/api/version",tags=["version"],summary="Version info",response_model=Version)
+@app.get("/version",tags=["version"],summary="Version info",response_model=Version)
 def version()->dict:
     """
     Version information for the running application instance
@@ -55,7 +53,7 @@ def custom_openapi():
         title=app.title,
         version=str(VERSION.get('major','0'))+'.'+str(VERSION.get('minor','0'))+'.'+VERSION.get('build','-'),
         routes=app.routes,
-        servers=[{'url':'https://open-genes.com'},{'url':'https://open-genes.com/openapi'}],
+        servers=[{'url':CONFIG.get('API_URL','')}],
     )
     app.openapi_schema = openapi_schema
     return app.openapi_schema
