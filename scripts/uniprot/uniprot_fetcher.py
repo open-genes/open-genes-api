@@ -26,7 +26,10 @@ logging.basicConfig(
 
 
 counter = 0
-for gene_object in dao.GeneDAO().get_list(request="SELECT ncbi_id, symbol FROM `gene`"):
+for gene_object in dao.GeneDAO().get_list(request="SELECT ncbi_id, symbol, uniprot, uniprot_summary_ru FROM `gene`"):
+    if gene_object['uniprot'] and gene_object['uniprot_summary_ru']:
+        continue
+        
     response_raw = requests.get(
         'https://www.ebi.ac.uk/proteins/api/proteins',
         params={
@@ -61,7 +64,7 @@ for gene_object in dao.GeneDAO().get_list(request="SELECT ncbi_id, symbol FROM `
         if comment['type'] == 'FUNCTION':
             for text in comment['text']:
                 text_value = text['value']
-                protein['uniprot_summary_en'] += text_value + ' '
+                protein['uniprot_summary_en'] += text_value + '. '
                 if len(text_value) < 5000:
                     translated = TRANSLATOR.translate(text_value)
                 else:
@@ -75,6 +78,7 @@ for gene_object in dao.GeneDAO().get_list(request="SELECT ncbi_id, symbol FROM `
             ncbi_id=gene_object['ncbi_id'],
             uniprot_summary_en=protein['uniprot_summary_en'],
             uniprot_summary_ru=protein['uniprot_summary_ru'],
+            uniprot=reference_protein['id'],
         )
     )
     counter += 1
