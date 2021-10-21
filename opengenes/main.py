@@ -25,8 +25,7 @@ def assembling_endpoints(app: FastAPI):
 
 
 origins = [
-    "http://localhost",
-    "https://localhost",
+    "*",
 ]
 
 
