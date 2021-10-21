@@ -81,9 +81,14 @@ async def get_gene_by_expression_change(expression_change: str, lang: Language =
     raise HTTPException( status_code=404, detail='Not implemented',)
     return GeneDAO().get()
 
+@router.get( '/gene/{symbol}', response_model=Gene,)
+async def dummy_get_gene_by_symbol(symbol: str, lang: Language = Language.en):
+        raise HTTPException( status_code=404, detail='Not implemented',)
+
 @router.get(
-    '/gene/{symbol}',
+    '/test/gene/{symbol}',
     response_model=Gene,
+    include_in_schema=False,
 )
 async def get_gene_by_symbol(symbol: str, lang: Language = Language.en):
     if not symbol.isnumeric():
