@@ -94,6 +94,7 @@ async def get_gene_by_symbol(symbol: str, lang: Language = Language.en):
     if not symbol.isnumeric():
         raise HTTPException( status_code=404, detail='Not implemented',)
         return GeneDAO().get()
+    ncbi_id=int(symbol)
     try:
         return GeneDAO().get(ncbi_id=ncbi_id)
     except Exception as e:
