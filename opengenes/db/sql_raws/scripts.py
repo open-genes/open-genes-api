@@ -47,7 +47,7 @@ LEFT JOIN gene_to_disease ON gene_to_disease.gene_id = gene.id
 LEFT JOIN disease ON gene_to_disease.disease_id = disease.id
 LEFT JOIN disease disease_category ON disease.icd_code_visible = disease_category.icd_code
 WHERE gene.isHidden != 1 @FILTERS@
-GROUP BY gene.id
+GROUP BY gene.id @HAVING@
 ORDER BY family_phylum.order DESC
 ) preout
 @LIMIT@

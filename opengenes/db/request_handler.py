@@ -1,4 +1,4 @@
-from opengenes.db.filters import FILTERS
+from opengenes.db.filters import FILTERS, HAVING
 
 
 class RequestHandler:
@@ -50,10 +50,15 @@ class RequestHandler:
 
     def add_filters(self, filters: dict):
         filter_array = []
+        having_array = []
         for key, value in filters.items():
             filter_array.append(FILTERS[key].format(value))
+            having_array.append(HAVING[key].format(len(value.split(','))))
         if filter_array:
             temp_filters_row = 'AND' + 'AND'.join(filter_array)
+            temp_having_array = 'HAVING' + 'AND'.join(having_array)
         else:
             temp_filters_row = ''
+            temp_having_array = ''
         self.sql_row = self.sql_row.replace('@FILTERS@', temp_filters_row)
+        self.sql_row = self.sql_row.replace('@HAVING@', temp_having_array)
