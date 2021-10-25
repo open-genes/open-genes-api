@@ -8,6 +8,8 @@ from opengenes.presenters.disease import DiseaseShort, DiseaseCategories
 from opengenes.presenters.expression import Expression
 from opengenes.presenters.functional_cluster import FunctionalCluster
 from opengenes.presenters.human_protein_atlas import HumanProteinAtlas
+from opengenes.presenters.aging_mechanism import AgingMechanism
+from opengenes.presenters.timestamp import Timestamp
 from opengenes.presenters.origin import Origin
 from opengenes.presenters.researches import Researches
 from opengenes.presenters.comment_cause import CommentCause
@@ -60,6 +62,7 @@ class Gene:
     proteinDescriptionUniProt: str = Field(title="Protein description (UniProt)")
     commentCause: dict = Field(title="Gene selection criteria")
     functionalClusters: List[FunctionalCluster] = Field(title="Age-related processes/systems the gene involved in")
+    agingMechanisms: List[AgingMechanism] = Field(title="Aging mechanism the gene involved in")
     researches: Researches = Field(title="Researches", description="Researches confirming the association of the gene with life expectancy and aging")
     expression: List[Expression] = Field(title="Gene expression in organs and tissues (NCBI)")
     proteinClasses: List[str] = Field(title="Protein classes", description="Protein classification by their function")
@@ -76,7 +79,7 @@ class Gene:
     accCds: str = Field(title="Location on chromosome — CoDing Sequence")
     terms: dict = Field(title="GO terms (Gene Ontology)")
     orthologs: dict = Field(title="Gene orthologs")
-    timestamp: int = Field(title="Unix time of the latest changes")
+    timestamp: Timestamp = Field(title="Unix time of the latest changes")
     human_protein_atlas: HumanProteinAtlas = Field(title="Data parsed from Human Protein Atlas")
     ensembl: str = Field(title="Ensembl id")
     methylationCorrelation: str = Field(
