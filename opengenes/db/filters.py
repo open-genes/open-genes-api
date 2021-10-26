@@ -7,6 +7,10 @@ FILTERS_JOIN = {
             'WHERE `functional_cluster_id` IN ({}) GROUP BY `gene_id` HAVING count(`functional_cluster_id`) = {}) '
             '`age_related_processes` on `age_related_processes`.`gene_id`=`gene`.`id`',
 
+    'comment_cause': ' (SELECT `gene_to_comment_cause`.`gene_id` FROM `gene_to_comment_cause` '
+            'WHERE `comment_cause_id` IN ({}) GROUP BY `gene_id` HAVING count(`comment_cause_id`) = {}) '
+            '`selection_criteria` on `selection_criteria`.`gene_id`=`gene`.`id`',
+
     'diseases': ' (SELECT `gene_to_disease`.`gene_id` FROM `gene_to_disease` '
             'WHERE `disease_id` IN ({}) GROUP BY `gene_id` HAVING count(`disease_id`) = {}) '
             '`gene_diseases` on `gene_diseases`.`gene_id`=`gene`.`id`',

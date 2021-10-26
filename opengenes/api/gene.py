@@ -17,7 +17,8 @@ router = APIRouter()
 )
 async def get_genes_list(
         lang: Language = Language.en, page: int = None, pageSize: int = None, byDiseases: str = None,
-        byDiseaseCategories: str = None, byAgeRelatedProcess: str = None, byExpressionChange: str = None
+        byDiseaseCategories: str = None, byAgeRelatedProcess: str = None, byExpressionChange: str = None,
+        bySelectionCriteria: str = None,
 ):
     sql_handler = RequestHandler(GENES_QUERY)
     sql_handler.set_language(lang.value)
@@ -31,6 +32,8 @@ async def get_genes_list(
         filters['functional_clusters'] = byAgeRelatedProcess
     if byExpressionChange:
         filters['expression_change'] = byExpressionChange
+    if bySelectionCriteria:
+        filters['comment_cause'] = bySelectionCriteria
     sql_handler.add_filters(sql_handler.validate_filters(filters))
     print(sql_handler.sql)
     return loads(GeneDAO().get_list(request=sql_handler.sql)[0]['respJS'])
