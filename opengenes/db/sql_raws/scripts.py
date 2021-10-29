@@ -12,7 +12,10 @@ JSON_OBJECT(
 'ncbiId',gene.ncbi_id,
 'uniprot',IFNULL(gene.uniprot,''),
 'expressionChange',gene.expressionChange,
-'timestamp',gene.updated_at,
+'timestamp',JSON_OBJECT(
+ 'created',IFNULL(gene.created_at,''),
+ 'changed',IFNULL(gene.updated_at,'')
+ ),
 'ensembl',gene.ensembl,
 'methylationCorrelation',IFNULL(gene.methylation_horvath,''),
 'aliases',CAST(CONCAT_WS('"','[',REPLACE(gene.aliases,' ','","'),']') AS JSON),
@@ -46,6 +49,7 @@ LEFT JOIN comment_cause ON gene_to_comment_cause.comment_cause_id = comment_caus
 LEFT JOIN gene_to_disease ON gene_to_disease.gene_id = gene.id
 LEFT JOIN disease ON gene_to_disease.disease_id = disease.id
 LEFT JOIN disease disease_category ON disease.icd_code_visible = disease_category.icd_code
+@FILTERS_JOIN@
 WHERE gene.isHidden != 1 @FILTERS@
 GROUP BY gene.id
 ORDER BY family_phylum.order DESC
