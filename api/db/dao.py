@@ -48,6 +48,17 @@ class GeneDAO(BaseDAO):
         result = cur.fetchone()
         return result
 
+    def get_by_symbol(
+        self,
+        gene: str,
+    ) -> entities.Gene:
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute(
+            "SELECT * FROM `gene` WHERE symbol='{}';".format(gene)
+        )
+        result = cur.fetchone()
+        return result
+
     def add(
         self,
         gene: entities.Gene,
