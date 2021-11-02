@@ -7,7 +7,7 @@ from opengenes.config import Language
 from opengenes.db.dao import GeneDAO
 from opengenes.db.request_handler import RequestHandler
 from opengenes.db.sql_raws.scripts import GENES_QUERY
-from opengenes.presenters.gene import GeneShort, Gene
+from opengenes.presenters.gene import GeneShort, Gene, GeneForMethylation, GeneWithResearches
 
 router = APIRouter()
 
@@ -113,3 +113,18 @@ async def get_gene_by_symbol(symbol: str, lang: Language = Language.en):
 async def get_gene_by_id(ncbi_id: int, lang: Language = Language.en):
     return 'dummy'
 
+
+@router.get(
+    '/gene/methylation',
+    response_model=GeneForMethylation,
+)
+async def get_gene_by_id(ncbi_id: int, lang: Language = Language.en):
+    return 'dummy'
+
+
+@router.get(
+    '/gene/increase-lifespan',
+    response_model=GeneWithResearches,
+)
+async def get_gene_by_id(ncbi_id: int, lang: Language = Language.en):
+    return 'dummy'

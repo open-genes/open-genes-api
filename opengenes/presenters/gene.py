@@ -11,12 +11,10 @@ from opengenes.presenters.human_protein_atlas import HumanProteinAtlas
 from opengenes.presenters.aging_mechanism import AgingMechanism
 from opengenes.presenters.timestamp import Timestamp
 from opengenes.presenters.origin import Origin
-from opengenes.presenters.researches import Researches
+from opengenes.presenters.researches import Researches, IncreaseLifespan
 from opengenes.presenters.comment_cause import CommentCause
 from json import loads
 
-
-BAD_CLUSTER = {"id": None, "name": None}
 
 
 @dataclass
@@ -41,6 +39,35 @@ class GeneShort:
     methylationCorrelation: str = Field(title="Whether gene methylation changes with age (according to Horvath's epigenetic clock)")
     diseaseCategories: dict = Field(title="Disease categories (ICD)")
     commentCause: dict = Field(title="Gene selection criteria")
+
+
+@dataclass
+class GeneForMethylation:
+    id: int
+    name: str = Field(title="Gene name")
+    symbol: str = Field(title="Gene symbol (HGNC)")
+    ncbiId: str = Field(title="Entrez Gene id")
+    uniprot: str = Field(title="UniProt id")
+    ensembl: str = Field(title="Ensembl id")
+    methylationCorrelation: str = Field(
+        title="Horvath's epigenetic clock",
+        description="Whether gene methylation changes with age (according to Horvath's epigenetic clock)"
+    )
+
+
+@dataclass
+class GeneWithResearches:
+    id: int
+    name: str = Field(title="Gene name")
+    symbol: str = Field(title="Gene symbol (HGNC)")
+    ncbiId: str = Field(title="Entrez Gene id")
+    uniprot: str = Field(title="UniProt id")
+    ensembl: str = Field(title="Ensembl id")
+    methylationCorrelation: str = Field(
+        title="Horvath's epigenetic clock",
+        description="Whether gene methylation changes with age (according to Horvath's epigenetic clock)"
+    )
+    researches: IncreaseLifespan = Field(title="Researches", description="Effect of modulation of gene activity on a lifespan")
 
 
 @dataclass
