@@ -7,7 +7,7 @@ from config import Language
 from db.dao import GeneDAO
 from db.request_handler import RequestHandler
 from db.sql_raws.scripts import GENES_QUERY
-from presenters.gene import GeneShort, Gene
+from presenters.gene import GeneShort, Gene, GeneForMethylation, GeneWithResearches
 
 router = APIRouter()
 
@@ -113,3 +113,18 @@ async def get_gene_by_symbol(symbol: str, lang: Language = Language.en):
 async def get_gene_by_id(ncbi_id: int, lang: Language = Language.en):
     return 'dummy'
 
+
+@router.get(
+    '/gene/methylation',
+    response_model=GeneForMethylation,
+)
+async def get_gene_by_id(ncbi_id: int, lang: Language = Language.en):
+    return 'dummy'
+
+
+@router.get(
+    '/gene/increase-lifespan',
+    response_model=GeneWithResearches,
+)
+async def get_gene_by_id(ncbi_id: int, lang: Language = Language.en):
+    return 'dummy'
