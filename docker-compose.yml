@@ -1,15 +1,30 @@
 version: '3'
 
 services:
-  open-genes-backend:
-    build: .
-    image: open_genes_backend:latest
-    hostname: opengenes
-    container_name: open_genes_backend
+  api:
+    user: ${OPEN_GENES_UID}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: open-genes-backend-dev
+    hostname: opengenes-api
+    container_name: open-genes-api-dev
     volumes:
-      - "./opengenes:/open-genes-backend/opengenes"
-      - "./scripts:/open-genes-backend/scripts"
-      - "./.env:/open-genes-backend/.env"
-      - "./pyproject.toml:/open-genes-backend/pyproject.toml"
-      - "./pdm.lock:/open-genes-backend/pdm.lock"
+      - "./api:/api"
+      - "./.env:/.env"
+      - "./requirements.txt:/requirements.txt"
     network_mode: "host"
+
+  scripts:
+    user: ${OPEN_GENES_UID}
+    image: open-genes-backend-dev
+    hostname: opengenes-backend
+    container_name: open-genes-scripts-dev
+    volumes:
+      - "./api:/api"
+      - "./scripts:/scripts"
+      - "./.env:/.env"
+      - "./requirements.txt:/requirements.txt"
+    network_mode: "host"
+    working_dir: /scripts
+    command: /bin/bash

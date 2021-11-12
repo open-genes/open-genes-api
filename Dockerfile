@@ -1,18 +1,11 @@
 FROM python:3.9-slim-buster
 
-RUN python -m pip install -U pdm
+COPY requirements.txt ./
+RUN pip install -r requirements.txt
 
-RUN mkdir /open-genes-backend
-WORKDIR /open-genes-backend
-COPY opengenes ./opengenes
-COPY scripts ./scripts
+COPY api api
+COPY scripts scripts
 COPY .env .env
-ADD VERSION ./
+COPY VERSION ./
 
-ENV PYTHONPATH "${PYTHONPATH}:/open-genes-backend"
-
-COPY pyproject.toml pyproject.toml
-COPY pdm.lock pdm.lock
-RUN pdm sync -v
-
-CMD ["pdm", "run", "python", "opengenes/main.py"]
+CMD ["python", "api/main.py"]

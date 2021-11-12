@@ -3,11 +3,11 @@ from typing import List
 
 from fastapi import APIRouter, HTTPException
 
-from opengenes.config import Language
-from opengenes.db.dao import GeneDAO
-from opengenes.db.request_handler import RequestHandler
-from opengenes.db.sql_raws.scripts import GENES_QUERY
-from opengenes.presenters.gene import GeneShort, Gene
+from config import Language
+from db.dao import GeneDAO
+from db.request_handler import RequestHandler
+from db.sql_raws.scripts import GENES_QUERY
+from presenters.gene import GeneShort, Gene
 
 router = APIRouter()
 

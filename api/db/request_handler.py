@@ -1,4 +1,4 @@
-from opengenes.db.filters import FILTERS, FILTERS_JOIN
+from db.filters import FILTERS, FILTERS_JOIN
 
 
 class RequestHandler:

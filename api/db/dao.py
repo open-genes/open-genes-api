@@ -1,7 +1,7 @@
 from mysql import connector
 
-from opengenes.config import CONFIG
-from opengenes.entities import entities
+from config import CONFIG
+from entities import entities
 
 
 # TODO(dmtgk): Add relationships integration.

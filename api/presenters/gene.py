@@ -2,17 +2,17 @@ from typing import List, Optional, Dict
 
 from pydantic import Field
 from pydantic.dataclasses import dataclass
-from opengenes.db.dao import GeneDAO, DiseaseDAO, FunctionalClusterDAO, CommentCauseDAO
+from db.dao import GeneDAO, DiseaseDAO, FunctionalClusterDAO, CommentCauseDAO
 
-from opengenes.presenters.disease import DiseaseShort, DiseaseCategories
-from opengenes.presenters.expression import Expression
-from opengenes.presenters.functional_cluster import FunctionalCluster
-from opengenes.presenters.human_protein_atlas import HumanProteinAtlas
-from opengenes.presenters.aging_mechanism import AgingMechanism
-from opengenes.presenters.timestamp import Timestamp
-from opengenes.presenters.origin import Origin
-from opengenes.presenters.researches import Researches
-from opengenes.presenters.comment_cause import CommentCause
+from presenters.disease import DiseaseShort, DiseaseCategories
+from presenters.expression import Expression
+from presenters.functional_cluster import FunctionalCluster
+from presenters.human_protein_atlas import HumanProteinAtlas
+from presenters.aging_mechanism import AgingMechanism
+from presenters.timestamp import Timestamp
+from presenters.origin import Origin
+from presenters.researches import Researches
+from presenters.comment_cause import CommentCause
 from json import loads
 
 

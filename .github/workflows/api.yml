@@ -22,4 +22,4 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_PUSH_TOKEN }}
           
       - name: Push
-        run: docker push opengenes/api
+        run: docker push opengenes/backend

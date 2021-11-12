@@ -7,8 +7,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 from pydantic import BaseModel
 
-from opengenes.api import gene, disease
-from opengenes.config import CONFIG, VERSION
+from endpoints import gene, disease
+from config import CONFIG, VERSION
 
 
 def assembling_endpoints(app: FastAPI):
