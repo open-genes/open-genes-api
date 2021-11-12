@@ -2,50 +2,35 @@
 
 ## Architecture
 
-- **opengenes** - root
+- **api** - API application root
   - *main.py* - entry point
-  - **api** - api endpoints
+  - **endpoints** - api endpoints
   - **db** - domain access object (DAO) logic for DB
   - **entities** - domain entities
 
-## Init development stand
+- **scripts** - maintenance scripts root
+  - *aging_mechanisms* -
+  - *clocks* - 
+  - *icd* -
+  - *translations* -
+  - *uniprot* -
 
-deps:
-- [pdm](https://pdm.fming.dev/)
+## Development
 
-```
-sh open-genes.sh dev
-```
-
-## Init containerized stand
-
-### Up docker image
+### Build local development image
 
 ```
-docker-compose up -d
+./open-genes-backend.sh build
 ```
 
-*or*
+### Run API app in development mode
 
 ```
-sh open-genes.sh up -d
+./open-genes-backend.sh run api
 ```
 
-### Run docker container instance
+### Get the shell to run scripts
 
 ```
-docker-compose run -d --name opengenes-backend opengenes-backend
-```
-
-*or*
-
-```
-sh open-genes.sh run -d
-```
-
-### Use scripts in docker container
-
-```
-docker exec -it opengenes-backend bash
-pdm run python scripts/<your-script-path>
+./open-genes-backend.sh run scripts
 ```
