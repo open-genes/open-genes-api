@@ -20,4 +20,12 @@ FILTERS_JOIN = {
             'LEFT JOIN `disease` disease_category on `disease`.`icd_code_visible`=`disease_category`.`icd_code` '
             'WHERE `disease_category`.`id` IN ({}) GROUP BY `gene_id` HAVING count(`disease_category`.`id`) = {})'
             ' `gene_disease_categories` on `gene_disease_categories`.`gene_id`=`gene`.`id`',
+
+    'aging_mechanisms': ' (SELECT `gene_to_ontology`.`gene_id` FROM `gene_to_ontology` '
+            'LEFT JOIN `gene_ontology_to_aging_mechanism_visible` on '
+                '`gene_ontology_to_aging_mechanism_visible`.`gene_ontology_id`=`gene_to_ontology`.`gene_ontology_id` '
+            'LEFT JOIN `aging_mechanism` on '
+                '`gene_ontology_to_aging_mechanism_visible`.`aging_mechanism_id`=`aging_mechanism`.`id` '
+            'WHERE `aging_mechanism`.`id` IN ({}) GROUP BY `gene_id` HAVING count(`aging_mechanism`.`id`) = {})'
+            ' `filter_aging_mechanisms` on `filter_aging_mechanisms`.`gene_id`=`gene`.`id`',
 }

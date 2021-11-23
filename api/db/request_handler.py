@@ -31,7 +31,7 @@ class RequestHandler:
         self.sql_row = temp_sql_row
 
     def set_language(self, lang: str):
-        self.sql_row = self.sql_row.replace('_en', '_' + lang)
+        self.sql_row = self.sql_row.replace('@LANG@', lang)
 
     @property
     def sql(self):
