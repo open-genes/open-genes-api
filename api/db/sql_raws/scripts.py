@@ -48,7 +48,7 @@ LEFT JOIN gene_to_comment_cause ON gene_to_comment_cause.gene_id = gene.id
 LEFT JOIN comment_cause ON gene_to_comment_cause.comment_cause_id = comment_cause.id
 LEFT JOIN gene_to_disease ON gene_to_disease.gene_id = gene.id
 LEFT JOIN disease ON gene_to_disease.disease_id = disease.id
-LEFT JOIN disease disease_category ON disease.icd_code_visible = disease_category.icd_code AND disease_category.icd_name_en NOT IN (NULL, "")
+LEFT JOIN disease disease_category ON disease.icd_code_visible = disease_category.icd_code AND disease_category.icd_name_en != ""
 LEFT JOIN (SELECT gene.id,
                 CAST(CONCAT('[',GROUP_CONCAT(distinct JSON_OBJECT('id',IFNULL(aging_mechanism.id,0),'name',COALESCE(NULLIF(aging_mechanism.name_@LANG@, ''), NULLIF(aging_mechanism.name_en, ''), '1')) separator ","),']') AS JSON) as aging_mechanisms
                 FROM gene
@@ -56,7 +56,7 @@ LEFT JOIN (SELECT gene.id,
                 LEFT JOIN `gene_ontology_to_aging_mechanism_visible`
                         ON gene_to_ontology.gene_ontology_id = gene_ontology_to_aging_mechanism_visible.gene_ontology_id
                 INNER JOIN `aging_mechanism` 
-                ON gene_ontology_to_aging_mechanism_visible.aging_mechanism_id = aging_mechanism.id AND aging_mechanism.name_en NOT IN (NULL, "")
+                ON gene_ontology_to_aging_mechanism_visible.aging_mechanism_id = aging_mechanism.id AND aging_mechanism.name_en != ""
                 group by gene.id) joined_aging_mechanisms ON gene.id=joined_aging_mechanisms.id
 @FILTERS_JOIN@
 WHERE gene.isHidden != 1 @FILTERS@
