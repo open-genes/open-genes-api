@@ -2,8 +2,8 @@ import os
 
 import pandas as pd
 
-from opengenes.entities import entities
-from opengenes.db import dao
+from api.entities import entities
+from api.db import dao
 
 
 def checker():

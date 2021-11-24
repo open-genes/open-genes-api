@@ -4,7 +4,7 @@ import ast
 import requests
 import pandas as pd
 
-from opengenes.db import dao
+from api.db import dao
 
 
 cur_dir = os.path.dirname(os.path.abspath(__file__))

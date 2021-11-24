@@ -8,4 +8,6 @@ COPY scripts scripts
 COPY .env .env
 COPY VERSION ./
 
+ENV PYTHONPATH=/:/api
+
 CMD ["python", "api/main.py"]

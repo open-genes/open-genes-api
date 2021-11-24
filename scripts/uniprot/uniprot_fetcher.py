@@ -5,8 +5,8 @@ import logging
 import requests
 from deep_translator import GoogleTranslator
 
-from opengenes.entities import entities
-from opengenes.db import dao
+from api.entities import entities
+from api.db import dao
 
 
 TRANSLATOR = GoogleTranslator(source='en', target='ru')

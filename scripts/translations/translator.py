@@ -2,7 +2,7 @@ import re
 import argparse
 from deep_translator import GoogleTranslator
 
-from opengenes.db import dao
+from api.db import dao
 
 
 def translate(table_name: str, field_name_en: str, field_name_ru: str):
