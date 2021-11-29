@@ -361,3 +361,24 @@ class CalorieExperimentDAO(BaseDAO):
 
         return cur.fetchone()
 
+    def add_isoform(self, name):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute(
+            "INSERT INTO isoform(name_en) VALUES ('{}');".format(name)
+        )
+        self.cnx.commit()
+
+        cur.execute(
+            "SELECT * FROM isoform WHERE ID=%(id)s;",
+            {'id': cur.lastrowid},
+        )
+        result = cur.fetchone()
+
+        return cur.fetchone()
+
+    def get_isoform(self, name):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute(
+            "SELECT id FROM isoform WHERE name_en='{}';".format(name)
+        )
+        return cur.fetchone()
