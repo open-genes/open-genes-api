@@ -322,5 +322,42 @@ class CalorieExperimentDAO(BaseDAO):
             "INSERT INTO treatment_time_unit(name_en) VALUES ('{}');".format(name)
         )
         self.cnx.commit()
+
+        cur.execute(
+            "SELECT * FROM treatment_time_unit WHERE ID=%(id)s;",
+            {'id': cur.lastrowid},
+        )
+        result = cur.fetchone()
+
+        return cur.fetchone()
+
+    def add_measurement_type(self, name):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute(
+            "INSERT INTO measurement_type(name_en) VALUES ('{}');".format(name)
+        )
+        self.cnx.commit()
+
+        cur.execute(
+            "SELECT * FROM measurement_type WHERE ID=%(id)s;",
+            {'id': cur.lastrowid},
+        )
+        result = cur.fetchone()
+
+        return cur.fetchone()
+
+    def add_sample(self, name):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute(
+            "INSERT INTO sample(name_en) VALUES ('{}');".format(name)
+        )
+        self.cnx.commit()
+
+        cur.execute(
+            "SELECT * FROM sample WHERE ID=%(id)s;",
+            {'id': cur.lastrowid},
+        )
+        result = cur.fetchone()
+
         return cur.fetchone()
 

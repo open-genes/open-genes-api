@@ -7,6 +7,7 @@ import time
 from mysql.connector.errors import DataError
 import traceback
 
+
 def parser():
     cur_dir = os.path.dirname(os.path.abspath(__file__))
     calory_restrictions = open(os.path.join(cur_dir, 'Calory_restriction_datasets-2 - Sheet1.csv'))
@@ -48,29 +49,54 @@ def parser():
                         source_id=source_id,
                     )
                     dao.SourceDAO().add_relation(gene_to_source=gene_to_source)
+                    if row['measurementMethod'] == "chromatography, mass_spectrometry" \
+                            or row['measurementMethod'] == "mass_spectrometry":
+                        measurement_method_str = row['measurementMethod']
+                    else:
+                        measurement_method_str = row['measurementMethod'].lower().replace('_', ' ')
+                    measurement_method_id = calorie_dao.get_measurement_method(name=measurement_method_str)['id']
                     if row['organism'] == "mouse":
-                        organism = 'mice'
+                        organism = "mice"
+                        strain_id = calorie_dao.get_organism_line(row['line'])['id']
+                    elif row["organism"] == "monkey":
+                        organism = "rhesus monkeys"
+                        strain_id = None
                     else:
                         organism = row['organism']
+                        try:
+                            strain_id = calorie_dao.get_organism_line(row['line'])['id']
+                        except TypeError:
+                            print(row['line'])
+                            continue
                     if row['sex'] == "both":
                         sex = 'mixed'
                     else:
                         sex = row['sex']
+                    try:
+                        tissue_str = row['tissue'].lower().replace('_', ' ')
+                        tissue_id = calorie_dao.get_sample(name=tissue_str)['id'],
+                    except TypeError:
+                        tissue_str = row['tissue'].lower().replace('_', ' ')
+                        result = calorie_dao.add_sample(name=tissue_str)
+                        tissue_id = result['id']
+
                     calory_restriction_object = CalorieRestrictionExperiment(
                         gene_id=gene_id,
                         symbol=gene.symbol,
                         p_val=row['pValue'],
                         result=row['crResult'],
-                        measurement_method_id=calorie_dao.get_measurement_method(name=row['measurementMethod'])['id'],
-                        measurement_type_id=calorie_dao.get_measurement_type(name=row['measurementType'])['id'],
+                        measurement_method_id=measurement_method_id,
+                        measurement_type_id=
+                        calorie_dao.get_measurement_type(name=row['measurementType'].lower().replace('_', ' '))['id'],
                         restriction_percent=row['restrictionPercent'],
                         restriction_time=row['restrictionTime'].split('_')[0],
-                        restriction_time_unit_id=calorie_dao.get_treatment_time(row['restrictionTime'].split('_')[1])['id'],
+                        restriction_time_unit_id=calorie_dao.get_treatment_time(row['restrictionTime'].split('_')[1])[
+                            'id'],
                         age=row['age'].split('_')[0],
                         tissue_id=calorie_dao.get_sample(name=row['tissue'])['id'],
                         age_time_unit_id=calorie_dao.get_treatment_time(row['age'].split('_')[1])['id'],
                         model_organism_id=calorie_dao.get_model_organism(organism)['id'],
-                        strain_id=calorie_dao.get_organism_line(row['line'])['id'],
+                        strain_id=strain_id,
                         organism_sex_id=calorie_dao.get_organism_sex(sex)['id'],
                         experiment_number=row['experimentNumber'],
                         expression_change_log_fc=row['lexpressionChangeLogFc'],
@@ -88,5 +114,6 @@ def parser():
                     print("=========================")
                     print(row)
                     print("=========================")
+
 
 parser()
