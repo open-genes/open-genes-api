@@ -79,15 +79,21 @@ def parser():
                         tissue_str = row['tissue'].lower().replace('_', ' ')
                         result = calorie_dao.add_sample(name=tissue_str)
                         tissue_id = result['id']
-
+                    if len(row['isoform']) > 0:
+                        try:
+                            isoform_id = calorie_dao.get_isoform(name=row['isoform'])['id'],
+                        except TypeError:
+                            result = calorie_dao.add_isoform(name=row['isoform'])
+                            isoform_id = result['id']
+                    else:
+                        isoform_id = None
                     calory_restriction_object = CalorieRestrictionExperiment(
                         gene_id=gene_id,
                         symbol=gene.symbol,
                         p_val=row['pValue'],
                         result=row['crResult'],
                         measurement_method_id=measurement_method_id,
-                        measurement_type_id=
-                        calorie_dao.get_measurement_type(name=row['measurementType'].lower().replace('_', ' '))['id'],
+                        measurement_type_id=calorie_dao.get_measurement_type(name=row['measurementType'].lower().replace('_', ' '))['id'],
                         restriction_percent=row['restrictionPercent'],
                         restriction_time=row['restrictionTime'].split('_')[0],
                         restriction_time_unit_id=calorie_dao.get_treatment_time(row['restrictionTime'].split('_')[1])[
@@ -102,7 +108,7 @@ def parser():
                         expression_change_log_fc=row['lexpressionChangeLogFc'],
                         expression_change_percent=row['expressionChangePercent'],
                         doi=row['doi'],
-                        isoform=calorie_dao.get_isoform(row['isoform']),
+                        isoform=isoform_id,
                     )
                     calorie_dao.add_experiment(experiment=calory_restriction_object)
 
