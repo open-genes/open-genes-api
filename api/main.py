@@ -9,6 +9,8 @@ from pydantic import BaseModel
 
 from endpoints import gene, disease
 from config import CONFIG, VERSION
+from opengenes.api import gene, disease, calorie_experiment
+from opengenes.config import CONFIG, VERSION
 
 
 def assembling_endpoints(app: FastAPI):
@@ -20,7 +22,10 @@ def assembling_endpoints(app: FastAPI):
         disease.router,
         tags=["disease"],
     )
-
+    app.include_router(
+        calorie_experiment.router,
+        tags=["calorie_experiment"],
+    )
 
 origins = [
     "*",
@@ -87,6 +92,6 @@ if __name__ == "__main__":
         "main:app",
         host=CONFIG['API_HOST'],
         port=int(CONFIG['API_PORT']),
-        reload=CONFIG.get('RELOAD',False),
-        debug=CONFIG.get('DEBUG',False), # debug=True implies reload=True
+        reload=True,
+        debug=CONFIG['DEBUG'],
     )
