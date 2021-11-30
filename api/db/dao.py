@@ -239,7 +239,12 @@ class DiseaseDAO(BaseDAO):
 
 
 class CalorieExperimentDAO(BaseDAO):
-    """Disease Table fetcher."""
+    """Calorie experiment Table fetcher."""
+
+    def get_list(self):
+        cur = self.cnx.cursor()
+        cur.execute(CALORIE_EXPERIMENT_QUERY)
+        return cur.fetchall()
 
     def add_experiment(self, experiment: entities.CalorieRestrictionExperiment):
         experiment_dict = experiment.dict(exclude_none=True)
