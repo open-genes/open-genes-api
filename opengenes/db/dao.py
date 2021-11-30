@@ -2,8 +2,8 @@ from mysql import connector
 
 from opengenes.config import CONFIG
 from opengenes.entities import entities
+from opengenes.db.sql_raws.scripts import CALORIE_EXPERIMENT_QUERY
 
-from time import sleep
 
 # TODO(dmtgk): Add relationships integration.
 # TODO(dmtgk): Add versatility to BaseDAO and pydantic entity validation.
@@ -85,6 +85,7 @@ class GeneDAO(BaseDAO):
         return result
 
     def update(self, gene: entities.Gene, ) -> entities.Gene:
+
         gene_dict = gene.dict(exclude_none=True)
         prep_str = [f"`{k}` = %({k})s" for k in gene_dict.keys()]
 
@@ -239,7 +240,12 @@ class DiseaseDAO(BaseDAO):
 
 
 class CalorieExperimentDAO(BaseDAO):
-    """Disease Table fetcher."""
+    """Calorie experiment Table fetcher."""
+
+    def get_list(self):
+        cur = self.cnx.cursor()
+        cur.execute(CALORIE_EXPERIMENT_QUERY)
+        return cur.fetchall()
 
     def add_experiment(self, experiment: entities.CalorieRestrictionExperiment):
         experiment_dict = experiment.dict(exclude_none=True)
