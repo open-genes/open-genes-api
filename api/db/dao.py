@@ -241,9 +241,10 @@ class DiseaseDAO(BaseDAO):
 class CalorieExperimentDAO(BaseDAO):
     """Calorie experiment Table fetcher."""
 
-    def get_list(self):
-        cur = self.cnx.cursor()
-        cur.execute(CALORIE_EXPERIMENT_QUERY)
+    def get_list(self, request):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute('SET SESSION group_concat_max_len = 100000;')
+        cur.execute(request)
         return cur.fetchall()
 
     def add_experiment(self, experiment: entities.CalorieRestrictionExperiment):

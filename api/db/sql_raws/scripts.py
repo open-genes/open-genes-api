@@ -69,37 +69,45 @@ ORDER BY family_phylum.order DESC
 
 CALORIE_EXPERIMENT_QUERY = '''
 SELECT JSON_OBJECT(
-    'id', cre.id,
-    'gene', g.symbol,
-    'p_val', cre.p_val,
-    'result', cre.result,
-    'measurement_method', mm.name_en,
-    'measurement_type', mt.name_en,
-    'restriction_percent', cre.restriction_percent,
-    'restriction_time', cre.restriction_time,
-    'restriction_time_unit', ttu.name_en,
-    'age', cre.age,
-    'age_time_unit', ttu2.name_en,
-    'model_organims', mo.name_en,
-    'strain', ol.name_en,
-    'organism_sex', os.name_en,
-    'tissue', s.name_en,
-    'experiment_number', cre.experiment_number,
-    'expression_change_log_fc', cre.expression_change_log_fc,
-    'expression_change_percent', cre.expression_change_percent,
-    'doi', cre.doi,
-    'isoform', i.name_en
-)
-FROM
-    calorie_restriction_experiment AS cre
-    JOIN gene g on g.id = cre.gene_id
-    JOIN measurement_method mm on cre.measurement_method_id = mm.id
-    JOIN measurement_type mt on mt.id = cre.measurement_type_id
-    JOIN treatment_time_unit ttu on cre.restriction_time_unit_id = ttu.id
-    JOIN treatment_time_unit ttu2 on cre.age_time_unit_id = ttu2.id
-    JOIN model_organism mo on cre.model_organism_id = mo.id
-    JOIN organism_line ol on cre.strain_id = ol.id
-    JOIN organism_sex os on cre.organism_sex_id = os.id
-    JOIN sample s on cre.tissue_id = s.id
-    LEFT JOIN isoform i on cre.isoform_id = i.id
+       'options',JSON_OBJECT('pagination',JSON_OBJECT('page',@PAGE@,'pageSize',@PAGESIZE@,'pagesTotal',CEILING(MAX(jsout.fRows)/@PAGESIZE@)),'objTotal',MAX(jsout.fRows))
+   ,'items',JSON_ARRAYAGG(jsout.jsonobj)) respJS FROM (
+   SELECT preout.jsonobj, fRows FROM (
+         SELECT count(*) OVER() fRows,
+         JSON_OBJECT(
+             'id', cre.id,
+             'gene', g.symbol,
+             'p_val', cre.p_val,
+             'result', cre.result,
+             'measurement_method', mm.name_en,
+             'measurement_type', mt.name_en,
+             'restriction_percent', cre.restriction_percent,
+             'restriction_time', cre.restriction_time,
+             'restriction_time_unit', ttu.name_en,
+             'age', cre.age,
+             'age_time_unit', ttu2.name_en,
+             'model_organims', mo.name_en,
+             'strain', ol.name_en,
+             'organism_sex', os.name_en,
+             'tissue', s.name_en,
+             'experiment_number', cre.experiment_number,
+             'expression_change_log_fc', cre.expression_change_log_fc,
+             'expression_change_percent', cre.expression_change_percent,
+             'doi', cre.doi,
+             'isoform', i.name_en
+             ) as jsonobj
+         FROM
+             calorie_restriction_experiment AS cre
+             JOIN gene g on g.id = cre.gene_id
+             JOIN measurement_method mm on cre.measurement_method_id = mm.id
+             JOIN measurement_type mt on mt.id = cre.measurement_type_id
+             JOIN treatment_time_unit ttu on cre.restriction_time_unit_id = ttu.id
+             JOIN treatment_time_unit ttu2 on cre.age_time_unit_id = ttu2.id
+             JOIN model_organism mo on cre.model_organism_id = mo.id
+             JOIN organism_line ol on cre.strain_id = ol.id
+             JOIN organism_sex os on cre.organism_sex_id = os.id
+             JOIN sample s on cre.tissue_id = s.id
+             LEFT JOIN isoform i on cre.isoform_id = i.id
+             ) preout
+       @LIMIT@
+) jsout;
 '''
