@@ -71,6 +71,7 @@ class GeneDAO(BaseDAO):
         subs = ', '.join([f'%({k})s' for k in gene_dict.keys()])
         query += f"VALUES ({subs});"
 
+        print(query)
         cur = self.cnx.cursor(dictionary=True)
         cur.execute(query, gene_dict)
         self.cnx.commit()
