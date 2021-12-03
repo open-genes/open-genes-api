@@ -1,8 +1,8 @@
-from opengenes.db import dao
+from db import dao
 import os
 import csv
 import requests
-from opengenes.entities.entities import Gene, Source, GeneToSource, CalorieRestrictionExperiment
+from entities.entities import Gene, Source, GeneToSource, CalorieRestrictionExperiment
 import time
 from mysql.connector.errors import DataError
 import traceback
