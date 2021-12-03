@@ -29,6 +29,7 @@ def parser():
                 continue
             if len(gene.json()['hits']) > 0:
                 gene_answer = gene.json()['hits'][0]
+                print(gene_answer)
                 gene = Gene(
                     isHidden=1,
                     symbol=gene_answer['symbol'],
@@ -37,7 +38,10 @@ def parser():
                     updated_at=time.time(),
                 )
                 if 'alias' in gene_answer:
-                    gene.aliases = ','.join(gene_answer['alias'])
+                    if type(gene_answer['alias']) == list:
+                        gene.aliases = ','.join(gene_answer['alias'])
+                    else:
+                        gene.aliases = gene_answer['alias']
                 if 'summary' in gene_answer:
                     gene.ncbi_summary_en = gene_answer['summary']
                 if 'entrezgene' in gene_answer:

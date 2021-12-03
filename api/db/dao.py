@@ -70,8 +70,7 @@ class GeneDAO(BaseDAO):
         query = f"INSERT INTO `gene` ({', '.join(gene_dict.keys())}) "
         subs = ', '.join([f'%({k})s' for k in gene_dict.keys()])
         query += f"VALUES ({subs});"
-
-        print(query)
+        print(gene.aliases)
         cur = self.cnx.cursor(dictionary=True)
         cur.execute(query, gene_dict)
         self.cnx.commit()
