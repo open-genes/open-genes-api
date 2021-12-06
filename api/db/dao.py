@@ -29,6 +29,18 @@ class GeneDAO(BaseDAO):
         cur.execute(request)
         return cur.fetchall()
 
+    def get_source_gene(self, gene_symbol):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute(
+            '''
+            SELECT s.name FROM
+            gene JOIN gene_to_source gts on gene.id = gts.gene_id
+            JOIN source s on gts.source_id = s.id
+            WHERE gene.symbol = "{}"
+            '''.format(gene_symbol)
+        )
+        return cur.fetchone()
+
     def get_origin_for_gene(self, phylum_id):
         cur = self.cnx.cursor(dictionary=True)
         cur.execute(
@@ -70,7 +82,6 @@ class GeneDAO(BaseDAO):
         query = f"INSERT INTO `gene` ({', '.join(gene_dict.keys())}) "
         subs = ', '.join([f'%({k})s' for k in gene_dict.keys()])
         query += f"VALUES ({subs});"
-        print(gene.aliases)
         cur = self.cnx.cursor(dictionary=True)
         cur.execute(query, gene_dict)
         self.cnx.commit()

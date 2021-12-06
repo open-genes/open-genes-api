@@ -21,7 +21,17 @@ def parser():
         result = dao.SourceDAO().add_source(source=source)
         source_id = result['id']
     for row in reader:
-        if not dao.GeneDAO().get_by_symbol(gene=row['symbol']):
+        gene_db = dao.GeneDAO().get_by_symbol(gene=row['symbol'])
+        try:
+            gene_source = dao.GeneDAO().get_source_gene(gene_db['symbol'])
+            if gene_source['name'] == 'calorie_restriction':
+                continue
+        except TypeError:
+            pass
+        if gene_db:
+            gene_id = gene_db['id']
+            gene_symbol = gene_db['symbol']
+        if not gene_db:
             gene = requests.get('https://mygene.info/v3/query'
                                 '?fields=symbol%2Cname%2Centrezgene%2Calias%2Csummary'
                                 '&species=human&q={}'.format(row['symbol']))
@@ -29,7 +39,6 @@ def parser():
                 continue
             if len(gene.json()['hits']) > 0:
                 gene_answer = gene.json()['hits'][0]
-                print(gene_answer)
                 gene = Gene(
                     isHidden=1,
                     symbol=gene_answer['symbol'],
@@ -47,14 +56,9 @@ def parser():
                 if 'entrezgene' in gene_answer:
                     gene.ncbi_id = gene_answer['entrezgene']
                 gene_symbol = gene.symbol
-                try:
-                    gene_id = dao.GeneDAO().add(gene=gene)['id']
-                except DataError:
-                    pass
-        else:
-            gene = dao.GeneDAO().get_by_symbol(gene=row['symbol'])
-            gene_id = gene['id']
-            gene_symbol = gene['symbol']
+                gene_id = dao.GeneDAO().add(gene=gene)['id']
+            else:
+                continue
         gene_to_source = GeneToSource(
             gene_id=gene_id,
             source_id=source_id,
