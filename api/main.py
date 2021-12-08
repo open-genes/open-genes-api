@@ -90,6 +90,6 @@ if __name__ == "__main__":
         "main:app",
         host=CONFIG['API_HOST'],
         port=int(CONFIG['API_PORT']),
-        reload=True,
-        debug=CONFIG['DEBUG'],
+        reload=CONFIG.get('RELOAD',False),
+        debug=CONFIG.get('DEBUG',False), # debug=True implies reload=True
     )
