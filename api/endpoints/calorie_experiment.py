@@ -11,7 +11,7 @@ router = APIRouter()
 @router.get(
     '/calorie_experiment',
 )
-async def get_disease_list(lang: Language, page: int, pageSize: int):
+async def get_disease_list(lang: Language = Language.en, page: int = None, pageSize: int = None):
     sql_handler = RequestHandler(CALORIE_EXPERIMENT_QUERY)
     sql_handler.set_language(lang.value)
     sql_handler.set_pagination(page, pageSize)
