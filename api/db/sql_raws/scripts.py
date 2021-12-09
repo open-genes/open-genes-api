@@ -94,7 +94,7 @@ JSON_OBJECT(
     'tissue', s.name_@LANG@,
     'experimentNumber', cre.experiment_number,
     'doi', cre.doi,
-    'expressionChangePercent', cre.expression_change_percent,
+    'expressionChangePercent', CAST(cre.expression_change_percent AS FLOAT ),
     'isoform', i.name_@LANG@
     ) separator ","),']') AS JSON)) as jsonobj
 FROM gene
