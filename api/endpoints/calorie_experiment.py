@@ -19,5 +19,4 @@ async def get_diet_list(lang: Language = Language.en, page: int = None, pageSize
     sql_handler = RequestHandler(CALORIE_EXPERIMENT_QUERY)
     sql_handler.set_language(lang.value)
     sql_handler.set_pagination(page, pageSize)
-    print(sql_handler.sql)
     return loads(CalorieExperimentDAO().get_list(request=sql_handler.sql)[0]['respJS'])
