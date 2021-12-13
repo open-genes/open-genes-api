@@ -3,6 +3,7 @@ from typing import List, Optional
 from presenters.aging_mechanism import AgingMechanism
 from presenters.disease import DiseaseShort, DiseaseCategories
 from presenters.expression import Expression
+from presenters.protein_class import ProteinClass
 from presenters.functional_cluster import FunctionalCluster
 from presenters.human_protein_atlas import HumanProteinAtlas
 from presenters.origin import Origin
@@ -35,6 +36,7 @@ class GeneShort:
     methylationCorrelation: str = Field(title="Whether gene methylation changes with age (according to Horvath's epigenetic clock)")
     diseaseCategories: dict = Field(title="Disease categories (ICD)")
     commentCause: dict = Field(title="Gene selection criteria")
+    proteinClass: List[ProteinClass] = Field()
 
 
 @dataclass
