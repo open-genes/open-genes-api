@@ -28,4 +28,8 @@ FILTERS_JOIN = {
                 '`gene_ontology_to_aging_mechanism_visible`.`aging_mechanism_id`=`aging_mechanism`.`id` '
             'WHERE `aging_mechanism`.`id` IN ({}) GROUP BY `gene_id` HAVING count(`aging_mechanism`.`id`) = {})'
             ' `filter_aging_mechanisms` on `filter_aging_mechanisms`.`gene_id`=`gene`.`id`',
+
+    'protein_classes': ' (SELECT gene_to_protein_class.gene_id FROM gene_to_protein_class '
+            'WHERE protein_class_id IN ({}) GROUP BY gene_id HAVING count(protein_class_id) = {}) '
+            'protein_classes on protein_classes.gene_id=gene.id',
 }

@@ -8,17 +8,19 @@ from db.dao import GeneDAO
 from db.request_handler import RequestHandler
 from db.sql_raws.scripts import GENES_QUERY
 from presenters.gene import GeneShort, Gene, GeneForMethylation, GeneWithResearches
+from presenters.output import GeneOutput
 
 router = APIRouter()
 
 
 @router.get(
     '/gene/search',
+    # response_model=GeneOutput
 )
 async def get_genes_list(
         lang: Language = Language.en, page: int = None, pageSize: int = None, byDiseases: str = None,
         byDiseaseCategories: str = None, byAgeRelatedProcess: str = None, byExpressionChange: str = None,
-        bySelectionCriteria: str = None, byAgingMechanism: str = None,
+        bySelectionCriteria: str = None, byAgingMechanism: str = None, byProteinClass: str = None
 ):
     sql_handler = RequestHandler(GENES_QUERY)
     sql_handler.set_language(lang.value)
@@ -36,8 +38,9 @@ async def get_genes_list(
         filters['comment_cause'] = bySelectionCriteria
     if byAgingMechanism:
         filters['aging_mechanisms'] = byAgingMechanism
+    if byProteinClass:
+        filters['protein_classes'] = byProteinClass
     sql_handler.add_filters(sql_handler.validate_filters(filters))
-    print(sql_handler.sql)
     return loads(GeneDAO().get_list(request=sql_handler.sql)[0]['respJS'])
 
 

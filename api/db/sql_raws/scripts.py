@@ -32,11 +32,10 @@ JSON_OBJECT(
  'order',family_phylum.order
  ),
 'commentCause',JSON_REMOVE(JSON_OBJECTAGG(IFNULL(comment_cause.id,'null'),COALESCE(NULLIF(comment_cause.name_@LANG@, ''), NULLIF(comment_cause.name_en, ''), '')), '$.null'),
-'functionalClusters',CAST(CONCAT('[',GROUP_CONCAT(distinct JSON_OBJECT('id',IFNULL(functional_cluster.id,0),'name',COALESCE(NULLIF(functional_cluster.name_@LANG@, ''), NULLIF(functional_cluster.name_en, ''), '')) separator ","),']') AS JSON), ## этот вариант требует больше памяти, но обеспечивает совместимость со старым фронтом
-##'functionalClusters',JSON_REMOVE(JSON_ARRAYAGG(JSON_OBJECT('id',IFNULL(functional_cluster.id,'null'),'name',IFNULL(functional_cluster.name_en,''))), '$.null'), ## этот вариант требует больше памяти, но обеспечивает совместимость со старым фронтом
-##'functionalClusters',JSON_OBJECTAGG('id',IFNULL(functional_cluster.id,''),'name',IFNULL(functional_cluster.name_en,'')), ## этот вариант требует больше памяти, но обеспечивает совместимость со старым фронтом
-'diseases',JSON_REMOVE(JSON_OBJECTAGG(IFNULL(disease.id,'null'),JSON_OBJECT('icdCode',IFNULL(disease.icd_code ,''),'name',COALESCE(NULLIF(disease.name_@LANG@, ''), NULLIF(disease.name_en, ''), ''),'icdName',COALESCE(NULLIF(disease.icd_name_@LANG@, ''), NULLIF(disease.icd_name_en, ''), ''))), '$.null'),
-'diseaseCategories',JSON_REMOVE(JSON_OBJECTAGG(IFNULL(disease_category.id,'null'),JSON_OBJECT('icdCode',IFNULL(disease_category.icd_code,''),'icdCategoryName',COALESCE(NULLIF(disease_category.icd_name_@LANG@, ''), NULLIF(disease.icd_name_en, ''), ''))), '$.null'),
+'functionalClusters',CAST(CONCAT('[',GROUP_CONCAT(distinct JSON_OBJECT('id',IFNULL(functional_cluster.id,0),'name',COALESCE(NULLIF(functional_cluster.name_@LANG@, ''), NULLIF(functional_cluster.name_@LANG@, ''), '')) separator ","),']') AS JSON), ## этот вариант требует больше памяти, но обеспечивает совместимость со старым фронтом
+'diseases',JSON_REMOVE(JSON_OBJECTAGG(IFNULL(disease.id,'null'),JSON_OBJECT('icdCode',IFNULL(disease.icd_code ,''),'name',COALESCE(NULLIF(disease.name_@LANG@, ''), NULLIF(disease.name_@LANG@, ''), ''),'icdName',COALESCE(NULLIF(disease.icd_name_@LANG@, ''), NULLIF(disease.icd_name_@LANG@, ''), ''))), '$.null'),
+'diseaseCategories',JSON_REMOVE(JSON_OBJECTAGG(IFNULL(disease_category.id,'null'),JSON_OBJECT('icdCode',IFNULL(disease_category.icd_code,''),'icdCategoryName',COALESCE(NULLIF(disease_category.icd_name_@LANG@, ''), NULLIF(disease.icd_name_@LANG@, ''), ''))), '$.null'),
+'proteinClasses',JSON_REMOVE(JSON_OBJECTAGG(IFNULL(protein_class.id,'null'),JSON_OBJECT('name',IFNULL(protein_class.name_en ,''),'name',COALESCE(NULLIF(protein_class.name_en, ''), NULLIF(protein_class.name_en, ''), ''))), '$.null'),
 'agingMechanisms',aging_mechanisms) as jsonobj
 FROM gene
 LEFT JOIN phylum family_phylum ON gene.family_phylum_id = family_phylum.id
@@ -48,6 +47,8 @@ LEFT JOIN gene_to_comment_cause ON gene_to_comment_cause.gene_id = gene.id
 LEFT JOIN comment_cause ON gene_to_comment_cause.comment_cause_id = comment_cause.id
 LEFT JOIN gene_to_disease ON gene_to_disease.gene_id = gene.id
 LEFT JOIN disease ON gene_to_disease.disease_id = disease.id
+LEFT JOIN gene_to_protein_class ON gene_to_protein_class.gene_id = gene.id
+LEFT JOIN protein_class ON gene_to_protein_class.protein_class_id = protein_class.id
 LEFT JOIN disease disease_category ON disease.icd_code_visible = disease_category.icd_code AND disease_category.icd_name_en != ""
 LEFT JOIN (SELECT gene.id,
                 CAST(CONCAT('[',GROUP_CONCAT(distinct JSON_OBJECT('id',IFNULL(aging_mechanism.id,0),'name',COALESCE(NULLIF(aging_mechanism.name_@LANG@, ''), NULLIF(aging_mechanism.name_en, ''), '1')) separator ","),']') AS JSON) as aging_mechanisms
@@ -62,6 +63,53 @@ LEFT JOIN (SELECT gene.id,
 WHERE gene.isHidden != 1 @FILTERS@
 GROUP BY gene.id
 ORDER BY family_phylum.order DESC
+) preout
+@LIMIT@
+) jsout;
+'''
+
+CALORIE_EXPERIMENT_QUERY = '''
+SELECT JSON_OBJECT(
+'options',JSON_OBJECT('pagination',JSON_OBJECT('page',@PAGE@,'pageSize',@PAGESIZE@,'pagesTotal',CEILING(MAX(jsout.fRows)/@PAGESIZE@)),'objTotal',MAX(jsout.fRows))
+,'items',JSON_ARRAYAGG(jsout.jsonobj)) respJS FROM (
+SELECT preout.jsonobj, fRows FROM (
+SELECT count(*) OVER() fRows,
+JSON_OBJECT(
+'id',gene.id,
+'symbol',IFNULL(gene.symbol,''),
+'name',IFNULL(gene.name,''),
+'ncbiId',gene.ncbi_id,
+'uniprot',IFNULL(gene.uniprot,''),
+'ensembl',gene.ensembl,
+'calorieRestrictionExperiments', CAST(CONCAT('[',GROUP_CONCAT(distinct JSON_OBJECT(
+    'id', cre.id,
+    'lexpressionChangeLogFc', cre.expression_change_log_fc,
+    'pValue', cre.p_val,
+    'crResult', cre.result,
+    'measurementMethod', mm.name_@LANG@,
+    'measurementType', mm.name_@LANG@,
+    'restrictionPercent', cre.restriction_percent,
+    'restrictionTime', cre.restriction_time,
+    'age', cre.age,
+    'organism', mo.name_@LANG@,
+    'line', ol.name_@LANG@,
+    'sex', os.name_@LANG@,
+    'tissue', s.name_@LANG@,
+    'experimentNumber', cre.experiment_number,
+    'doi', cre.doi,
+    'expressionChangePercent', CAST(cre.expression_change_percent AS FLOAT ),
+    'isoform', i.name_@LANG@
+    ) separator ","),']') AS JSON)) as jsonobj
+FROM gene
+    JOIN calorie_restriction_experiment cre on gene.id = cre.gene_id
+    JOIN measurement_method mm on cre.measurement_method_id = mm.id
+    JOIN measurement_type mt on cre.measurement_type_id = mt.id
+    JOIN organism_line ol on cre.strain_id = ol.id
+    JOIN organism_sex os on cre.organism_sex_id = os.id
+    JOIN model_organism mo on cre.model_organism_id = mo.id
+    JOIN sample s on cre.tissue_id = s.id
+    LEFT JOIN isoform i on cre.isoform_id = i.id
+    GROUP BY gene.id
 ) preout
 @LIMIT@
 ) jsout;

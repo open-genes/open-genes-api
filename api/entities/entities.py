@@ -82,3 +82,36 @@ class Disease(BaseModel):
     icd_name_en: Optional[str] = None
     icd_name_ru: Optional[str] = None
     icd_code_visible: Optional[str] = None
+
+
+class Source(BaseModel):
+    # id: int
+    name: Optional[str] = None
+
+
+class GeneToSource(BaseModel):
+    gene_id: Optional[int] = None
+    source_id: Optional[int] = None
+
+
+class CalorieRestrictionExperiment(BaseModel):
+    # id: int
+    gene_id: Optional[int] = None
+    p_val: Optional[str] = None
+    result: Optional[str] = None
+    measurement_method_id: Optional[int] = None
+    measurement_type_id: Optional[int] = None
+    restriction_percent: Optional[float] = None
+    restriction_time: Optional[int] = None
+    restriction_time_unit_id: Optional[int] = None
+    age: Optional[str] = None
+    age_time_unit_id: Optional[int] = None
+    model_organism_id: Optional[int] = None
+    strain_id: Optional[int] = None
+    organism_sex_id: Optional[int] = None
+    tissue_id: Optional[int] = None
+    isoform_id: Optional[int] = None
+    experiment_number: Optional[str] = None
+    expression_change_log_fc: Optional[str] = None
+    expression_change_percent: Optional[str] = None
+    doi: Optional[str] = None

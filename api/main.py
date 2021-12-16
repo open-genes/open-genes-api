@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 from pydantic import BaseModel
 
-from endpoints import gene, disease
+from endpoints import gene, disease, calorie_experiment
 from config import CONFIG, VERSION
 
 
@@ -20,7 +20,10 @@ def assembling_endpoints(app: FastAPI):
         disease.router,
         tags=["disease"],
     )
-
+    app.include_router(
+        calorie_experiment.router,
+        tags=["calorie_experiment"],
+    )
 
 origins = [
     "*",

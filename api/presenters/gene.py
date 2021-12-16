@@ -1,20 +1,17 @@
-from typing import List, Optional, Dict
+from typing import List, Optional
 
-from pydantic import Field
-from pydantic.dataclasses import dataclass
-from db.dao import GeneDAO, DiseaseDAO, FunctionalClusterDAO, CommentCauseDAO
-
+from presenters.aging_mechanism import AgingMechanism
 from presenters.disease import DiseaseShort, DiseaseCategories
 from presenters.expression import Expression
+from presenters.protein_class import ProteinClass
 from presenters.functional_cluster import FunctionalCluster
 from presenters.human_protein_atlas import HumanProteinAtlas
-from presenters.aging_mechanism import AgingMechanism
-from presenters.timestamp import Timestamp
 from presenters.origin import Origin
+from presenters.calorie_restriction_experiments import CalorieRestrictionExperiment
 from presenters.researches import Researches, IncreaseLifespan
-from presenters.comment_cause import CommentCause
-from json import loads
-
+from presenters.timestamp import Timestamp
+from pydantic import Field
+from pydantic.dataclasses import dataclass
 
 
 @dataclass
@@ -39,6 +36,7 @@ class GeneShort:
     methylationCorrelation: str = Field(title="Whether gene methylation changes with age (according to Horvath's epigenetic clock)")
     diseaseCategories: dict = Field(title="Disease categories (ICD)")
     commentCause: dict = Field(title="Gene selection criteria")
+    proteinClass: List[ProteinClass] = Field()
 
 
 @dataclass
@@ -68,6 +66,17 @@ class GeneWithResearches:
         description="Whether gene methylation changes with age (according to Horvath's epigenetic clock)"
     )
     researches: IncreaseLifespan = Field(title="Researches", description="Effect of modulation of gene activity on a lifespan")
+
+
+@dataclass
+class GeneWithDiet:
+    id: int
+    name: str = Field(title="Gene name")
+    symbol: str = Field(title="Gene symbol (HGNC)")
+    ncbiId: Optional[str] = Field(title="Entrez Gene id")
+    uniprot: str = Field(title="UniProt id")
+    ensembl: Optional[str] = Field(title="Ensembl id")
+    calorieRestrictionExperiments: List[CalorieRestrictionExperiment] = Field()
 
 
 @dataclass
