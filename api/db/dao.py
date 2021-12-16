@@ -3,7 +3,6 @@ from mysql import connector
 from config import CONFIG
 from entities import entities
 
-from time import sleep
 
 # TODO(dmtgk): Add relationships integration.
 # TODO(dmtgk): Add versatility to BaseDAO and pydantic entity validation.
