@@ -248,6 +248,24 @@ class DiseaseDAO(BaseDAO):
         return self.get(icd_code=disease_dict['icd_code'])
 
 
+
+class CriteriaDAO(BaseDAO):
+    """Criteria Table fetcher."""
+
+    def get_all(self):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute(
+            '''
+            SELECT CAST(CONCAT('[', GROUP_CONCAT( distinct JSON_OBJECT(
+            'id', comment_cause.id,
+            'name', comment_cause.name_en
+            ) separator ","), ']') AS JSON) AS jsonobj
+            FROM comment_cause'''
+        )
+        return cur.fetchall()
+
+
+
 class CalorieExperimentDAO(BaseDAO):
     """Calorie experiment Table fetcher."""
 
