@@ -199,6 +199,19 @@ class CommentCauseDAO(BaseDAO):
         )
         return cur.fetchone()
 
+    def get_all(self, lang):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute('SET SESSION group_concat_max_len = 100000;')
+        cur.execute(
+            '''
+            SELECT CAST(CONCAT('[', GROUP_CONCAT( distinct JSON_OBJECT(
+            'id', comment_cause.id,
+            'name', comment_cause.name_{}
+            ) separator ","), ']') AS JSON) AS jsonobj
+            FROM comment_cause'''.format(lang)
+        )
+        return cur.fetchall()
+
 
 class DiseaseDAO(BaseDAO):
     """Disease Table fetcher."""
@@ -246,24 +259,6 @@ class DiseaseDAO(BaseDAO):
         cur.close()
 
         return self.get(icd_code=disease_dict['icd_code'])
-
-
-
-class CriteriaDAO(BaseDAO):
-    """Criteria Table fetcher."""
-
-    def get_all(self, lang):
-        cur = self.cnx.cursor(dictionary=True)
-        cur.execute(
-            '''
-            SELECT CAST(CONCAT('[', GROUP_CONCAT( distinct JSON_OBJECT(
-            'id', comment_cause.id,
-            'name', comment_cause.name_{}
-            ) separator ","), ']') AS JSON) AS jsonobj
-            FROM comment_cause'''.format(lang)
-        )
-        return cur.fetchall()
-
 
 
 class CalorieExperimentDAO(BaseDAO):
