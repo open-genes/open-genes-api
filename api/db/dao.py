@@ -134,6 +134,22 @@ class FunctionalClusterDAO(BaseDAO):
         return cur.fetchone()
 
 
+class AgingMechanismDAO(BaseDAO):
+
+    def get_all(self, lang):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute('SET SESSION group_concat_max_len = 100000;')
+        cur.execute(
+            '''
+            SELECT CAST(CONCAT('[', GROUP_CONCAT( distinct JSON_OBJECT(
+            'id', aging_mechanism.id,
+            'name', aging_mechanism.name_{}
+            ) separator ","), ']') AS JSON) AS jsonobj
+            FROM aging_mechanism'''.format(lang)
+        )
+        return cur.fetchall()
+
+
 class SourceDAO(BaseDAO):
 
     def get_source(self, source: entities.Source):
