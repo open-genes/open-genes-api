@@ -13,5 +13,5 @@ router = APIRouter()
     '/criteria',
     response_model=List[Criteria]
 )
-async def get_diet_list(lang: Language = Language.en):
+async def get_criteria(lang: Language = Language.en):
     return loads(CommentCauseDAO().get_all(lang=lang.value)[0]['jsonobj'])
