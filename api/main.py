@@ -30,7 +30,7 @@ def assembling_endpoints(app: FastAPI):
     )
     app.include_router(
         functional_cluster.router,
-        tags=["functional_cluster"],
+        tags=["age_related_process"],
     )
     app.include_router(
         criteria.router,
