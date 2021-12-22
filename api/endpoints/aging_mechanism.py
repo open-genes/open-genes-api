@@ -13,5 +13,5 @@ router = APIRouter()
     '/age-related-processes',
     response_model=List[AgingMechanism]
 )
-async def get_diet_list(lang: Language = Language.en):
+async def get_age_related_processes(lang: Language = Language.en):
     return loads(AgingMechanismDAO().get_all(lang=lang.value)[0]['jsonobj'])
