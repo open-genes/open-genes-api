@@ -35,7 +35,7 @@ JSON_OBJECT(
 'functionalClusters',CAST(CONCAT('[',GROUP_CONCAT(distinct JSON_OBJECT('id',IFNULL(functional_cluster.id,0),'name',COALESCE(NULLIF(functional_cluster.name_@LANG@, ''), NULLIF(functional_cluster.name_@LANG@, ''), '')) separator ","),']') AS JSON), ## этот вариант требует больше памяти, но обеспечивает совместимость со старым фронтом
 'diseases',JSON_REMOVE(JSON_OBJECTAGG(IFNULL(disease.id,'null'),JSON_OBJECT('icdCode',IFNULL(disease.icd_code ,''),'name',COALESCE(NULLIF(disease.name_@LANG@, ''), NULLIF(disease.name_@LANG@, ''), ''),'icdName',COALESCE(NULLIF(disease.icd_name_@LANG@, ''), NULLIF(disease.icd_name_@LANG@, ''), ''))), '$.null'),
 'diseaseCategories',JSON_REMOVE(JSON_OBJECTAGG(IFNULL(disease_category.id,'null'),JSON_OBJECT('icdCode',IFNULL(disease_category.icd_code,''),'icdCategoryName',COALESCE(NULLIF(disease_category.icd_name_@LANG@, ''), NULLIF(disease.icd_name_@LANG@, ''), ''))), '$.null'),
-'proteinClasses',CAST(CONCAT('[',GROUP_CONCAT(distinct JSON_OBJECT('id',IFNULL(protein_class.id,0),'name',COALESCE(NULLIF(protein_class.name_@LANG@, ''), NULLIF(protein_class.name_@LANG@, ''), '')) separator ","),']') AS JSON)
+'proteinClasses',CAST(CONCAT('[',GROUP_CONCAT(distinct JSON_OBJECT('id',IFNULL(protein_class.id,0),'name',COALESCE(NULLIF(protein_class.name_@LANG@, ''), NULLIF(protein_class.name_@LANG@, ''), '')) separator ","),']') AS JSON),
 'agingMechanisms',aging_mechanisms) as jsonobj
 FROM gene
 LEFT JOIN phylum family_phylum ON gene.family_phylum_id = family_phylum.id
