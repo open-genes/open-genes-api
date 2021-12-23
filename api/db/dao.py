@@ -133,6 +133,35 @@ class FunctionalClusterDAO(BaseDAO):
         )
         return cur.fetchone()
 
+    def get_all(self, lang):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute('SET SESSION group_concat_max_len = 100000;')
+        cur.execute(
+            '''
+            SELECT CAST(CONCAT('[', GROUP_CONCAT( distinct JSON_OBJECT(
+            'id', functional_cluster.id,
+            'name', functional_cluster.name_{}
+            ) separator ","), ']') AS JSON) AS jsonobj
+            FROM functional_cluster'''.format(lang)
+        )
+        return cur.fetchall()
+
+
+class AgingMechanismDAO(BaseDAO):
+
+    def get_all(self, lang):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute('SET SESSION group_concat_max_len = 100000;')
+        cur.execute(
+            '''
+            SELECT CAST(CONCAT('[', GROUP_CONCAT( distinct JSON_OBJECT(
+            'id', aging_mechanism.id,
+            'name', aging_mechanism.name_{}
+            ) separator ","), ']') AS JSON) AS jsonobj
+            FROM aging_mechanism'''.format(lang)
+        )
+        return cur.fetchall()
+
 
 class SourceDAO(BaseDAO):
 
@@ -198,6 +227,19 @@ class CommentCauseDAO(BaseDAO):
             {'comment_cause_id': comment_cause_id},
         )
         return cur.fetchone()
+
+    def get_all(self, lang):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute('SET SESSION group_concat_max_len = 100000;')
+        cur.execute(
+            '''
+            SELECT CAST(CONCAT('[', GROUP_CONCAT( distinct JSON_OBJECT(
+            'id', comment_cause.id,
+            'name', comment_cause.name_{}
+            ) separator ","), ']') AS JSON) AS jsonobj
+            FROM comment_cause'''.format(lang)
+        )
+        return cur.fetchall()
 
 
 class DiseaseDAO(BaseDAO):
