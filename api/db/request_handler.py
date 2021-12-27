@@ -1,4 +1,6 @@
 from db.filters import FILTERS, FILTERS_JOIN
+from db.sorts import SORTS
+from config import Order
 
 
 class RequestHandler:
@@ -36,6 +38,10 @@ class RequestHandler:
     @property
     def sql(self):
         return self.sql_row
+
+    def set_sort(self, sort, order:Order = Order.desc):
+        summary_sort = SORTS[sort]
+        self.sql_row = self.sql_row.replace('@SORT@', " ".join([summary_sort, order.value]))
 
     @staticmethod
     def validate_filters(filters: dict):

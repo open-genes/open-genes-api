@@ -36,7 +36,7 @@ JSON_OBJECT(
 'diseases',JSON_REMOVE(JSON_OBJECTAGG(IFNULL(disease.id,'null'),JSON_OBJECT('icdCode',IFNULL(disease.icd_code ,''),'name',COALESCE(NULLIF(disease.name_@LANG@, ''), NULLIF(disease.name_@LANG@, ''), ''),'icdName',COALESCE(NULLIF(disease.icd_name_@LANG@, ''), NULLIF(disease.icd_name_@LANG@, ''), ''))), '$.null'),
 'diseaseCategories',JSON_REMOVE(JSON_OBJECTAGG(IFNULL(disease_category.id,'null'),JSON_OBJECT('icdCode',IFNULL(disease_category.icd_code,''),'icdCategoryName',COALESCE(NULLIF(disease_category.icd_name_@LANG@, ''), NULLIF(disease.icd_name_@LANG@, ''), ''))), '$.null'),
 'proteinClasses',CAST(CONCAT('[',GROUP_CONCAT(distinct JSON_OBJECT('id',IFNULL(protein_class.id,0),'name',COALESCE(NULLIF(protein_class.name_@LANG@, ''), NULLIF(protein_class.name_@LANG@, ''), '')) separator ","),']') AS JSON),
-'agingMechanisms',aging_mechanisms) as jsonobj
+'agingMechanisms',aging_mechanisms) as jsonobj, COUNT(comment_cause.id) AS ccause_count
 FROM gene
 LEFT JOIN phylum family_phylum ON gene.family_phylum_id = family_phylum.id
 LEFT JOIN phylum ON gene.phylum_id = phylum.id
@@ -62,7 +62,7 @@ LEFT JOIN (SELECT gene.id,
 @FILTERS_JOIN@
 WHERE gene.isHidden != 1 @FILTERS@
 GROUP BY gene.id
-ORDER BY family_phylum.order DESC
+ORDER BY @SORT@
 ) preout
 @LIMIT@
 ) jsout;
