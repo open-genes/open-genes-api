@@ -2,7 +2,7 @@ GENES_QUERY = '''
 SELECT JSON_OBJECT(
 'options',JSON_OBJECT('pagination',JSON_OBJECT('page',@PAGE@,'pageSize',@PAGESIZE@,'pagesTotal',CEILING(MAX(jsout.fRows)/@PAGESIZE@)),'objTotal',MAX(jsout.fRows))
 ,'items',JSON_ARRAYAGG(jsout.jsonobj)) respJS FROM (
-SELECT preout.jsonobj, fRows FROM (
+SELECT preout.jsonobj, JSON_LENGTH(preout.jsonobj, '$.commentCause') ccRows, fRows FROM (
 SELECT count(*) OVER() fRows,
 JSON_OBJECT(
 'id',gene.id,
@@ -36,7 +36,7 @@ JSON_OBJECT(
 'diseases',JSON_REMOVE(JSON_OBJECTAGG(IFNULL(disease.id,'null'),JSON_OBJECT('icdCode',IFNULL(disease.icd_code ,''),'name',COALESCE(NULLIF(disease.name_@LANG@, ''), NULLIF(disease.name_@LANG@, ''), ''),'icdName',COALESCE(NULLIF(disease.icd_name_@LANG@, ''), NULLIF(disease.icd_name_@LANG@, ''), ''))), '$.null'),
 'diseaseCategories',JSON_REMOVE(JSON_OBJECTAGG(IFNULL(disease_category.id,'null'),JSON_OBJECT('icdCode',IFNULL(disease_category.icd_code,''),'icdCategoryName',COALESCE(NULLIF(disease_category.icd_name_@LANG@, ''), NULLIF(disease.icd_name_@LANG@, ''), ''))), '$.null'),
 'proteinClasses',CAST(CONCAT('[',GROUP_CONCAT(distinct JSON_OBJECT('id',IFNULL(protein_class.id,0),'name',COALESCE(NULLIF(protein_class.name_@LANG@, ''), NULLIF(protein_class.name_@LANG@, ''), '')) separator ","),']') AS JSON),
-'agingMechanisms',aging_mechanisms) as jsonobj, COUNT(comment_cause.id) AS ccause_count
+'agingMechanisms',aging_mechanisms) as jsonobj
 FROM gene
 LEFT JOIN phylum family_phylum ON gene.family_phylum_id = family_phylum.id
 LEFT JOIN phylum ON gene.phylum_id = phylum.id
@@ -64,6 +64,7 @@ WHERE gene.isHidden != 1 @FILTERS@
 GROUP BY gene.id
 ORDER BY @SORT@
 ) preout
+@SORT_BY_CC@ -- <- ORDER BY ccRows DESC/ASC if criteriaQuantity else ''
 @LIMIT@
 ) jsout;
 '''

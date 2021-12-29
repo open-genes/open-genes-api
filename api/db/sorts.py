@@ -1,4 +1,4 @@
 SORTS = {
     None: ' `family_phylum`.`order`',
-    'сriteriaQuantity': ' ccause_count',
+    'criteriaQuantity': ' ccause_count',
 }
