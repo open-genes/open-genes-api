@@ -51,7 +51,6 @@ async def get_genes_list(
     if byProteinClass:
         filters['protein_classes'] = byProteinClass
     sql_handler.add_filters(sql_handler.validate_filters(filters))
-    print(sql_handler.sql)
     return loads(GeneDAO().get_list(request=sql_handler.sql)[0]['respJS'])
 
 
