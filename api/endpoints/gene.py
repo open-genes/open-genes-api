@@ -3,7 +3,7 @@ from typing import List
 
 from fastapi import APIRouter, HTTPException
 
-from config import Language, Order
+from config import Language, Order, SortVariant
 from db.dao import GeneDAO
 from db.request_handler import RequestHandler
 from db.sql_raws.scripts import GENES_QUERY
@@ -27,13 +27,13 @@ async def get_genes_list(
     bySelectionCriteria: str = None,
     byAgingMechanism: str = None,
     byProteinClass: str = None,
-    sortBy: str = None,
+    sortBy: SortVariant = SortVariant.default,
     sortOrder: Order = Order.desc,
 ):
     sql_handler = RequestHandler(GENES_QUERY)
     sql_handler.set_language(lang.value)
     sql_handler.set_pagination(page, pageSize)
-    sql_handler.set_sort(sortBy, sortOrder)
+    sql_handler.set_sort(sortBy.value, sortOrder)
     filters = {}
     if byDiseases:
         filters['diseases'] = byDiseases
@@ -50,6 +50,7 @@ async def get_genes_list(
     if byProteinClass:
         filters['protein_classes'] = byProteinClass
     sql_handler.add_filters(sql_handler.validate_filters(filters))
+    print(sql_handler.sql)
     return loads(GeneDAO().get_list(request=sql_handler.sql)[0]['respJS'])
 
 

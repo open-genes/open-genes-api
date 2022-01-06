@@ -1,4 +1,4 @@
 SORTS = {
-    None: ' `family_phylum`.`order`',
+    'default': ' `family_phylum`.`order`',
     'criteriaQuantity': 'ORDER by ccRows',
 }

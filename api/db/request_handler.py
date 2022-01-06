@@ -43,7 +43,7 @@ class RequestHandler:
         summary_sort = SORTS[sort]
         if sort == 'criteriaQuantity':
             self.sql_row = self.sql_row.replace('@SORT_BY_CC@', ' '.join([summary_sort, order.value]))
-            self.sql_row = self.sql_row.replace('@SORT@', ' '.join([SORTS[None], order.value]))
+            self.sql_row = self.sql_row.replace('@SORT@', ' '.join([SORTS['default'], order.value]))
         else:
             self.sql_row = self.sql_row.replace('@SORT@', ' '.join([summary_sort, order.value]))
             self.sql_row = self.sql_row.replace('@SORT_BY_CC@', ' ')
