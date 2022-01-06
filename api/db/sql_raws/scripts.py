@@ -64,7 +64,7 @@ WHERE gene.isHidden != 1 @FILTERS@
 GROUP BY gene.id
 ORDER BY @SORT@
 ) preout
-ORDER by ccRows DESC
+@SORT_BY_CC@
 @LIMIT@
 ) jsout;
 '''
