@@ -8,7 +8,6 @@ from db.dao import GeneDAO
 from db.request_handler import RequestHandler
 from db.sql_raws.scripts import GENES_QUERY
 from presenters.gene import GeneShort, Gene, GeneForMethylation, GeneWithResearches
-from presenters.output import GeneOutput
 
 router = APIRouter()
 
