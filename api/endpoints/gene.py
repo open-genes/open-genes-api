@@ -12,6 +12,16 @@ from presenters.output import GeneOutput
 
 router = APIRouter()
 
+@router.get(
+    '/gene/search2',
+    # response_model=GeneOutput
+)
+async def gene_search(
+        lang: Language = Language.en, page: int = None, pageSize: int = None, byDiseases: str = None,
+        byDiseaseCategories: str = None, byAgeRelatedProcess: str = None, byExpressionChange: str = None,
+        bySelectionCriteria: str = None, byAgingMechanism: str = None, byProteinClass: str = None
+):
+	return GeneDAO().search(request={'lang':lang.value})
 
 @router.get(
     '/gene/search',
