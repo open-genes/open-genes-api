@@ -3,12 +3,11 @@ from typing import List
 
 from fastapi import APIRouter, HTTPException
 
-from config import Language
+from config import Language, Order, SortVariant
 from db.dao import GeneDAO
 from db.request_handler import RequestHandler
 from db.sql_raws.scripts import GENES_QUERY
 from presenters.gene import GeneShort, Gene, GeneForMethylation, GeneWithResearches
-from presenters.output import GeneOutput
 
 router = APIRouter()
 
@@ -18,13 +17,23 @@ router = APIRouter()
     # response_model=GeneOutput
 )
 async def get_genes_list(
-        lang: Language = Language.en, page: int = None, pageSize: int = None, byDiseases: str = None,
-        byDiseaseCategories: str = None, byAgeRelatedProcess: str = None, byExpressionChange: str = None,
-        bySelectionCriteria: str = None, byAgingMechanism: str = None, byProteinClass: str = None
+    lang: Language = Language.en,
+    page: int = None,
+    pageSize: int = None,
+    byDiseases: str = None,
+    byDiseaseCategories: str = None,
+    byAgeRelatedProcess: str = None,
+    byExpressionChange: str = None,
+    bySelectionCriteria: str = None,
+    byAgingMechanism: str = None,
+    byProteinClass: str = None,
+    sortBy: SortVariant = SortVariant.default,
+    sortOrder: Order = Order.desc,
 ):
     sql_handler = RequestHandler(GENES_QUERY)
     sql_handler.set_language(lang.value)
     sql_handler.set_pagination(page, pageSize)
+    sql_handler.set_sort(sortBy.value, sortOrder)
     filters = {}
     if byDiseases:
         filters['diseases'] = byDiseases

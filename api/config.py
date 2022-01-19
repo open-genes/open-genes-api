@@ -21,3 +21,13 @@ if os.path.exists(version_file):
 class Language(Enum):
     ru = "ru"
     en = "en"
+
+
+class Order(Enum):
+    asc = "ASC"
+    desc = "DESC"
+
+
+class SortVariant(Enum):
+    criteriaQuantity = "criteriaQuantity"
+    default = "default"

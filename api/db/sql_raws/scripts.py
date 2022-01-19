@@ -2,7 +2,7 @@ GENES_QUERY = '''
 SELECT JSON_OBJECT(
 'options',JSON_OBJECT('pagination',JSON_OBJECT('page',@PAGE@,'pageSize',@PAGESIZE@,'pagesTotal',CEILING(MAX(jsout.fRows)/@PAGESIZE@)),'objTotal',MAX(jsout.fRows))
 ,'items',JSON_ARRAYAGG(jsout.jsonobj)) respJS FROM (
-SELECT preout.jsonobj, fRows FROM (
+SELECT preout.jsonobj, JSON_LENGTH(preout.jsonobj, '$.commentCause') ccRows, fRows FROM (
 SELECT count(*) OVER() fRows,
 JSON_OBJECT(
 'id',gene.id,
@@ -62,8 +62,9 @@ LEFT JOIN (SELECT gene.id,
 @FILTERS_JOIN@
 WHERE gene.isHidden != 1 @FILTERS@
 GROUP BY gene.id
-ORDER BY family_phylum.order DESC
+ORDER BY @SORT@
 ) preout
+@SORT_BY_CC@
 @LIMIT@
 ) jsout;
 '''
