@@ -33,7 +33,7 @@ async def get_genes_list(
 ):
     sortOrder = sortOrder.upper()
     if sortOrder not in ['ASC', 'DESC']:
-        return HTTPException(status_code=422, detail="Invalid argument for order")
+        return HTTPException(status_code=422, detail="Invalid argument for sortOrder")
     sql_handler = RequestHandler(GENES_QUERY)
     sql_handler.set_language(lang.value)
     sql_handler.set_pagination(page, pageSize)
