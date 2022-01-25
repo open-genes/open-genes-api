@@ -1,3 +1,4 @@
+import json
 from json import loads
 from typing import List
 
@@ -30,7 +31,9 @@ async def get_genes_list(
     sortBy: SortVariant = SortVariant.default,
     sortOrder: str = None,
 ):
-    sortOrder = sortOrder.capitalize()
+    sortOrder = sortOrder.upper()
+    if sortOrder not in ['ASC', 'DESC']:
+        return HTTPException(status_code=422, detail="Invalid argument for order")
     sql_handler = RequestHandler(GENES_QUERY)
     sql_handler.set_language(lang.value)
     sql_handler.set_pagination(page, pageSize)
