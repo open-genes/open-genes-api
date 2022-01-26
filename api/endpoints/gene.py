@@ -29,7 +29,7 @@ async def get_genes_list(
     byAgingMechanism: str = None,
     byProteinClass: str = None,
     sortBy: SortVariant = SortVariant.default,
-    sortOrder: str = DESC,
+    sortOrder: str = 'DESC',
 ):
     sortOrder = sortOrder.upper()
     if sortOrder not in ['ASC', 'DESC']:
