@@ -19,9 +19,12 @@ router = APIRouter()
 async def gene_search(
         lang: Language = Language.en, page: int = None, pageSize: int = None, byDiseases: str = None,
         byDiseaseCategories: str = None, byAgeRelatedProcess: str = None, byExpressionChange: str = None,
-        bySelectionCriteria: str = None, byAgingMechanism: str = None, byProteinClass: str = None
+        bySelectionCriteria: str = None, byAgingMechanism: str = None, byProteinClass: str = None,
+        sortBy: str = None, sortOrder: str=None,
+        researches: str=None
+
 ):
-	return GeneDAO().search(request={'lang':lang.value})
+    return GeneDAO().search(request={'lang':lang.value,'page':page,'pageSize':pageSize,'byDiseases':byDiseases, 'byDiseaseCategories':byDiseaseCategories,'byAgeRelatedProcess':byAgeRelatedProcess,'byExpressionChange':byExpressionChange,'bySelectionCriteria':bySelectionCriteria,'byAgingMechanism':byAgingMechanism,'byProteinClass':byProteinClass,'sortBy':sortBy,'sortOrder':sortOrder,'researches':researches})
 
 @router.get(
     '/gene/search',

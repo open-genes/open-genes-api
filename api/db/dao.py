@@ -38,126 +38,321 @@ class GeneDAO(BaseDAO):
         output={
             'gene':
             {
-                'id':['gene.id'],
-                'gene_id':['gene.id'],
-                'count':["count(*) over()"],
-                'homologueTaxon':["COALESCE(NULLIF(taxon.name_@LANG@, ''), NULLIF(taxon.name_en, ''), '')"],
-                'symbol':["IFNULL(gene.symbol,'')"],
-                'name':["IFNULL(gene.name,'')"],
-                'ncbi_id':["gene.ncbi_id"],
-                'uniprot':["IFNULL(gene.uniprot,'')"],
+                'id':'gene.id',
+                'gene_id':'gene.id',
+                'count':"count(*) over()",
+                'homologueTaxon':"COALESCE(NULLIF(taxon.name_@LANG@, ''), NULLIF(taxon.name_en, ''), '')",
+                'symbol':"IFNULL(gene.symbol,'')",
+                'name':"IFNULL(gene.name,'')",
+                'ncbi_id':"gene.ncbi_id",
+                'uniprot':"IFNULL(gene.uniprot,'')",
                 'timestamp':
                 {
-                    'created':["IFNULL(gene.created_at,'')"],
-                    'changed':["IFNULL(gene.updated_at,'')"],
+                    'created':"IFNULL(gene.created_at,'')",
+                    'changed':"IFNULL(gene.updated_at,'')",
                 },
-                'ensembl':["gene.ensembl"],
-                'methylationCorrelation':["IFNULL(gene.methylation_horvath,'')"],
-                'aliases':["gene.aliases"],
+                'ensembl':"gene.ensembl",
+                'methylationCorrelation':"IFNULL(gene.methylation_horvath,'')",
+                'aliases':"gene.aliases",
                 'origin':
                 {
-                    'id':["phylum.id"],
-                    'phylum':["IFNULL(phylum.name_phylo,'')"],
-                    'age':["IFNULL(phylum.name_mya,'')"],
-                    'order':["phylum.order"],
+                    'id':"phylum.id",
+                    'phylum':"IFNULL(phylum.name_phylo,'')",
+                    'age':"IFNULL(phylum.name_mya,'')",
+                    'order':"phylum.order",
+                    'test':"112",
                 },
                 'familyOrigin':
                 {
-                    'id':["family_phylum.id"],
-                    'phylum':["IFNULL(family_phylum.name_phylo,'')"],
-                    'age':["IFNULL(family_phylum.name_mya,'')"],
-                    'order':["family_phylum.order"],
+                    'id':"family_phylum.id",
+                    'phylum':"IFNULL(family_phylum.name_phylo,'')",
+                    'age':"IFNULL(family_phylum.name_mya,'')",
+                    'order':"family_phylum.order",
                 },
-                '_from':"from gene LEFT JOIN taxon ON gene.taxon_id = taxon.id LEFT JOIN phylum family_phylum ON gene.family_phylum_id = family_phylum.id LEFT JOIN phylum ON gene.phylum_id = phylum.id where gene.id<%s limit 20000",
-                '_prefix':'',
-            },
-            'diseaseCategories':
-            {
-                'gene_id':["gene_to_disease.gene_id"],
-                'id':["IFNULL(disease_category.id,'null')"],
-                'icdCode':["IFNULL(disease_category.icd_code,'')"],
-                'icdCategoryName':["COALESCE(NULLIF(disease_category.icd_name_@LANG@, ''), NULLIF(disease.icd_name_@LANG@, ''), '')"],
-                '_from':"from open_genes.disease disease_category join open_genes.disease on disease.icd_code_visible = disease_category.icd_code AND disease_category.icd_name_en != '' join gene_to_disease on disease.id=gene_to_disease.disease_id where gene_id in (select gene_id from gene)",
-            },
-            'disease':
-            {
-                'gene_id':["gene_to_disease.gene_id"],
-                'id':["IFNULL(disease.id,'null')"],
-                'icdCode':["IFNULL(disease.icd_code ,'')"],
-                'name':["COALESCE(NULLIF(disease.name_@LANG@, ''), NULLIF(disease.name_@LANG@, ''), '')"],
-                'icdName':["COALESCE(NULLIF(disease.icd_name_@LANG@, ''), NULLIF(disease.icd_name_@LANG@, ''), '')"],
-                '_from':"from disease join gene_to_disease on disease.id=gene_to_disease.disease_id where gene_id in (select gene_id from gene)",
-            },
-            'commentCause':
-            {
-                'gene_id':["gene_to_comment_cause.gene_id"],
-                'id':["IFNULL(comment_cause.id,'null')"],
-                'name':["COALESCE(NULLIF(comment_cause.name_@LANG@, ''), NULLIF(comment_cause.name_en, ''), '')"],
-                '_from':"from comment_cause join gene_to_comment_cause on comment_cause.id=gene_to_comment_cause.comment_cause_id where gene_id in (select gene_id from gene)",
-            },
-            'proteinClasses':
-            {
-                'gene_id':["gene_to_protein_class.gene_id"],
-                'id':["IFNULL(protein_class.id,'null')"],
-                'name':["COALESCE(NULLIF(protein_class.name_en, ''), NULLIF(protein_class.name_en, ''), '')"],
-                '_from':"from protein_class join gene_to_protein_class on protein_class.id=gene_to_protein_class.protein_class_id where gene_id in (select gene_id from gene)",
-            },
-            'agingMechanisms':
-            {
-                'gene_id':["gene_to_ontology.gene_id"],
-                '_from':"from gene_to_ontology join gene_ontology_to_aging_mechanism_visible on gene_ontology_to_aging_mechanism_visible.gene_ontology_id=gene_to_ontology.gene_ontology_id join aging_mechanism on aging_mechanism.id=gene_ontology_to_aging_mechanism_visible.aging_mechanism_id where gene_to_ontology.gene_id in (select gene_id from gene)",
+                '_from':"""
+FROM gene
+LEFT JOIN phylum family_phylum ON gene.family_phylum_id = family_phylum.id
+LEFT JOIN phylum ON gene.phylum_id = phylum.id
+LEFT JOIN taxon ON gene.taxon_id = taxon.id
+@FILTERING@
+order by @ORDERING@ gene.id limit 20000""",
+
+                'diseaseCategories':
+                [{
+                    'id':"IFNULL(disease_category.id,'null')",
+                    'icdCode':"IFNULL(disease_category.icd_code,'')",
+                    'icdCategoryName':"COALESCE(NULLIF(disease_category.icd_name_@LANG@, ''), NULLIF(disease.icd_name_@LANG@, ''), '')",
+                    '_from':"from gene join gene_to_disease on gene_to_disease.gene_id=gene.gene_id join open_genes.disease on disease.id=gene_to_disease.disease_id join open_genes.disease disease_category on disease_category.icd_code=disease.icd_code_visible AND disease_category.icd_name_en != ''",
+                }],
+                'disease':
+                [{
+                    'id':"IFNULL(disease.id,'null')",
+                    'icdCode':"IFNULL(disease.icd_code ,'')",
+                    'name':"COALESCE(NULLIF(disease.name_@LANG@, ''), NULLIF(disease.name_@LANG@, ''), '')",
+                    'icdName':"COALESCE(NULLIF(disease.icd_name_@LANG@, ''), NULLIF(disease.icd_name_@LANG@, ''), '')",
+                    '_from':"from gene join gene_to_disease on gene_to_disease.gene_id=gene.gene_id join disease on disease.id=gene_to_disease.disease_id",
+                }],
+                'commentCause':
+                [{
+                    'id':"IFNULL(comment_cause.id,'null')",
+                    'name':"COALESCE(NULLIF(comment_cause.name_@LANG@, ''), NULLIF(comment_cause.name_en, ''), '')",
+                    '_from':"from gene join gene_to_comment_cause on gene_to_comment_cause.gene_id=gene.gene_id join comment_cause on comment_cause.id=gene_to_comment_cause.comment_cause_id",
+                }],
+                'proteinClasses':
+                [{
+                    'id':"IFNULL(protein_class.id,'null')",
+                    'name':"COALESCE(NULLIF(protein_class.name_en, ''), NULLIF(protein_class.name_en, ''), '')",
+                    '_from':"from gene join gene_to_protein_class on gene_to_protein_class.gene_id=gene.gene_id join  protein_class on protein_class.id=gene_to_protein_class.protein_class_id",
+                }],
+                'agingMechanisms':
+                [{
+                    'id':'aging_mechanism.id',
+                    'name':'coalesce(aging_mechanism.name_@LANG@,aging_mechanism.name_en)',
+                    '_from':"""
+FROM gene
+LEFT JOIN `gene_to_ontology` ON gene_to_ontology.gene_id = gene.gene_id
+LEFT JOIN `gene_ontology_to_aging_mechanism_visible` ON gene_to_ontology.gene_ontology_id = gene_ontology_to_aging_mechanism_visible.gene_ontology_id
+INNER JOIN `aging_mechanism` ON gene_ontology_to_aging_mechanism_visible.aging_mechanism_id = aging_mechanism.id AND aging_mechanism.name_en != '' """,
+                }],
+                'researches':
+                {
+                    'increaseLifespan':[{
+                        'interventionType':'gene_intervention.name_@LANG@',
+                        'interventionResult':'intervention_result_for_longevity.name_@LANG@',
+                        'modelOrganism':'lifespan_experiment_model_organism.name_@LANG@',
+                        'organismLine':'lifespan_experiment_organism_line.name_@LANG@',
+                        'sex':'lifespan_experiment_organism_sex.name_@LANG@',
+                        'general_lifespan_experiment_id':'lifespan_experiment.general_lifespan_experiment_id',
+                        'age':'general_lifespan_experiment.age',
+                        'treatment_start':'lifespan_experiment.treatment_start',
+                        'startTimeUnit':'treatment_time_unit.name_@LANG@',
+                        'genotype':'lifespan_experiment.genotype',
+                        'valueForMale':'general_lifespan_experiment.lifespan_change_percent_male',
+                        'valueForFemale':'general_lifespan_experiment.lifespan_change_percent_female',
+                        'valueForAll':'general_lifespan_experiment.lifespan_change_percent_common',
+                        'doi':'general_lifespan_experiment.reference',
+                        'pmid':'general_lifespan_experiment.pmid',
+                        'comment':'general_lifespan_experiment.comment_@LANG@',
+                        '_from':"""
+from gene
+join lifespan_experiment on lifespan_experiment.gene_id=gene.gene_id
+join gene_intervention on gene_intervention.id=lifespan_experiment.gene_intervention_id
+join intervention_result_for_longevity on intervention_result_for_longevity.id=lifespan_experiment.intervention_result_id
+join general_lifespan_experiment on general_lifespan_experiment.id=lifespan_experiment.general_lifespan_experiment_id
+left join model_organism as lifespan_experiment_model_organism on lifespan_experiment_model_organism.id=lifespan_experiment.model_organism_id
+left join organism_line as lifespan_experiment_organism_line on lifespan_experiment_organism_line.id=general_lifespan_experiment.organism_line_id
+left join organism_sex as lifespan_experiment_organism_sex on lifespan_experiment_organism_sex.id=general_lifespan_experiment.organism_sex_id
+left join treatment_time_unit on treatment_time_unit.id=lifespan_experiment.treatment_start_time_unit_id
+""",
+                    }],
+                    'geneAssociatedWithProgeriaSyndromes':[{
+                        'progeriaSyndrome':'progeria_syndrome.name_@LANG@',
+                        'doi':'gene_to_progeria.reference',
+                        'pmid':'gene_to_progeria.pmid',
+                        'comment':'gene_to_progeria.comment_@LANG@',
+                        '_from':"""
+from gene
+join gene_to_progeria on gene_to_progeria.gene_id=gene.gene_id
+join progeria_syndrome on progeria_syndrome.id=gene_to_progeria.progeria_syndrome_id
+""",
+                     }],
+                    'geneAssociatedWithLongevityEffects':[{
+                        'longevityEffect':'longevity_effect.name_@LANG@',
+                        'allelicPolymorphism':'polymorphism.name_@LANG@',
+                        'sex':'gene_to_longevity_effect.sex_of_organism',
+                        'allelicVariant':'gene_to_longevity_effect.allele_variant',
+                        'modelOrganism':'longevity_effect_model_organism.name_@LANG@',
+                        'changeType':'longevity_effect_age_related_change_type.name_@LANG@',
+                        'dataType':'gene_to_longevity_effect.data_type',
+                        'doi':'gene_to_longevity_effect.reference',
+                        'pmid':'gene_to_longevity_effect.pmid',
+                        'comment':'gene_to_longevity_effect.comment_@LANG@',
+                        '_from':"""
+from gene
+join gene_to_longevity_effect on gene_to_longevity_effect.gene_id=gene.gene_id
+join longevity_effect on longevity_effect.id = gene_to_longevity_effect.longevity_effect_id
+left join polymorphism on polymorphism.id = gene_to_longevity_effect.polymorphism_id
+left join age_related_change_type as longevity_effect_age_related_change_type on longevity_effect_age_related_change_type.id = gene_to_longevity_effect.age_related_change_type_id
+left join model_organism as longevity_effect_model_organism on longevity_effect_model_organism.id=gene_to_longevity_effect.model_organism_id
+""",
+                     }],
+                    'ageRelatedChangesOfGene': [{
+                        'changeType':'age_related_change_age_related_change_type.name_@LANG@',
+                        'sample':'sample.name_@LANG@',
+                        'modelOrganism':'age_related_change_model_organism.name_@LANG@',
+                        'organismLine':'age_related_change_organism_line.name_@LANG@',
+                        'ageFrom':'age_related_change.age_from',
+                        'ageTo':'age_related_change.age_to',
+                        'ageUnit':'age_related_change.age_unit',
+                        'valueForMale':'age_related_change.change_value_male',
+                        'valueForFemale':'age_related_change.change_value_female',
+                        'valueForAll':'age_related_change.change_value_common',
+                        'measurementType':'age_related_change.measurement_type',
+                        'doi':'age_related_change.reference',
+                        'pmid':'age_related_change.pmid',
+                        'comment':'age_related_change.comment_@LANG@',
+                        '_from':"""
+from gene
+join age_related_change on age_related_change.gene_id=gene.gene_id
+join age_related_change_type as age_related_change_age_related_change_type on age_related_change_age_related_change_type.id=age_related_change.age_related_change_type_id
+left join sample on sample.id = age_related_change.sample_id
+left join model_organism as age_related_change_model_organism on age_related_change_model_organism.id = age_related_change.model_organism_id
+left join organism_line as age_related_change_organism_line on age_related_change_organism_line.id = age_related_change.organism_line_id """
+                    }],
+                    'interventionToGeneImprovesVitalProcesses':[{
+                        'id':'gene_intervention_to_vital_process.id',
+                        'geneIntervention':'gene_intervention_method.name_@LANG@',
+                        'result':'intervention_result_for_vital_process.name_@LANG@',
+                        'resultCode':'intervention_result_for_vital_process.id',
+                        'vitalProcess':'vital_process.name_@LANG@',
+                        'vitalProcessId':'vital_process.id',
+                        'modelOrganism':'gene_intervention_to_vital_process_model_organism.name_@LANG@',
+                        'organismLine':'gene_intervention_to_vital_process_organism_line.name_@LANG@',
+                        'age':'gene_intervention_to_vital_process.age',
+                        'genotype':'gene_intervention_to_vital_process.genotype',
+                        'ageUnit':'gene_intervention_to_vital_process.age_unit',
+                        'sex':'gene_intervention_to_vital_process_organism_sex.name_@LANG@',
+                        'doi':'gene_intervention_to_vital_process.reference',
+                        'pmid':'gene_intervention_to_vital_process.pmid',
+                        'comment':'gene_intervention_to_vital_process.comment_@LANG@',
+                        '_from':"""
+from gene
+join gene_intervention_to_vital_process on gene_intervention_to_vital_process.gene_id=gene.gene_id
+join gene_intervention_result_to_vital_process on gene_intervention_to_vital_process.id = gene_intervention_result_to_vital_process.gene_intervention_to_vital_process_id
+join vital_process on vital_process.id = gene_intervention_result_to_vital_process.vital_process_id
+join intervention_result_for_vital_process on intervention_result_for_vital_process.id = gene_intervention_result_to_vital_process.intervention_result_for_vital_process_id
+join gene_intervention_method on gene_intervention_method.id = gene_intervention_to_vital_process.gene_intervention_method_id
+left join organism_sex as gene_intervention_to_vital_process_organism_sex on gene_intervention_to_vital_process_organism_sex.id = gene_intervention_to_vital_process.sex_of_organism
+left join model_organism as gene_intervention_to_vital_process_model_organism on gene_intervention_to_vital_process_model_organism.id = gene_intervention_to_vital_process.model_organism_id
+left join organism_line as gene_intervention_to_vital_process_organism_line on gene_intervention_to_vital_process_organism_line.id = gene_intervention_to_vital_process.organism_line_id
+""",
+                     }],
+                    'proteinRegulatesOtherGenes':[{
+                        'regulatedGeneId':'regulated_gene.id',
+                        'regulatedGeneSymbol':'regulated_gene.symbol',
+                        'regulatedGeneName':'regulated_gene.name',
+                        'regulatedGeneNcbiId':'regulated_gene.ncbi_id',
+                        'proteinActivity':'protein_activity.name_@LANG@',
+                        'regulationType':'gene_regulation_type.name_@LANG@',
+                        'doi':'protein_to_gene.reference',
+                        'pmid':'protein_to_gene.pmid',
+                        'comment':'protein_to_gene.comment_@LANG@',
+                        '_from':"""
+from gene
+join protein_to_gene on protein_to_gene.gene_id=gene.gene_id
+join open_genes.gene as regulated_gene on regulated_gene.id = protein_to_gene.regulated_gene_id
+join protein_activity on protein_activity.id = protein_to_gene.protein_activity_id
+join gene_regulation_type on gene_regulation_type.id = protein_to_gene.regulation_type_id
+""",
+                     }],
+                    'additionalEvidences':[{
+                        'doi':'gene_to_additional_evidence.reference',
+                        'pmid':'gene_to_additional_evidence.pmid',
+                        'comment':'gene_to_additional_evidence.comment_@LANG@',
+                        '_from':""" from gene join gene_to_additional_evidence on gene_to_additional_evidence.gene_id=gene.gene_id """,
+                     }],
+                },
             },
         }
-        plain={}
-        queue=[('',output,plain)]
+
+        if 'researches' in request and request['researches']=='0': del output['gene']['researches'];
+
+        tables={}
+        queue=[('','',output,tables)]
         while len(queue):
-            (p,o,f)=queue.pop(0)
+            (n,k,o,t)=queue.pop(0)
+            if isinstance(o,list):
+                queue[0:0]=[(n,k,i,t) for i in o]
+                continue
             if not isinstance(o,dict):
-                f[p]=o
+                t[n]=o
                 continue
             if '_from' in o:
-                f[p]={'_from':o['_from']}
-                f=f[p]
-            if '_prefix' in o: p=o['_prefix'];
-            i=-1
-            for k in [k for k in o if not k.startswith('_')]: queue.insert(i:=i+1,((p+'_'+k).strip('_'),o[k],f))
+                t={'_from':o['_from'],'_output':o,'_name':n}
+                tables[k]=t
+                n=k
+            queue[0:0]=[((n+'_'+k).strip('_'),k,o[k],t) for k in o if not k.startswith('_')]
+        #print(tables)
+        #return
 
-        query="with "+",\n".join([o+' as ( select '+', '.join([plain[o][f][0]+' as `'+f+'`' for f in plain[o].keys() if not f.startswith('_')])+plain[o]['_from']+')' for o in plain])
-        query=query+"\n"+"\nunion ".join(["select coalesce(gene_id,"+','.join([o2+'_gene_id' for o2 in plain if o2!='gene'])+") as gene_id,"+','.join([o2+'.*' for o2 in plain])+' from '+o+' '+' '.join(['left join '+o2+' on false' for o2 in plain if o2!=o ]) for o in plain])
-        query=query+"\norder by 1"
+        primary_table=list(tables.keys())[0]
+        query="with "+",\n".join([t+' as ( select '+'row_number() over() as '+t+('_o1' if t==primary_table else '_o2')+', '+('0 as '+t+'_o2' if t==primary_table else primary_table+'_o1 as '+t+'_o1')+', '+', '.join([tables[t][f]+' as `'+f+'`' for f in tables[t].keys() if not f.startswith('_')])+' '+tables[t]['_from']+')' for t in tables])
+        query=query+"\n"+"\nunion ".join(['select *, '+t+'_o1 as primary_ordering, '+t+'_o2 as secondary_ordering '+' '.join([('from'if t2==primary_table else ('right join' if t2==t else 'left join'))+' '+t2+('' if t2==primary_table else ' on false') for t2 in tables]) for t in tables])
+        query=query+"\norder by primary_ordering,secondary_ordering"
+
+        ordering={
+            'criteriaQuantity':'(select count(*) from gene_to_comment_cause where gene_id=gene.id)',
+            'familyPhylum':'(select `order` from phylum where phylum.id=family_phylum_id)',
+        }.get(request.get('sortBy'),'')
+        if ordering: ordering=ordering+' '+request.get('sortOrder','')+', '
+        query=query.replace("@ORDERING@",ordering)
+
+        filtering={}
+        if request.get('byDiseases'):
+            filtering['(select count(*) from gene_to_disease where gene_to_disease.gene_id=gene.id and disease_id in ('+','.join(['%s' for v in request['byDiseases'].split(',')])+'))=%s']=request['byDiseases'].split(',')+[len(request['byDiseases'].split(','))]
+        params=[]
+        if filtering:
+            for p in filtering.values(): params=params+p
+            filtering='where '+' and '.join(filtering.keys())
+        else:
+            filtering=''
+        print(filtering,params)
+        query=query.replace("@FILTERING@",filtering)
 
         query=query.replace("@LANG@",request.get('lang','en'))
-        print (query)
+        #print (query)
 
         re=[]
-        row={}
+        row=None
+        lists={}
 
         prev_id=None
-        print(prev_id)
+
+        def handle_row(r):
+            nonlocal re
+            if not r: return
+            re.append(r)
 
         def row_consumer(r):
-            nonlocal prev_id,row,re
-            id=r[list(r.keys())[0]] if len(r) else None
-            if id!=prev_id:
-                print('row',row)
+            nonlocal row,lists
+            t=None
+            for n in r:
+                s=n.rsplit('_o',1)
+                if s[-1].isnumeric() and r[n]:
+                    t=s[0]
+                    break
+            if not t:
+                print ('Unexpected row',row)
+                return
+
+            if t==primary_table:
+                handle_row(row)
                 row={}
-            prev_id=id
-            queue=[('',output)]
+                data=row
+                lists={}
+            else:
+                data={}
+
+            queue=[(t,'',tables[t]['_output'],data)]
             while len(queue):
-                (p,o)=queue.pop(0)
-                if not isinstance(o,dict):
-                    print ('p',p,o)
+                (n,k,o,d)=queue.pop(0)
+                if isinstance(o,list):
+                    d[k]=[]
+                    lists[n]=d[k]
                     continue
-                if '_prefix' in o: p=o['_prefix'];
-                print (p,o)
-                i=-1
-                for k in [k for k in o if not k.startswith('_')]: queue.insert(i:=i+1,((p+'_'+k).strip('_'),o[k]))
-            re.append(r)
-            return 1
+                if not isinstance(o,dict):
+                    d[k]=r.get(n)
+                    continue
+                if k:
+                    d[k]={}
+                    d=d[k]
+                queue[0:0]=[((n+'_'+k).strip('_'),k,o[k],d) for k in o if not k.startswith('_')]
+            if tables[t]['_name'] in lists: lists[tables[t]['_name']].append(data)
 
 
             #r['aliases']=r['aliases'].split(' ')
-        re=self.fetch_all(query,[10],row_consumer)
+        self.fetch_all(query,params,row_consumer)
+        handle_row (row)
         return re
 
     def get_list(self, request):
