@@ -80,6 +80,14 @@ class GeneWithDiet:
 
 
 @dataclass
+class Location:
+    accCds: str = Field(title="Location on chromosome — CoDing Sequence")
+    accOrf: str = Field(title="Location on chromosome — Open Reading Frame")
+    accPromoter: str = Field(title="Location on chromosome — Promoter")
+    band: str = Field(title="Location on chromosome — cytogenetic band")
+
+
+@dataclass
 class Gene:
     id: int
     name: str = Field(title="Gene name")
@@ -106,13 +114,7 @@ class Gene:
         title="Age-dependent changes of gene expression",
         description="Designations: \n0 — no data \n1 — decreases\n2 — increases\n3 — mixed"
     )
-    band: str = Field(title="Location on chromosome — cytogenetic band")
-    locationStart: str = Field(title="Location on chromosome — start")
-    locationEnd: str = Field(title="Location on chromosome — end")
-    orientation: str = Field(title="Location on chromosome — Plus or minus strand")
-    accPromoter: str = Field(title="Location on chromosome — Promoter")
-    accOrf: str = Field(title="Location on chromosome — Open Reading Frame")
-    accCds: str = Field(title="Location on chromosome — CoDing Sequence")
+    location: Location = Field(title="NAME THIS TITLE")
     terms: dict = Field(title="GO terms (Gene Ontology)")
     orthologs: dict = Field(title="Gene orthologs")
     timestamp: Timestamp = Field(title="Unix time of the latest changes")
