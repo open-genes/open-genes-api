@@ -460,6 +460,18 @@ join gene_regulation_type on gene_regulation_type.id = protein_to_gene.regulatio
         filtering={}
         if request.get('byDiseases'):
             filtering['(select count(*) from gene_to_disease where gene_to_disease.gene_id=gene.id and disease_id in ('+','.join(['%s' for v in request['byDiseases'].split(',')])+'))=%s']=request['byDiseases'].split(',')+[len(request['byDiseases'].split(','))]
+        if request.get('byDiseaseCategories'):
+            filtering['(select count(*) from gene_to_disease g join disease d on g.disease_id=d.id join disease c on c.icd_code=d.icd_code_visible where g.gene_id=gene.id and c.id in ('+','.join(['%s' for v in request['byDiseaseCategories'].split(',')])+'))=%s']=request['byDiseaseCategories'].split(',')+[len(request['byDiseaseCategories'].split(','))]
+        if request.get('byAgeRelatedProcess'):
+            filtering['(select count(*) from gene_to_functional_cluster where gene_id=gene.id and functional_cluster_id in ('+','.join(['%s' for v in request['byAgeRelatedProcess'].split(',')])+'))=%s']=request['byAgeRelatedProcess'].split(',')+[len(request['byAgeRelatedProcess'].split(','))]
+        if request.get('byExpressionChange'):
+            filtering['']=[]
+        if request.get('bySelectionCriteria'):
+            filtering['(select count(*) from gene_to_comment_cause where gene_id=gene.id and comment_cause_id in ('+','.join(['%s' for v in request['bySelectionCriteria'].split(',')])+'))=%s']=request['bySelectionCriteria'].split(',')+[len(request['bySelectionCriteria'].split(','))]
+        if request.get('byAgingMechanism'):
+            filtering['(select count(distinct aging_mechanism_id) from gene_to_ontology o join gene_ontology_to_aging_mechanism_visible a on a.gene_ontology_id=o.gene_ontology_id where o.gene_id=gene.id and aging_mechanism_id in ('+','.join(['%s' for v in request['byAgingMechanism'].split(',')])+'))=%s']=request['byAgingMechanism'].split(',')+[len(request['byAgingMechanism'].split(','))]
+        if request.get('byProteinClass'):
+            filtering['(select count(*) from gene_to_protein_class where gene_id=gene.id and protein_class_id in ('+','.join(['%s' for v in request['byProteinClass'].split(',')])+'))=%s']=request['byProteinClass'].split(',')+[len(request['byProteinClass'].split(','))]
         params=[]
         if filtering:
             for p in filtering.values(): params=params+p
@@ -474,6 +486,7 @@ join gene_regulation_type on gene_regulation_type.id = protein_to_gene.regulatio
 
         re=[]
         row=None
+        row_count=None
         lists={}
 
         def handle_row(r):
@@ -482,8 +495,9 @@ join gene_regulation_type on gene_regulation_type.id = protein_to_gene.regulatio
             re.append(r)
 
         def row_consumer(r):
-            nonlocal row,lists
+            nonlocal row,lists,row_count
             t=r['table_name']
+            if r['row_count'] is not None: row_count=r['row_count']
 
             if t==primary_table:
                 handle_row(row)
@@ -513,7 +527,7 @@ join gene_regulation_type on gene_regulation_type.id = protein_to_gene.regulatio
             #r['aliases']=r['aliases'].split(' ')
         self.fetch_all(query,params,row_consumer)
         handle_row (row)
-        return re
+        return {'options':{'objTotal':row_count,"pagination":{"page":1,"pageSize":row_count,"pagesTotal":1}},'items':re}
 
     def get_list(self, request):
         cur = self.cnx.cursor(dictionary=True)
