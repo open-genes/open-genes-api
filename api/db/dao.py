@@ -72,7 +72,9 @@ LEFT JOIN phylum family_phylum ON gene.family_phylum_id = family_phylum.id
 LEFT JOIN phylum ON gene.phylum_id = phylum.id
 LEFT JOIN taxon ON gene.taxon_id = taxon.id
 @FILTERING@
-order by @ORDERING@ gene.id limit 20000""",
+order by @ORDERING@ gene.id
+@PAGING@
+""",
 
                 'diseaseCategories':
                 [{
@@ -482,6 +484,12 @@ join gene_regulation_type on gene_regulation_type.id = protein_to_gene.regulatio
         query=query.replace("@FILTERING@",filtering)
 
         query=query.replace("@LANG@",request.get('lang','en'))
+
+        page=request.get('page')
+        page=int(page) if page is not None else 1
+        pageSize=request.get('pageSize')
+        pageSize=int(pageSize) if pageSize is not None else 10
+        query=query.replace('@PAGING@','limit '+str(pageSize)+' offset '+str(pageSize*page-1));
         #print (query)
 
         re=[]
@@ -527,7 +535,7 @@ join gene_regulation_type on gene_regulation_type.id = protein_to_gene.regulatio
             #r['aliases']=r['aliases'].split(' ')
         self.fetch_all(query,params,row_consumer)
         handle_row (row)
-        return {'options':{'objTotal':row_count,"pagination":{"page":1,"pageSize":row_count,"pagesTotal":1}},'items':re}
+        return {'options':{'objTotal':row_count,"pagination":{"page":page,"pageSize":pageSize,"pagesTotal":row_count//pageSize + (row_count%pageSize!=0)}},'items':re}
 
     def get_list(self, request):
         cur = self.cnx.cursor(dictionary=True)
