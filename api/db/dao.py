@@ -489,12 +489,12 @@ join gene_regulation_type on gene_regulation_type.id = protein_to_gene.regulatio
         page=int(page) if page is not None else 1
         pageSize=request.get('pageSize')
         pageSize=int(pageSize) if pageSize is not None else 10
-        query=query.replace('@PAGING@','limit '+str(pageSize)+' offset '+str(pageSize*page-1));
+        query=query.replace('@PAGING@','limit '+str(pageSize)+' offset '+str(pageSize*(page-1)));
         #print (query)
 
         re=[]
         row=None
-        row_count=None
+        row_count=0
         lists={}
 
         def handle_row(r):
