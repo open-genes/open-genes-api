@@ -460,14 +460,16 @@ join gene_regulation_type on gene_regulation_type.id = protein_to_gene.regulatio
         query=query.replace("@ORDERING@",ordering)
 
         filtering={}
+        if request.get('isHidden')!='1':
+            filtering['gene.isHidden!=1']=[]
         if request.get('byDiseases'):
             filtering['(select count(*) from gene_to_disease where gene_to_disease.gene_id=gene.id and disease_id in ('+','.join(['%s' for v in request['byDiseases'].split(',')])+'))=%s']=request['byDiseases'].split(',')+[len(request['byDiseases'].split(','))]
         if request.get('byDiseaseCategories'):
             filtering['(select count(*) from gene_to_disease g join disease d on g.disease_id=d.id join disease c on c.icd_code=d.icd_code_visible where g.gene_id=gene.id and c.id in ('+','.join(['%s' for v in request['byDiseaseCategories'].split(',')])+'))=%s']=request['byDiseaseCategories'].split(',')+[len(request['byDiseaseCategories'].split(','))]
         if request.get('byAgeRelatedProcess'):
-            filtering['(select count(*) from gene_to_functional_cluster where gene_id=gene.id and functional_cluster_id in ('+','.join(['%s' for v in request['byAgeRelatedProcess'].split(',')])+'))=%s']=request['byAgeRelatedProcess'].split(',')+[len(request['byAgeRelatedProcess'].split(','))]
+            filtering['(select count(*) from gene_to_functional_cluster where gene_id=gene.id and functional_cluster_id in ('+','.join(['%s' for v in request['byagerelatedprocess'].split(',')])+'))=%s']=request['byAgeRelatedProcess'].split(',')+[len(request['byAgeRelatedProcess'].split(','))]
         if request.get('byExpressionChange'):
-            filtering['']=[]
+            filtering['gene.expressionChange in ('+','.join(['%s' for v in request['byExpressionChange'].split(',')])+')']=request['byExpressionChange'].split(',')
         if request.get('bySelectionCriteria'):
             filtering['(select count(*) from gene_to_comment_cause where gene_id=gene.id and comment_cause_id in ('+','.join(['%s' for v in request['bySelectionCriteria'].split(',')])+'))=%s']=request['bySelectionCriteria'].split(',')+[len(request['bySelectionCriteria'].split(','))]
         if request.get('byAgingMechanism'):
@@ -500,6 +502,18 @@ join gene_regulation_type on gene_regulation_type.id = protein_to_gene.regulatio
         def handle_row(r):
             nonlocal re
             if not r: return
+            queue=[('',r)]
+            while len(queue):
+                (k,o)=queue.pop(0)
+                if isinstance(o,list):
+                    queue[0:0]=[(k,i) for i in o]
+                    continue
+                for k in [k for k in o if o[k] is None]: o[k]=''
+                queue[0:0]=[(k,o[k]) for k in o if isinstance(o[k],dict) or isinstance(o[k],list) ]
+
+            r['aliases']=[a for a in r['aliases'].split(' ') if a]
+            if not r['origin']['id']:r['origin']=None
+            if not r['familyOrigin']['id']: r['familyOrigin']=None
             re.append(r)
 
         def row_consumer(r):
