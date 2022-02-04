@@ -6,14 +6,12 @@ from fastapi import APIRouter, HTTPException
 from config import Language, Order, SortVariant
 from db.dao import GeneDAO
 from db.request_handler import RequestHandler
-from db.sql_raws.scripts import GENES_QUERY
 from presenters.gene import GeneShort, Gene, GeneForMethylation, GeneWithResearches
 
 router = APIRouter()
 
 @router.get(
-    '/gene/search2',
-    # response_model=GeneOutput
+    '/gene/search',
 )
 async def gene_search(
         lang: Language = Language.en, page: int = None, pageSize: int = None, byDiseases: str = None,
@@ -27,47 +25,6 @@ async def gene_search(
     sortBy=sortBy.value
     sortOrder=sortOrder.value
     return GeneDAO().search(locals())
-
-@router.get(
-    '/gene/search',
-    # response_model=GeneOutput
-)
-async def get_genes_list(
-    lang: Language = Language.en,
-    page: int = None,
-    pageSize: int = None,
-    byDiseases: str = None,
-    byDiseaseCategories: str = None,
-    byAgeRelatedProcess: str = None,
-    byExpressionChange: str = None,
-    bySelectionCriteria: str = None,
-    byAgingMechanism: str = None,
-    byProteinClass: str = None,
-    sortBy: SortVariant = SortVariant.default,
-    sortOrder: Order = Order.desc,
-):
-    sql_handler = RequestHandler(GENES_QUERY)
-    sql_handler.set_language(lang.value)
-    sql_handler.set_pagination(page, pageSize)
-    sql_handler.set_sort(sortBy.value, sortOrder)
-    filters = {}
-    if byDiseases:
-        filters['diseases'] = byDiseases
-    if byDiseaseCategories:
-        filters['disease_categories'] = byDiseaseCategories
-    if byAgeRelatedProcess:
-        filters['functional_clusters'] = byAgeRelatedProcess
-    if byExpressionChange:
-        filters['expression_change'] = byExpressionChange
-    if bySelectionCriteria:
-        filters['comment_cause'] = bySelectionCriteria
-    if byAgingMechanism:
-        filters['aging_mechanisms'] = byAgingMechanism
-    if byProteinClass:
-        filters['protein_classes'] = byProteinClass
-    sql_handler.add_filters(sql_handler.validate_filters(filters))
-    return loads(GeneDAO().get_list(request=sql_handler.sql)[0]['respJS'])
-
 
 @router.get(
     '/gene/by-latest',

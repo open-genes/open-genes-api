@@ -2,7 +2,6 @@ from mysql import connector
 
 from config import CONFIG
 from entities import entities
-import copy
 
 
 # TODO(dmtgk): Add relationships integration.
@@ -550,12 +549,6 @@ join gene_regulation_type on gene_regulation_type.id = protein_to_gene.regulatio
         self.fetch_all(query,params,row_consumer)
         handle_row (row)
         return {'options':{'objTotal':row_count,"pagination":{"page":page,"pageSize":pageSize,"pagesTotal":row_count//pageSize + (row_count%pageSize!=0)}},'items':re}
-
-    def get_list(self, request):
-        cur = self.cnx.cursor(dictionary=True)
-        cur.execute('SET SESSION group_concat_max_len = 100000;')
-        cur.execute(request)
-        return cur.fetchall()
 
     def get_source_gene(self, gene_symbol):
         cur = self.cnx.cursor(dictionary=True)
