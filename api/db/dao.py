@@ -38,31 +38,31 @@ class GeneDAO(BaseDAO):
             'gene':
             {
                 'id':'gene.id',
-                'homologueTaxon':"COALESCE(NULLIF(taxon.name_@LANG@, ''), NULLIF(taxon.name_en, ''), '')",
-                'symbol':"IFNULL(gene.symbol,'')",
-                'name':"IFNULL(gene.name,'')",
+                'homologueTaxon':"COALESCE(taxon.name_@LANG@,taxon.name_en)",
+                'symbol':"gene.symbol",
+                'name':"gene.name",
                 'ncbiId':"gene.ncbi_id",
-                'uniprot':"IFNULL(gene.uniprot,'')",
+                'uniprot':"gene.uniprot",
                 'timestamp':
                 {
-                    'created':"IFNULL(gene.created_at,'')",
-                    'changed':"IFNULL(gene.updated_at,'')",
+                    'created':"gene.created_at",
+                    'changed':"gene.updated_at",
                 },
                 'ensembl':"gene.ensembl",
-                'methylationCorrelation':"IFNULL(gene.methylation_horvath,'')",
+                'methylationCorrelation':"gene.methylation_horvath",
                 'aliases':["gene.aliases"], # TODO split into array in the controller
                 'origin':
                 {
                     'id':"phylum.id",
-                    'phylum':"IFNULL(phylum.name_phylo,'')",
-                    'age':"IFNULL(phylum.name_mya,'')",
+                    'phylum':"phylum.name_phylo",
+                    'age':"phylum.name_mya",
                     'order':"phylum.order",
                 },
                 'familyOrigin':
                 {
                     'id':"family_phylum.id",
-                    'phylum':"IFNULL(family_phylum.name_phylo,'')",
-                    'age':"IFNULL(family_phylum.name_mya,'')",
+                    'phylum':"family_phylum.name_phylo",
+                    'age':"family_phylum.name_mya",
                     'order':"family_phylum.order",
                 },
                 '_from':"""
@@ -77,9 +77,9 @@ order by @ORDERING@ gene.id
 
                 'diseaseCategories':
                 [{
-                    'id':"IFNULL(disease_category.id,'null')",
-                    'icdCode':"IFNULL(disease_category.icd_code,'')",
-                    'icdCategoryName':"COALESCE(NULLIF(disease_category.icd_name_@LANG@, ''), NULLIF(disease.icd_name_@LANG@, ''), '')",
+                    'id':"disease_category.id",
+                    'icdCode':"disease_category.icd_code",
+                    'icdCategoryName':"COALESCE(disease_category.icd_name_@LANG@,disease.icd_name_@LANG@)",
                     '_from':"""
 
 from gene join gene_to_disease on gene_to_disease.gene_id=gene.id
@@ -89,22 +89,22 @@ join open_genes.disease disease_category on disease_category.icd_code=disease.ic
                 }],
                 'diseases':
                 [{
-                    'id':"IFNULL(disease.id,'null')",
-                    'icdCode':"IFNULL(disease.icd_code ,'')",
-                    'name':"COALESCE(NULLIF(disease.name_@LANG@, ''), NULLIF(disease.name_@LANG@, ''), '')",
-                    'icdName':"COALESCE(NULLIF(disease.icd_name_@LANG@, ''), NULLIF(disease.icd_name_@LANG@, ''), '')",
+                    'id':"disease.id",
+                    'icdCode':"disease.icd_code",
+                    'name':"COALESCE(disease.name_@LANG@,disease.name_@LANG@)",
+                    'icdName':"COALESCE(disease.icd_name_@LANG@,disease.icd_name_@LANG@)",
                     '_from':"from gene join gene_to_disease on gene_to_disease.gene_id=gene.id join disease on disease.id=gene_to_disease.disease_id",
                 }],
                 'commentCause':
                 [{
-                    'id':"IFNULL(comment_cause.id,'null')",
-                    'name':"COALESCE(NULLIF(comment_cause.name_@LANG@, ''), NULLIF(comment_cause.name_en, ''), '')",
+                    'id':"comment_cause.id",
+                    'name':"COALESCE(comment_cause.name_@LANG@,comment_cause.name_en)",
                     '_from':"from gene join gene_to_comment_cause on gene_to_comment_cause.gene_id=gene.id join comment_cause on comment_cause.id=gene_to_comment_cause.comment_cause_id",
                 }],
                 'proteinClasses':
                 [{
-                    'id':"IFNULL(protein_class.id,'null')",
-                    'name':"COALESCE(NULLIF(protein_class.name_en, ''), NULLIF(protein_class.name_en, ''), '')",
+                    'id':"protein_class.id",
+                    'name':"COALESCE(protein_class.name_en,protein_class.name_en)",
                     '_from':"from gene join gene_to_protein_class on gene_to_protein_class.gene_id=gene.id join  protein_class on protein_class.id=gene_to_protein_class.protein_class_id",
                 }],
                 'agingMechanisms':
