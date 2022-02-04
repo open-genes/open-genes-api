@@ -501,14 +501,14 @@ join gene_regulation_type on gene_regulation_type.id = protein_to_gene.regulatio
         def handle_row(r):
             nonlocal re
             if not r: return
-            queue=[('',r)]
-            while len(queue):
-                (k,o)=queue.pop(0)
-                if isinstance(o,list):
-                    queue[0:0]=[(k,i) for i in o]
-                    continue
-                for k in [k for k in o if o[k] is None]: o[k]=''
-                queue[0:0]=[(k,o[k]) for k in o if isinstance(o[k],dict) or isinstance(o[k],list) ]
+            #queue=[('',r)]
+            #while len(queue):
+            #    (k,o)=queue.pop(0)
+            #    if isinstance(o,list):
+            #        queue[0:0]=[(k,i) for i in o]
+            #        continue
+            #    for k in [k for k in o if o[k] is None]: o[k]=''
+            #    queue[0:0]=[(k,o[k]) for k in o if isinstance(o[k],dict) or isinstance(o[k],list) ]
 
             r['aliases']=[a for a in r['aliases'].split(' ') if a]
             if not r['origin']['id']:r['origin']=None
