@@ -475,6 +475,8 @@ join gene_regulation_type on gene_regulation_type.id = protein_to_gene.regulatio
             filtering['(select count(distinct aging_mechanism_id) from gene_to_ontology o join gene_ontology_to_aging_mechanism_visible a on a.gene_ontology_id=o.gene_ontology_id where o.gene_id=gene.id and aging_mechanism_id in ('+','.join(['%s' for v in request['byAgingMechanism'].split(',')])+'))=%s']=request['byAgingMechanism'].split(',')+[len(request['byAgingMechanism'].split(','))]
         if request.get('byProteinClass'):
             filtering['(select count(*) from gene_to_protein_class where gene_id=gene.id and protein_class_id in ('+','.join(['%s' for v in request['byProteinClass'].split(',')])+'))=%s']=request['byProteinClass'].split(',')+[len(request['byProteinClass'].split(','))]
+        if request.get('bySpecies'):
+            filtering['(select count(distinct model_organism_id) from lifespan_experiment where lifespan_experiment.gene_id=gene.id and model_organism_id in ('+','.join(['%s' for v in request['bySpecies'].split(',')])+'))=%s']=request['bySpecies'].split(',')+[len(request['bySpecies'].split(','))]
         params=[]
         if filtering:
             for p in filtering.values(): params=params+p
