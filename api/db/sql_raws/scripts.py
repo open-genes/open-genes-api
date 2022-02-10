@@ -88,7 +88,7 @@ JSON_OBJECT(
     'pValue', cre.p_val,
     'crResult', cre.result,
     'measurementMethod', mm.name_@LANG@,
-    'measurementType', mm.name_@LANG@,
+    'measurementType', mt.name_@LANG@,
     'restrictionPercent', cre.restriction_percent,
     'restrictionTime', cre.restriction_time,
     'age', cre.age,
