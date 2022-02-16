@@ -13,9 +13,6 @@ CREATE UNIQUE INDEX uin_worker_state
 ALTER TABLE gene
     ADD COLUMN hgnc_id TEXT;
 
-ALTER TABLE gene
-    ADD COLUMN uniprot_id TEXT;
-
 -- gene locus group -------------------------------------------------
 CREATE TABLE gene_locus_group
 (
@@ -78,8 +75,6 @@ CREATE INDEX in_transcript_exon_transcript_id
 -- down
 ALTER TABLE gene
     DROP COLUMN IF EXISTS hgnc_id;
-ALTER TABLE gene
-    DROP COLUMN IF EXISTS uniprot_id;
 ALTER TABLE gene
     DROP COLUMN IF EXISTS locus_group;
 ALTER TABLE gene

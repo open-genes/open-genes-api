@@ -8,12 +8,6 @@ import requests
 from api.entities import entities
 
 
-# "location": {
-#   accCds: "NP_000034",
-#   accOrf: "NM_000043",
-#   accPromoter: null,
-#   band "10q24.1"
-# }
 class GeneLocationFetcherNCBI():
     def __init__(self, symbol: str):
         self.gene = symbol
@@ -139,7 +133,6 @@ class Worker:
 
                 # hugo
                 hgnc_id = ''
-                uniprot_ids = ''
                 gene_group_id = 0
                 gene_locus_group_id = 0
                 hugo_location = ''
@@ -155,8 +148,7 @@ class Worker:
                             print(hugo_docs)
                             #
                             hgnc_id = hugo_docs['hgnc_id']
-                            #
-                            uniprot_ids = hugo_docs['uniprot_ids']
+
                             # gene group
                             gene_group = hugo_docs.get('gene_group')
                             if gene_group is not None:
@@ -164,12 +156,14 @@ class Worker:
                                     gene_group = gene_group[0]
                                     gene_group_id = self.gene_group_dao.get_id(gene_group)
                                     print("gene group:", gene_group_id)
+
                             # locus group
                             locus_group = hugo_docs.get('locus_group')
                             if locus_group is not None:
                                 if locus_group != '':
                                     gene_locus_group_id = self.locus_group_dao.get_id(locus_group)
                                     print("locus group:", gene_locus_group_id)
+
                             # location
                             hugo_location = hugo_docs['location']
 
@@ -178,21 +172,19 @@ class Worker:
 
                 # update gene
                 self.update_gene(gid, loc_start,
-                                 loc_end, loc_orient_int, hgnc_id, gene_group_id, gene_locus_group_id,
-                                 hugo_location,uniprot_ids)
+                                 loc_end, loc_orient_int, hgnc_id, gene_group_id, gene_locus_group_id, hugo_location)
 
                 # set state
                 self.state_dao.set(str(gid))
 
     def update_gene(self, id: int, loc_start,
-                    loc_end, loc_orient, hgnc_id, gene_group_id, gene_locus_group_id,
-                    location,uniprot_ids):
+                    loc_end, loc_orient, hgnc_id, gene_group_id, gene_locus_group_id, location):
         #
         cur = self.gene_dao.cnx.cursor(dictionary=True, buffered=True)
         sql = f'''
         UPDATE gene 
         SET locationStart={loc_start},locationEnd={loc_end},orientation={loc_orient},hgnc_id='{hgnc_id}',
-        gene_group={gene_group_id},locus_group={gene_locus_group_id},band='{location}',uniprot_id='{uniprot_ids}'
+        gene_group={gene_group_id},locus_group={gene_locus_group_id},band='{location}'
         WHERE id = {id};'''
         cur.execute(sql)
         self.gene_dao.cnx.commit()
