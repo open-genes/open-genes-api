@@ -302,7 +302,7 @@ class GeneSuggestionDAO(BaseDAO):
         where_list = []
         for substring in ls:
             where_list.append(suggestion_request_builder.build(substring))
-        where_block = " AND ".join(where_list)
+        where_block = " AND ".join("(" + b + ")" for b in where_list)
         # names block
         names_block = ",".join(suggestion_request_builder.get_names())
         # sql block
