@@ -28,8 +28,6 @@ class BaseDAO:
         return count
 
 
-
-
 class GeneDAO(BaseDAO):
     """Gene Table fetcher."""
     def search(self,request):
@@ -428,7 +426,7 @@ join gene_regulation_type on gene_regulation_type.id = protein_to_gene.regulatio
             },
         }
 
-        if 'researches' in request and request['researches']=='0': del output['gene']['researches'];
+        if 'researches' not in request or request['researches']!='1': del output['gene']['researches'];
 
         tables={}
         queue=[('','',output,tables)]
