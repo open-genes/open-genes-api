@@ -28,6 +28,45 @@ class GeneDAO(BaseDAO):
         cur.execute(request)
         return cur.fetchall()
 
+    def get_duplicates_genes(self):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute('''
+            SELECT min(gene.id) AS MAIN_GENE, GROUP_CONCAT(gene.id) AS GENES, COUNT(gene.id) as gid
+            FROM gene
+            GROUP BY gene.symbol
+            HAVING gid > 1
+            ''')
+        return cur.fetchall()
+
+    def change_table(self, tables, duplicates):
+        cur = self.cnx.cursor(dictionary=True)
+        for table in tables:
+            for item in duplicates:
+                for gene_id in item['GENES'].split(',')[1::]:
+                    cur.execute(
+                        '''
+                        UPDATE {table} SET gene_id = {main_gene}
+                            WHERE gene_id = {gene}
+                        '''.format(
+                            table=table,
+                            main_gene=item['MAIN_GENE'],
+                            gene=gene_id
+                            )
+                    )
+        self.cnx.commit()
+        return True
+
+    def delete_duplicates(self, genes_to_delete):
+        cur = self.cnx.cursor(dictionary=True)
+        for gene_id in genes_to_delete:
+            cur.execute('''
+                DELETE gene
+                FROM gene
+                WHERE id = {gene_id}
+                    '''.format(gene_id=gene_id))
+        self.cnx.commit()
+        return True
+
     def get_source_gene(self, gene_symbol):
         cur = self.cnx.cursor(dictionary=True)
         cur.execute(
