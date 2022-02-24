@@ -19,7 +19,7 @@ async def gene_search(
         byDiseaseCategories: str = None, byAgeRelatedProcess: str = None, byExpressionChange: str = None,
         bySelectionCriteria: str = None, byAgingMechanism: str = None, byProteinClass: str = None,
         bySpecies: str = None, byGeneId: str = None,
-        sortBy: SortVariant = SortVariant.default, sortOrder: Order = Order.desc,
+        sortBy: SortVariant = SortVariant.default, sortOrder: str = "DESC",
         researches: str=None, isHidden:str = None
 
 ):
