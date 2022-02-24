@@ -25,7 +25,6 @@ async def gene_search(
 ):
     lang=lang.value
     sortBy=sortBy.value
-    sortOrder=sortOrder.value
     return GeneDAO().search(locals())
 
 @router.get(
