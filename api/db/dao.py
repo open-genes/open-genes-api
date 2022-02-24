@@ -2,7 +2,7 @@ from mysql import connector
 
 from config import CONFIG
 from entities import entities
-
+from db.suggestion_handler import suggestion_request_builder
 
 # TODO(dmtgk): Add relationships integration.
 # TODO(dmtgk): Add versatility to BaseDAO and pydantic entity validation.
@@ -552,6 +552,45 @@ join gene_regulation_type on gene_regulation_type.id = protein_to_gene.regulatio
         handle_row (row)
         return {'options':{'objTotal':row_count,"pagination":{"page":page,"pageSize":pageSize,"pagesTotal":row_count//pageSize + (row_count%pageSize!=0)}},'items':re}
 
+    def get_duplicates_genes(self):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute('''
+            SELECT min(gene.id) AS MAIN_GENE, GROUP_CONCAT(gene.id) AS GENES, COUNT(gene.id) as gid
+            FROM gene
+            GROUP BY gene.symbol
+            HAVING gid > 1
+            ''')
+        return cur.fetchall()
+
+    def change_table(self, tables, duplicates):
+        cur = self.cnx.cursor(dictionary=True)
+        for table in tables:
+            for item in duplicates:
+                for gene_id in item['GENES'].split(',')[1::]:
+                    cur.execute(
+                        '''
+                        UPDATE {table} SET gene_id = {main_gene}
+                            WHERE gene_id = {gene}
+                        '''.format(
+                            table=table,
+                            main_gene=item['MAIN_GENE'],
+                            gene=gene_id
+                            )
+                    )
+        self.cnx.commit()
+        return True
+
+    def delete_duplicates(self, genes_to_delete):
+        cur = self.cnx.cursor(dictionary=True)
+        for gene_id in genes_to_delete:
+            cur.execute('''
+                DELETE gene
+                FROM gene
+                WHERE id = {gene_id}
+                    '''.format(gene_id=gene_id))
+        self.cnx.commit()
+        return True
+
     def get_source_gene(self, gene_symbol):
         cur = self.cnx.cursor(dictionary=True)
         cur.execute(
@@ -813,6 +852,25 @@ class DiseaseDAO(BaseDAO):
 
         return self.get(icd_code=disease_dict['icd_code'])
 
+class GeneSuggestionDAO(BaseDAO):
+    """Gene suggestion fetcher for gene table"""
+    def get_list(self, request):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute(request)
+        return cur.fetchall()
+
+    def search(self, input:str):
+        ls = [w for w in input.split(' ') if w]
+        # where's block
+        where_list = []
+        for substring in ls:
+            where_list.append(suggestion_request_builder.build(substring))
+        where_block = " AND ".join("(" + b + ")" for b in where_list)
+        # names block
+        names_block = ",".join(suggestion_request_builder.get_names())
+        # sql block
+        sql = f"SELECT {names_block} FROM gene WHERE {where_block};"
+        return self.get_list(sql)
 
 class CalorieExperimentDAO(BaseDAO):
     """Calorie experiment Table fetcher."""

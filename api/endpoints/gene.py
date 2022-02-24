@@ -5,9 +5,9 @@ from typing import List
 from fastapi import APIRouter, HTTPException
 
 from config import Language, SortVariant
-from db.dao import GeneDAO
+from db.dao import GeneDAO, GeneSuggestionDAO
 from db.request_handler import RequestHandler
-from presenters.gene import GeneShort, Gene, GeneForMethylation, GeneWithResearches
+from presenters.gene import GeneShort, Gene, GeneForMethylation, GeneWithResearches, GeneSuggestion
 
 router = APIRouter()
 
@@ -27,6 +27,15 @@ async def gene_search(
     sortBy=sortBy.value
     sortOrder=sortOrder.value
     return GeneDAO().search(locals())
+
+@router.get(
+    '/gene/suggestions',
+    response_model=List[GeneSuggestion],
+)
+async def get_gene_suggestions(input: str = None):
+    if not input:
+        return []
+    return GeneSuggestionDAO().search(input)
 
 @router.get(
     '/gene/by-latest',
