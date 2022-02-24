@@ -460,7 +460,7 @@ join gene_regulation_type on gene_regulation_type.id = protein_to_gene.regulatio
         if request.get('isHidden')!='1':
             filtering['gene.isHidden!=1']=[]
         if request.get('byGeneId'):
-            filtering['gene.id in ('+','.join(['%s' for v in request['byGeneId'].split(',')])+')']=request['byGeneId'].split(',')
+            filtering['gene.id in ('+','.join(['%s' for v in request['byGeneId'].split(',') if v.isdigit()])+')']=[v.strip() for v in request['byGeneId'].split(',') if v.isdigit()]
         if request.get('byDiseases'):
             filtering['(select count(*) from gene_to_disease where gene_to_disease.gene_id=gene.id and disease_id in ('+','.join(['%s' for v in request['byDiseases'].split(',')])+'))=%s']=request['byDiseases'].split(',')+[len(request['byDiseases'].split(','))]
         if request.get('byDiseaseCategories'):
