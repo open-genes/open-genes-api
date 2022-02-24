@@ -2,7 +2,7 @@ from mysql import connector
 
 from config import CONFIG
 from entities import entities
-
+from db.suggestion_handler import suggestion_request_builder
 
 # TODO(dmtgk): Add relationships integration.
 # TODO(dmtgk): Add versatility to BaseDAO and pydantic entity validation.
@@ -328,6 +328,25 @@ class DiseaseDAO(BaseDAO):
 
         return self.get(icd_code=disease_dict['icd_code'])
 
+class GeneSuggestionDAO(BaseDAO):
+    """Gene suggestion fetcher for gene table"""
+    def get_list(self, request):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute(request)
+        return cur.fetchall()
+
+    def search(self, input:str):
+        ls = [w for w in input.split(' ') if w]
+        # where's block
+        where_list = []
+        for substring in ls:
+            where_list.append(suggestion_request_builder.build(substring))
+        where_block = " AND ".join("(" + b + ")" for b in where_list)
+        # names block
+        names_block = ",".join(suggestion_request_builder.get_names())
+        # sql block
+        sql = f"SELECT {names_block} FROM gene WHERE {where_block};"
+        return self.get_list(sql)
 
 class CalorieExperimentDAO(BaseDAO):
     """Calorie experiment Table fetcher."""
