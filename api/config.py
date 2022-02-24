@@ -23,11 +23,6 @@ class Language(Enum):
     en = "en"
 
 
-class Order(Enum):
-    asc = "ASC"
-    desc = "DESC"
-
-
 class SortVariant(Enum):
     criteriaQuantity = "criteriaQuantity"
     default = "default"

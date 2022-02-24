@@ -1,9 +1,10 @@
+import json
 from json import loads
 from typing import List
 
 from fastapi import APIRouter, HTTPException
 
-from config import Language, Order, SortVariant
+from config import Language, SortVariant
 from db.dao import GeneDAO
 from db.request_handler import RequestHandler
 from presenters.gene import GeneShort, Gene, GeneForMethylation, GeneWithResearches

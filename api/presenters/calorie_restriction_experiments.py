@@ -10,13 +10,15 @@ class CalorieRestrictionExperiment:
     measurementMethod: str
     measurementType: str
     restrictionPercent: int
-    restrictionTime: str
+    duration: int
+    durationUnit: str
     age: str
+    ageUnit: str
     organism: str
     line: str
     sex: str
     tissue: str
-    experimentNumber: str
+    experimentGroupsQuantity: str
     doi: str
     expressionChangePercent: float
     isoform: Optional[str]
