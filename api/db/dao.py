@@ -881,9 +881,10 @@ class GeneSuggestionDAO(BaseDAO):
                     f=f and len([v for v in r.values() if (w.lower() in v.lower() if isinstance(v,str) else w==v) ])>0
                 k='found' if f else 'notFound'
                 if f and term in re['notFound']:
-                    re['found'].append(term)
+                    re['found'].append(' '.join(term))
                     re['notFound']=[t for t in re['notFound'] if t!=term]
 
+        re['notFound']=[' '.join(t) for t in re['notFound']]
         # sql block
         sql = f"SELECT {names_block} FROM gene WHERE {where_block};"
         self.fetch_all(sql,{},consume_row)

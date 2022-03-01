@@ -49,8 +49,8 @@ class GeneSuggestion:
 @dataclass
 class GeneSuggestionOutput:
     items: List[GeneSuggestion]
-    found: List[List[str]]
-    notFound: List[List[str]]
+    found: List[str]
+    notFound: List[str]
 
 @dataclass
 class GeneForMethylation:
