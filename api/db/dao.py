@@ -440,3 +440,18 @@ class CalorieExperimentDAO(BaseDAO):
             "SELECT id FROM isoform WHERE name_en='{}';".format(name)
         )
         return cur.fetchone()
+
+
+class ProteinClassesDAO(BaseDAO):
+    def get_all(self, lang):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute('SET SESSION group_concat_max_len = 100000;')
+        cur.execute(
+            '''
+            SELECT CAST(CONCAT('[', GROUP_CONCAT( distinct JSON_OBJECT(
+            'id', protein_class.id,
+            'name', protein_class.name_{}
+            ) separator ","), ']') AS JSON) AS jsonobj
+            FROM protein_class'''.format(lang)
+        )
+        return cur.fetchall()
