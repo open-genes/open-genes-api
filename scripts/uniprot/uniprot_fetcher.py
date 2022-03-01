@@ -26,7 +26,7 @@ logging.basicConfig(
 
 
 counter = 0
-for gene_object in dao.GeneDAO().get_list(request="SELECT ncbi_id, symbol, uniprot, uniprot_summary_ru FROM `gene`"):
+for gene_object in dao.GeneDAO().fetch_all("SELECT ncbi_id, symbol, uniprot, uniprot_summary_ru FROM `gene`"):
     if gene_object['uniprot'] and gene_object['uniprot_summary_ru']:
         continue
         

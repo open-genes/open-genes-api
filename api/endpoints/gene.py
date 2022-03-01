@@ -5,57 +5,36 @@ from typing import List
 from fastapi import APIRouter, HTTPException
 
 from config import Language, SortVariant
-from db.dao import GeneDAO
+from db.dao import GeneDAO, GeneSuggestionDAO
 from db.request_handler import RequestHandler
-from db.sql_raws.scripts import GENES_QUERY
-from presenters.gene import GeneShort, Gene, GeneForMethylation, GeneWithResearches
+from presenters.gene import GeneShort, Gene, GeneForMethylation, GeneWithResearches, GeneSuggestion
 
 router = APIRouter()
 
-
 @router.get(
     '/gene/search',
-    # response_model=GeneOutput
 )
-async def get_genes_list(
-    lang: Language = Language.en,
-    page: int = None,
-    pageSize: int = None,
-    byDiseases: str = None,
-    byDiseaseCategories: str = None,
-    byAgeRelatedProcess: str = None,
-    byExpressionChange: str = None,
-    bySelectionCriteria: str = None,
-    byAgingMechanism: str = None,
-    byProteinClass: str = None,
-    sortBy: SortVariant = SortVariant.default,
-    sortOrder: str = 'DESC',
-):
-    sortOrder = sortOrder.upper()
-    if sortOrder not in ['ASC', 'DESC']:
-        return HTTPException(status_code=422, detail="Invalid argument for sortOrder")
-    sql_handler = RequestHandler(GENES_QUERY)
-    sql_handler.set_language(lang.value)
-    sql_handler.set_pagination(page, pageSize)
-    sql_handler.set_sort(sortBy.value, sortOrder)
-    filters = {}
-    if byDiseases:
-        filters['diseases'] = byDiseases
-    if byDiseaseCategories:
-        filters['disease_categories'] = byDiseaseCategories
-    if byAgeRelatedProcess:
-        filters['functional_clusters'] = byAgeRelatedProcess
-    if byExpressionChange:
-        filters['expression_change'] = byExpressionChange
-    if bySelectionCriteria:
-        filters['comment_cause'] = bySelectionCriteria
-    if byAgingMechanism:
-        filters['aging_mechanisms'] = byAgingMechanism
-    if byProteinClass:
-        filters['protein_classes'] = byProteinClass
-    sql_handler.add_filters(sql_handler.validate_filters(filters))
-    return loads(GeneDAO().get_list(request=sql_handler.sql)[0]['respJS'])
+async def gene_search(
+        lang: Language = Language.en, page: int = None, pageSize: int = None, byDiseases: str = None,
+        byDiseaseCategories: str = None, byAgeRelatedProcess: str = None, byExpressionChange: str = None,
+        bySelectionCriteria: str = None, byAgingMechanism: str = None, byProteinClass: str = None,
+        bySpecies: str = None, byGeneId: str = None,
+        sortBy: SortVariant = SortVariant.default, sortOrder: str = "DESC",
+        researches: str=None, isHidden:str = None
 
+):
+    lang=lang.value
+    sortBy=sortBy.value
+    return GeneDAO().search(locals())
+
+@router.get(
+    '/gene/suggestions',
+    response_model=List[GeneSuggestion],
+)
+async def get_gene_suggestions(input: str = None):
+    if not input:
+        return []
+    return GeneSuggestionDAO().search(input)
 
 @router.get(
     '/gene/by-latest',
