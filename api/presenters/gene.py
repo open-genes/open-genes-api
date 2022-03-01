@@ -46,6 +46,11 @@ class GeneSuggestion:
     name: str = Field(title="Gene name", default=None)
     aliases: str = Field(title="Gene symbols in the other nomenclatures", default=None)
 
+@dataclass
+class GeneSuggestionOutput:
+    items: List[GeneSuggestion]
+    found: List[List[str]]
+    notFound: List[List[str]]
 
 @dataclass
 class GeneForMethylation:

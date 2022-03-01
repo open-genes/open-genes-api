@@ -854,23 +854,40 @@ class DiseaseDAO(BaseDAO):
 
 class GeneSuggestionDAO(BaseDAO):
     """Gene suggestion fetcher for gene table"""
-    def get_list(self, request):
-        cur = self.cnx.cursor(dictionary=True)
-        cur.execute(request)
-        return cur.fetchall()
-
     def search(self, input:str):
-        ls = [w for w in input.split(' ') if w]
+        terms=[term for term in [[w for w in t.strip().split(' ') if w] for t in input.split(',') if t] if term]
+        re={'items':[],'found':[],'notFound':terms}
+        if not terms: return re
+
         # where's block
-        where_list = []
-        for substring in ls:
-            where_list.append(suggestion_request_builder.build(substring))
-        where_block = " AND ".join("(" + b + ")" for b in where_list)
+        term_checks = []
+        for term in terms:
+            word_checks = []
+            for word in term:
+                word_checks.append(suggestion_request_builder.build(word))
+            term_checks.append(" AND ".join("(" + b + ")" for b in word_checks))
+        where_block = " OR ".join("(" + t + ")" for t in term_checks)
+
         # names block
         names_block = ",".join(suggestion_request_builder.get_names())
+
+        # found/notFound block
+        def consume_row(r):
+            nonlocal re, terms
+            re['items'].append(r)
+            for term in terms:
+                f=True
+                for w in term:
+                    f=f and len([v for v in r.values() if (w.lower() in v.lower() if isinstance(v,str) else w==v) ])>0
+                k='found' if f else 'notFound'
+                if f and term in re['notFound']:
+                    re['found'].append(term)
+                    re['notFound']=[t for t in re['notFound'] if t!=term]
+
         # sql block
         sql = f"SELECT {names_block} FROM gene WHERE {where_block};"
-        return self.get_list(sql)
+        self.fetch_all(sql,{},consume_row)
+        return re
 
 class CalorieExperimentDAO(BaseDAO):
     """Calorie experiment Table fetcher."""
