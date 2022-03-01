@@ -13,5 +13,5 @@ router = APIRouter()
     '/protein-classes',
     response_model=List[ProteinClass]
 )
-async def get_age_related_processes(lang: Language = Language.en):
+async def get_protein_classes(lang: Language = Language.en):
     return loads(FunctionalClusterDAO().get_all(lang=lang.value)[0]['jsonobj'])
