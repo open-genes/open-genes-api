@@ -10,7 +10,7 @@ router = APIRouter()
 
 
 @router.get(
-    '/protein-classes',
+    '/protein-class',
     response_model=List[ProteinClass]
 )
 async def get_protein_classes(lang: Language = Language.en):

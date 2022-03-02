@@ -1024,7 +1024,7 @@ class CalorieExperimentDAO(BaseDAO):
         return cur.fetchone()
 
       
-class ProteinClassesDAO(BaseDAO):
+class ProteinClassDAO(BaseDAO):
     def get_all(self, lang):
         cur = self.cnx.cursor(dictionary=True)
         cur.execute('SET SESSION group_concat_max_len = 100000;')
