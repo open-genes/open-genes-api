@@ -25,4 +25,5 @@ class Language(Enum):
 
 class SortVariant(Enum):
     criteriaQuantity = "criteriaQuantity"
+    familyPhylum = "familyPhylum"
     default = "default"
