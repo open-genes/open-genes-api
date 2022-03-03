@@ -41,6 +41,7 @@ class GeneDAO(BaseDAO):
                 'name':"gene.name",
                 'ncbiId':"gene.ncbi_id",
                 'uniprot':"gene.uniprot",
+                'expressionChange':"gene.expressionChange",
                 'timestamp':
                 {
                     'created':"gene.created_at",
