@@ -17,7 +17,7 @@ def assembling_endpoints(app: FastAPI):
         tags=["gene"],
     )
     app.include_router(
-        protein_classes.router,
+        protein_class.router,
         tags=["protein_classes"],
     )
     app.include_router(
