@@ -13,5 +13,5 @@ router = APIRouter()
     '/protein-class',
     response_model=List[ProteinClass]
 )
-async def get_protein_classes(lang: Language = Language.en):
+async def get_protein_class(lang: Language = Language.en):
     return loads(FunctionalClusterDAO().get_all(lang=lang.value)[0]['jsonobj'])
