@@ -881,12 +881,11 @@ class GeneSuggestionDAO(BaseDAO):
                 for w in term:
                     f=f and len([v for v in r.values() if (w.lower() in v.lower() if isinstance(v,str) else w==v) ])>0
 
-                print (term,f)
                 if f and term in re['notFound']:
                     re['found'].append(' '.join(term))
                     re['notFound']=[t for t in re['notFound'] if t!=term]
         # sql block
-        sql = f"SELECT {names_block} FROM gene WHERE {where_block};"
+        sql = f"SELECT {names_block} FROM gene WHERE {where_block} AND isHidden=0;"
         self.fetch_all(sql,{},consume_row)
 
         re['notFound']=[' '.join(t) for t in re['notFound']]
@@ -1043,7 +1042,7 @@ class CalorieExperimentDAO(BaseDAO):
         )
         return cur.fetchone()
 
-      
+
 class ProteinClassDAO(BaseDAO):
     def get_all(self, lang):
         cur = self.cnx.cursor(dictionary=True)
