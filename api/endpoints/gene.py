@@ -31,8 +31,12 @@ async def gene_search(
     '/gene/suggestions',
     response_model=GeneSuggestionOutput,
 )
-async def get_gene_suggestions(input: str = None):
-    return GeneSuggestionDAO().search(input)
+async def get_gene_suggestions(input: str = None, byGeneId: str = None):
+    if byGeneId:
+        return GeneSuggestionDAO().search_by_genes(byGeneId)
+    else:
+        return GeneSuggestionDAO().search(input)
+
 
 @router.get(
     '/gene/by-latest',

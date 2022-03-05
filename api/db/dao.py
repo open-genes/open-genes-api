@@ -891,6 +891,33 @@ class GeneSuggestionDAO(BaseDAO):
         re['notFound']=[' '.join(t) for t in re['notFound']]
         return re
 
+    def search_by_genes(self, byGeneId:str):
+        idls = [i.strip() for i in byGeneId.split(',') if i.strip().isdigit()]
+        re={'items':[],'found':[],'notFound':idls}
+        if not idls: return re
+
+        # names block
+        names_block = ",".join(suggestion_request_builder.get_names())
+
+        # found/notFound block
+        def consume_row(r):
+            nonlocal re, idls
+            re['items'].append(r)
+            for gid in idls:
+                f = gid == str(r['id'])
+
+                if f and gid in re['notFound']:
+                    re['found'].append(gid)
+                    re['notFound']=[t for t in re['notFound'] if t!=gid]
+
+        # sql block
+        idls_str = ','.join([str(i) for i in idls])
+        sql = f"SELECT {names_block} FROM gene WHERE id IN ({idls_str}) AND isHidden=0;"
+        self.fetch_all(sql, {}, consume_row)
+
+        return re
+
+
 class CalorieExperimentDAO(BaseDAO):
     """Calorie experiment Table fetcher."""
 
