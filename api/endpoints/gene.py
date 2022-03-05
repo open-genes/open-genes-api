@@ -31,9 +31,11 @@ async def gene_search(
     '/gene/suggestions',
     response_model=GeneSuggestionOutput,
 )
-async def get_gene_suggestions(input: str = None, byGeneId: str = None):
-    if byGeneId:
-        return GeneSuggestionDAO().search_by_genes(byGeneId)
+async def get_gene_suggestions(input: str = None, byGeneId: str = None, byGeneSmb: str = None):
+    if byGeneSmb:
+        return GeneSuggestionDAO().search_by_genes_symbol(byGeneSmb)
+    elif byGeneId:
+        return GeneSuggestionDAO().search_by_genes_id(byGeneId)
     else:
         return GeneSuggestionDAO().search(input)
 
