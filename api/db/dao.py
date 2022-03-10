@@ -462,6 +462,8 @@ join gene_regulation_type on gene_regulation_type.id = protein_to_gene.regulatio
             filtering['gene.isHidden!=1']=[]
         if request.get('byGeneId'):
             filtering['gene.id in ('+','.join(['%s' for v in request['byGeneId'].split(',')])+')']=request['byGeneId'].split(',')
+        # if request.get('bySymbol'):
+        #     filtering["gene.symbol='{}'".format(request['bySymbol'].strip())] = []
         if request.get('byDiseases'):
             filtering['(select count(*) from gene_to_disease where gene_to_disease.gene_id=gene.id and disease_id in ('+','.join(['%s' for v in request['byDiseases'].split(',')])+'))=%s']=request['byDiseases'].split(',')+[len(request['byDiseases'].split(','))]
         if request.get('byDiseaseCategories'):
@@ -552,6 +554,12 @@ join gene_regulation_type on gene_regulation_type.id = protein_to_gene.regulatio
         self.fetch_all(query,params,row_consumer)
         handle_row (row)
         return {'options':{'objTotal':row_count,"pagination":{"page":page,"pageSize":pageSize,"pagesTotal":row_count//pageSize + (row_count%pageSize!=0)}},'items':re}
+
+    def get_full_by_symbol(self, symbol):
+        req = {'bySymbol':symbol, 'limit':1}
+        resp = self.search(req)
+        print(resp)
+        return resp
 
     def get_duplicates_genes(self):
         cur = self.cnx.cursor(dictionary=True)
