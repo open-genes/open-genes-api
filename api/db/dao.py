@@ -4,6 +4,10 @@ from config import CONFIG
 from entities import entities
 from pydantic import BaseModel
 
+from db.suggestion_handler import suggestion_request_builder
+
+# TODO(dmtgk): Add relationships integration.
+# TODO(dmtgk): Add versatility to BaseDAO and pydantic entity validation.
 class BaseDAO:
     def __init__(self):
         # Connect to server.
@@ -173,6 +177,45 @@ class GeneDAO(BaseDAO):
         meta.update(re.pop(0))
 
         return {'options':{'objTotal':meta['row_count'],"pagination":{"page":meta['page'],"pageSize":meta['pageSize'],"pagesTotal":meta['row_count']//meta['pageSize'] + (meta['row_count']%meta['pageSize']!=0)}},'items':re}
+
+    def get_duplicates_genes(self):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute('''
+            SELECT min(gene.id) AS MAIN_GENE, GROUP_CONCAT(gene.id) AS GENES, COUNT(gene.id) as gid
+            FROM gene
+            GROUP BY gene.symbol
+            HAVING gid > 1
+            ''')
+        return cur.fetchall()
+
+    def change_table(self, tables, duplicates):
+        cur = self.cnx.cursor(dictionary=True)
+        for table in tables:
+            for item in duplicates:
+                for gene_id in item['GENES'].split(',')[1::]:
+                    cur.execute(
+                        '''
+                        UPDATE {table} SET gene_id = {main_gene}
+                            WHERE gene_id = {gene}
+                        '''.format(
+                            table=table,
+                            main_gene=item['MAIN_GENE'],
+                            gene=gene_id
+                            )
+                    )
+        self.cnx.commit()
+        return True
+
+    def delete_duplicates(self, genes_to_delete):
+        cur = self.cnx.cursor(dictionary=True)
+        for gene_id in genes_to_delete:
+            cur.execute('''
+                DELETE gene
+                FROM gene
+                WHERE id = {gene_id}
+                    '''.format(gene_id=gene_id))
+        self.cnx.commit()
+        return True
 
     def get_source_gene(self, gene_symbol):
         cur = self.cnx.cursor(dictionary=True)
@@ -435,6 +478,44 @@ class DiseaseDAO(BaseDAO):
 
         return self.get(icd_code=disease_dict['icd_code'])
 
+class GeneSuggestionDAO(BaseDAO):
+    """Gene suggestion fetcher for gene table"""
+    def search(self, input:str):
+        terms=[term for term in [[w for w in t.strip().split(' ') if w] for t in input.split(',') if t] if term]
+        re={'items':[],'found':[],'notFound':terms}
+        if not terms: return re
+
+        # where's block
+        term_checks = []
+        for term in terms:
+            word_checks = []
+            for word in term:
+                word_checks.append(suggestion_request_builder.build(word))
+            term_checks.append(" AND ".join("(" + b + ")" for b in word_checks))
+        where_block = " OR ".join("(" + t + ")" for t in term_checks)
+
+        # names block
+        names_block = ",".join(suggestion_request_builder.get_names())
+
+        # found/notFound block
+        def consume_row(r):
+            nonlocal re, terms
+            re['items'].append(r)
+            for term in terms:
+                f=True
+                for w in term:
+                    f=f and len([v for v in r.values() if (w.lower() in v.lower() if isinstance(v,str) else w==v) ])>0
+
+                print (term,f)
+                if f and term in re['notFound']:
+                    re['found'].append(' '.join(term))
+                    re['notFound']=[t for t in re['notFound'] if t!=term]
+        # sql block
+        sql = f"SELECT {names_block} FROM gene WHERE {where_block};"
+        self.fetch_all(sql,{},consume_row)
+
+        re['notFound']=[' '.join(t) for t in re['notFound']]
+        return re
 
 class CalorieExperimentDAO(BaseDAO):
     """Calorie experiment Table fetcher."""
@@ -586,3 +667,18 @@ class CalorieExperimentDAO(BaseDAO):
             "SELECT id FROM isoform WHERE name_en='{}';".format(name)
         )
         return cur.fetchone()
+
+      
+class ProteinClassDAO(BaseDAO):
+    def get_all(self, lang):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute('SET SESSION group_concat_max_len = 100000;')
+        cur.execute(
+            '''
+            SELECT CAST(CONCAT('[', GROUP_CONCAT( distinct JSON_OBJECT(
+            'id', protein_class.id,
+            'name', protein_class.name_{}
+            ) separator ","), ']') AS JSON) AS jsonobj
+            FROM protein_class'''.format(lang)
+        )
+        return cur.fetchall()

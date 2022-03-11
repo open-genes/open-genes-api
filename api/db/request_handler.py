@@ -1,6 +1,5 @@
 from db.filters import FILTERS, FILTERS_JOIN
 from db.sorts import SORTS
-from config import Order
 
 
 class RequestHandler:
@@ -39,13 +38,13 @@ class RequestHandler:
     def sql(self):
         return self.sql_row
 
-    def set_sort(self, sort, order:Order = Order.desc):
+    def set_sort(self, sort, order: str = "DESC"):
         summary_sort = SORTS[sort]
         if sort == 'criteriaQuantity':
-            self.sql_row = self.sql_row.replace('@SORT_BY_CC@', ' '.join([summary_sort, order.value]))
-            self.sql_row = self.sql_row.replace('@SORT@', ' '.join([SORTS['default'], order.value]))
+            self.sql_row = self.sql_row.replace('@SORT_BY_CC@', ' '.join([summary_sort, order]))
+            self.sql_row = self.sql_row.replace('@SORT@', ' '.join([SORTS['default'], order]))
         else:
-            self.sql_row = self.sql_row.replace('@SORT@', ' '.join([summary_sort, order.value]))
+            self.sql_row = self.sql_row.replace('@SORT@', ' '.join([summary_sort, order]))
             self.sql_row = self.sql_row.replace('@SORT_BY_CC@', ' ')
 
     @staticmethod

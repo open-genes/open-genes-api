@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 from pydantic import BaseModel
 
-from endpoints import gene, disease, calorie_experiment, aging_mechanism, functional_cluster, criteria
+from endpoints import gene, disease, calorie_experiment, aging_mechanism, functional_cluster, criteria, protein_class
 from config import CONFIG, VERSION
 
 
@@ -15,6 +15,10 @@ def assembling_endpoints(app: FastAPI):
     app.include_router(
         gene.router,
         tags=["gene"],
+    )
+    app.include_router(
+        protein_class.router,
+        tags=["protein_classes"],
     )
     app.include_router(
         disease.router,

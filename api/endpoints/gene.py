@@ -1,13 +1,14 @@
+import json
 from json import loads
 from typing import List
 
 from fastapi import APIRouter, HTTPException
 from fastapi import Depends
 
-from config import Language, Order, SortVariant
-from db.dao import GeneDAO
+from config import Language, SortVariant
+from db.dao import GeneDAO, GeneSuggestionDAO
 from db.request_handler import RequestHandler
-from presenters.gene import GeneShort, Gene, GeneForMethylation, GeneWithResearches
+from presenters.gene import GeneShort, Gene, GeneForMethylation, GeneWithResearches, GeneSuggestionOutput
 
 router = APIRouter()
 def common_parameters(q: str | None = None, skip: int = 0, limit: int = 100):
@@ -24,8 +25,15 @@ from models.gene import GeneSearchInput,GeneSearched
     '/gene/search',
     response_model=GeneSearched
 )
-async def gene_test(input:GeneSearchInput=Depends(GeneSearchInput))->List:
+async def gene_search(input:GeneSearchInput=Depends(GeneSearchInput))->List:
     return GeneDAO().search(input)
+
+@router.get(
+    '/gene/suggestions',
+    response_model=GeneSuggestionOutput,
+)
+async def get_gene_suggestions(input: str = None):
+    return GeneSuggestionDAO().search(input)
 
 @router.get(
     '/gene/by-latest',

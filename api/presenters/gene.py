@@ -38,6 +38,19 @@ class GeneShort:
     commentCause: dict = Field(title="Gene selection criteria")
     proteinClass: List[ProteinClass] = Field()
 
+@dataclass
+class GeneSuggestion:
+    id: int
+    ensembl: str = Field(title="Ensembl id", default=None)
+    symbol: str = Field(title="Gene symbol (HGNC)", default=None)
+    name: str = Field(title="Gene name", default=None)
+    aliases: str = Field(title="Gene symbols in the other nomenclatures", default=None)
+
+@dataclass
+class GeneSuggestionOutput:
+    items: List[GeneSuggestion]
+    found: List[str]
+    notFound: List[str]
 
 @dataclass
 class GeneForMethylation:

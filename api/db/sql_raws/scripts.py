@@ -17,21 +17,25 @@ JSON_OBJECT(
     'pValue', cre.p_val,
     'crResult', cre.result,
     'measurementMethod', mm.name_@LANG@,
-    'measurementType', mm.name_@LANG@,
+    'measurementType', mt.name_@LANG@,
     'restrictionPercent', cre.restriction_percent,
-    'restrictionTime', cre.restriction_time,
+    'duration', cre.restriction_time,
+    'durationUnit', tu2.name_@LANG@,
     'age', cre.age,
+    'ageUnit', tu.name_@LANG@,
     'organism', mo.name_@LANG@,
     'line', ol.name_@LANG@,
     'sex', os.name_@LANG@,
     'tissue', s.name_@LANG@,
-    'experimentNumber', cre.experiment_number,
+    'experimentGroupsQuantity', cre.experiment_number,
     'doi', cre.doi,
     'expressionChangePercent', CAST(cre.expression_change_percent AS FLOAT ),
     'isoform', i.name_@LANG@
     ) separator ","),']') AS JSON)) as jsonobj
 FROM gene
     JOIN calorie_restriction_experiment cre on gene.id = cre.gene_id
+    JOIN time_unit tu on cre.age_time_unit_id = tu.id
+    JOIN time_unit tu2 on cre.restriction_time_unit_id = tu2.id
     JOIN measurement_method mm on cre.measurement_method_id = mm.id
     JOIN measurement_type mt on cre.measurement_type_id = mt.id
     JOIN organism_line ol on cre.strain_id = ol.id
@@ -44,3 +48,4 @@ FROM gene
 @LIMIT@
 ) jsout;
 '''
+
