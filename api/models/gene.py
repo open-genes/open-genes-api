@@ -34,6 +34,7 @@ class Gene(BaseModel):
     id: int
     homologueTaxon:str|None
     symbol:str|None
+    chromosome:str|None
     name:str|None
     ncbiId:int|None
     uniprot:str|None
@@ -124,6 +125,7 @@ INNER JOIN `aging_mechanism` ON gene_ontology_to_aging_mechanism_visible.aging_m
         'id':'gene.id',
         'homologueTaxon':"COALESCE(taxon.name_@LANG@,taxon.name_en)",
         'symbol':"gene.symbol",
+        'chromosome':"gene.chromosome",
         'name':"gene.name",
         'ncbiId':"gene.ncbi_id",
         'uniprot':"gene.uniprot",
@@ -157,12 +159,14 @@ class GeneSearchInput(PaginationInput, LanguageInput, SortInput):
     byGeneId: str = None
     byGeneSymbol: str = None
     bySuggestions: str = None
+    byChromosomeNum: str = None
     sortBy: Literal['criteriaQuantity','familyPhylum']|None = None
     researches: str=None
     isHidden:str = 1
     _filters = {
         'isHidden':[lambda value: 'gene.isHidden!=1',lambda value: []],
         'byGeneId':[lambda value: 'gene.id in ('+','.join(['%s' for v in value.split(',')])+')',lambda value: value.split(',')],
+        'byChromosomeNum':[lambda value: 'gene.chromosome in ('+','.join(['%s' for v in value.split(',')])+')',lambda value: value.split(',')],
         'byGeneSymbol':[lambda value: 'gene.symbol in ('+','.join(['%s' for v in value.split(',')])+')',lambda value: value.split(',')],
         'byDiseases': [lambda value:'(select count(*) from gene_to_disease where gene_to_disease.gene_id=gene.id and disease_id in ('+','.join(['%s' for v in value.split(',')])+'))=%s',lambda value:value.split(',')+[len(value.split(','))]],
         'byDiseaseCategories': [lambda value:'(select count(*) from gene_to_disease g join disease d on g.disease_id=d.id join disease c on c.icd_code=d.icd_code_visible where g.gene_id=gene.id and c.id in ('+','.join(['%s' for v in value.split(',')])+'))=%s',lambda value:value.split(',')+[len(value.split(','))]],
