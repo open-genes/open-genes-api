@@ -179,16 +179,32 @@ class Worker:
 
     def update_gene(self, id: int, loc_start,
                     loc_end, loc_orient, hgnc_id, gene_group_id, gene_locus_group_id, location):
+        chstr = ''
+        for l in location:
+            if l.isdigit():
+                chstr += l
+            else:
+                break
+        try:
+            chromosome_num = int(chstr)
+        except:
+            chromosome_num = 'NULL'
+        print('chromosome:', chromosome_num)
+        #
+        gene_group_id = gene_group_id or 'NULL'
+        #
+        gene_locus_group_id = gene_locus_group_id or 'NULL'
+
         #
         cur = self.gene_dao.cnx.cursor(dictionary=True, buffered=True)
         sql = f'''
         UPDATE gene 
         SET locationStart={loc_start},locationEnd={loc_end},orientation={loc_orient},hgnc_id='{hgnc_id}',
-        gene_group={gene_group_id},locus_group={gene_locus_group_id},band='{location}'
+        gene_group={gene_group_id},locus_group={gene_locus_group_id},band='{location}',chromosome={chromosome_num}
         WHERE id = {id};'''
         cur.execute(sql)
         self.gene_dao.cnx.commit()
-
+ 
     def get_care_list(self):
         current_state = self.state_dao.get()
         if not current_state.isdigit():
