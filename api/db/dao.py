@@ -506,7 +506,6 @@ class GeneSuggestionDAO(BaseDAO):
                 for w in term:
                     f=f and len([v for v in r.values() if (w.lower() in v.lower() if isinstance(v,str) else w==v) ])>0
 
-                print (term,f)
                 if f and term in re['notFound']:
                     re['found'].append(' '.join(term))
                     re['notFound']=[t for t in re['notFound'] if t!=term]
@@ -668,7 +667,7 @@ class CalorieExperimentDAO(BaseDAO):
         )
         return cur.fetchone()
 
-      
+
 class ProteinClassDAO(BaseDAO):
     def get_all(self, lang):
         cur = self.cnx.cursor(dictionary=True)

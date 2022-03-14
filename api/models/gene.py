@@ -155,12 +155,15 @@ class GeneSearchInput(PaginationInput, LanguageInput, SortInput):
     byProteinClass: str = None
     bySpecies: str = None
     byGeneId: str = None
+    byGeneSymbol: str = None
+    bySuggestions: str = None
     sortBy: Literal['criteriaQuantity','familyPhylum']|None = None
     researches: str=None
     isHidden:str = 1
     _filters = {
         'isHidden':[lambda value: 'gene.isHidden!=1',lambda value: []],
         'byGeneId':[lambda value: 'gene.id in ('+','.join(['%s' for v in value.split(',')])+')',lambda value: value.split(',')],
+        'byGeneSymbol':[lambda value: 'gene.symbol in ('+','.join(['%s' for v in value.split(',')])+')',lambda value: value.split(',')],
         'byDiseases': [lambda value:'(select count(*) from gene_to_disease where gene_to_disease.gene_id=gene.id and disease_id in ('+','.join(['%s' for v in value.split(',')])+'))=%s',lambda value:value.split(',')+[len(value.split(','))]],
         'byDiseaseCategories': [lambda value:'(select count(*) from gene_to_disease g join disease d on g.disease_id=d.id join disease c on c.icd_code=d.icd_code_visible where g.gene_id=gene.id and c.id in ('+','.join(['%s' for v in value.split(',')])+'))=%s',lambda value:value.split(',')+[len(value.split(','))]],
         'byAgeRelatedProcess': [lambda value:'(select count(*) from gene_to_functional_cluster where gene_id=gene.id and functional_cluster_id in ('+','.join(['%s' for v in value.split(',')])+'))=%s',lambda value:value.split(',')+[len(value.split(','))]],
@@ -169,7 +172,7 @@ class GeneSearchInput(PaginationInput, LanguageInput, SortInput):
         'byAgingMechanism': [lambda value:'(select count(distinct aging_mechanism_id) from gene_to_ontology o join gene_ontology_to_aging_mechanism_visible a on a.gene_ontology_id=o.gene_ontology_id where o.gene_id=gene.id and aging_mechanism_id in ('+','.join(['%s' for v in value.split(',')])+'))=%s',lambda value:value.split(',')+[len(value.split(','))]],
         'byProteinClass': [lambda value:'(select count(*) from gene_to_protein_class where gene_id=gene.id and protein_class_id in ('+','.join(['%s' for v in value.split(',')])+'))=%s',lambda value:value.split(',')+[len(value.split(','))]],
         'bySpecies': [lambda value:'(select count(distinct model_organism_id) from lifespan_experiment where lifespan_experiment.gene_id=gene.id and model_organism_id in ('+','.join(['%s' for v in value.split(',')])+'))=%s',lambda value:value.split(',')+[len(value.split(','))]],
-        
+
     }
     _sorts = {
         'criteriaQuantity':'(select count(*) from gene_to_comment_cause where gene_id=gene.id)',

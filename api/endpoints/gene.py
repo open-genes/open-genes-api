@@ -26,6 +26,16 @@ from models.gene import GeneSearchInput,GeneSearched
     response_model=GeneSearched
 )
 async def gene_search(input:GeneSearchInput=Depends(GeneSearchInput))->List:
+    #
+    if input.bySuggestions is not None:
+        sls = GeneSuggestionDAO().search(input.bySuggestions)
+        idls = []
+        for item in sls['items']:
+            idls.append(item['id'])
+        suggfilter = ','.join(str(f) for f in idls)
+        input.bySuggestions = None
+        input.byGeneId = suggfilter
+    #
     return GeneDAO().search(input)
 
 @router.get(
@@ -34,6 +44,24 @@ async def gene_search(input:GeneSearchInput=Depends(GeneSearchInput))->List:
 )
 async def get_gene_suggestions(input: str = None):
     return GeneSuggestionDAO().search(input)
+
+@router.get(
+    '/test/gene/{symbol}',
+    response_model=Gene,
+    include_in_schema=False,
+)
+async def get_gene_by_symbol(symbol: str, lang: Language = Language.en):
+    if not symbol.isnumeric():
+        raise HTTPException( status_code=404, detail='Not implemented',)
+        return GeneDAO().get()
+    ncbi_id=int(symbol)
+    try:
+        return GeneDAO().get(ncbi_id=ncbi_id)
+    except Exception as e:
+        raise HTTPException(
+            status_code=404,
+            detail=e.args[0],
+        )
 
 @router.get(
     '/gene/by-latest',
@@ -83,23 +111,6 @@ async def get_gene_by_expression_change(expression_change: str, lang: Language =
 async def dummy_get_gene_by_symbol(symbol: str, lang: Language = Language.en):
         raise HTTPException( status_code=404, detail='Not implemented',)
 
-@router.get(
-    '/test/gene/{symbol}',
-    response_model=Gene,
-    include_in_schema=False,
-)
-async def get_gene_by_symbol(symbol: str, lang: Language = Language.en):
-    if not symbol.isnumeric():
-        raise HTTPException( status_code=404, detail='Not implemented',)
-        return GeneDAO().get()
-    ncbi_id=int(symbol)
-    try:
-        return GeneDAO().get(ncbi_id=ncbi_id)
-    except Exception as e:
-        raise HTTPException(
-            status_code=404,
-            detail=e.args[0],
-        )
 
 # dummy endpoint, for docs, actual processing is done in get_gene_by_symbol
 @router.get(
