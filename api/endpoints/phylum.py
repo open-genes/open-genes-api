@@ -13,5 +13,4 @@ router = APIRouter()
     response_model=List[PhylumOutput]
 )
 async def get_phylum():
-    print(loads(PhylumDAO().get_all()[0]['jsonobj']))
     return loads(PhylumDAO().get_all()[0]['jsonobj'])
