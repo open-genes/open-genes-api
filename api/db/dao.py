@@ -5,6 +5,8 @@ from entities import entities
 from pydantic import BaseModel
 
 from db.suggestion_handler import suggestion_request_builder
+from db.sql_raws.scripts import GENE_QUERY
+
 
 # TODO(dmtgk): Add relationships integration.
 # TODO(dmtgk): Add versatility to BaseDAO and pydantic entity validation.
@@ -20,163 +22,183 @@ class BaseDAO:
             ssl_disabled=True  # TODO(imhelle): Deal with ssl for db connection on droplet
         )
 
-    def fetch_all(self,query,params=[],consume=None):
+    def fetch_all(self, query, params=[], consume=None):
         cur = self.cnx.cursor(dictionary=True)
-        cur.execute(query,params)
-        if not consume: return cur.fetchall()
-        count=0
-        while r:=cur.fetchone():
-            if consume(r): break
+        cur.execute(query, params)
+        if not consume:
+            return cur.fetchall()
+        count = 0
+        while r := cur.fetchone():
+            if consume(r):
+                break
         return count
 
-    def prepare_tables(self,model):
-            tables={}
-            queue=[('','',model,tables,None)]
-            while len(queue):
-                (n,k,m,t,p)=queue.pop(0)
-                if not issubclass(m,BaseModel):
-                    t[n]=p._select.get(k,k) if hasattr(p,'_select') else k
-                    continue
-                if hasattr(m,'_from'):
-                    t={'_model':m,'_name':m._name if hasattr(m,'_name') else k,'_parent':t.get('_name'),'_from':m._from,'_join':''}
-                    tables[t['_name']]=t
-                    n=''
-                if hasattr(m,'_join'):
-                    t['_join']=(t['_join']+"\n"+m._join).strip()
-                queue[0:0]=[((n+'_'+k).strip('_'),k,m.__fields__[k].type_,t,m) for  k in m.__fields__]
+    def prepare_tables(self, model):
+        tables = {}
+        queue = [('', '', model, tables, None)]
+        while len(queue):
+            (n, k, m, t, p) = queue.pop(0)
+            if not issubclass(m, BaseModel):
+                t[n] = p._select.get(k, k) if hasattr(p, '_select') else k
+                continue
+            if hasattr(m, '_from'):
+                t = {'_model': m, '_name': m._name if hasattr(m, '_name') else k, '_parent': t.get('_name'), '_from': m._from, '_join': ''}
+                tables[t['_name']] = t
+                n = ''
+            if hasattr(m, '_join'):
+                t['_join'] = (t['_join'] + "\n" + m._join).strip()
+            queue[0:0] = [((n + '_' + k).strip('_'), k, m.__fields__[k].type_, t, m) for k in m.__fields__]
 
-            return tables
+        return tables
 
-    def prepare_query(self,tables,input):
-        primary_table=list(tables.keys())[0]
-        for table in [tables[t] for t in tables if '@JOINS@' not in tables[t]['_from']]: table['_from']=table['_from'].strip()+"\n@JOINS@\n"
-        query="with "+",\n".join([t+' as ( select concat('+((tables[t]['_parent']+'.ordering, ') if tables[t]['_parent'] else '')+"lpad(row_number() over(),5,'0')) as ordering"+(', count(*) over() as row_count' if t==primary_table else '')+', '+', '.join([tables[t][f]+' as "'+f+'"' for f in tables[t].keys() if not f.startswith('_')])+' '+tables[t]['_from'].replace('@JOINS@',tables[t].get('_join',''))+')' for t in tables])
-        query=query+"\n"+"\nunion ".join(['select '+t+'.ordering, '+(t+'.row_count' if t==primary_table else 'null')+" as row_count, '"+str(tables[t]['_name'])+"' as table_name,"+', '.join([', '.join([t+'.'+f+' as '+t+'_'+f for f in tables[t] if not f.startswith('_')]) for t in tables])+' '+' '.join([('from'if t2==primary_table else ('right join' if t2==t else 'left join'))+' '+t2+('' if t2==primary_table else ' on false') for t2 in tables]) for t in tables])
+    def prepare_query(self, tables, input):
+        primary_table = list(tables.keys())[0]
+        for table in [tables[t] for t in tables if '@JOINS@' not in tables[t]['_from']]:
+            table['_from'] = table['_from'].strip() + "\n@JOINS@\n"
+        query = "with " + ",\n".join([t + ' as ( select concat(' + ((tables[t]['_parent'] + '.ordering, ') if tables[t]['_parent'] else '') + "lpad(row_number() over(),5,'0')) as ordering" + (
+            ', count(*) over() as row_count' if t == primary_table else '') + ', ' + ', '.join([tables[t][f] + ' as "' + f + '"' for f in tables[t].keys() if not f.startswith('_')]) + ' ' + tables[t][
+                                          '_from'].replace('@JOINS@', tables[t].get('_join', '')) + ')' for t in tables])
+        query = query + "\n" + "\nunion ".join(['select ' + t + '.ordering, ' + (t + '.row_count' if t == primary_table else 'null') + " as row_count, '" + str(
+            tables[t]['_name']) + "' as table_name," + ', '.join([', '.join([t + '.' + f + ' as ' + t + '_' + f for f in tables[t] if not f.startswith('_')]) for t in tables]) + ' ' + ' '.join(
+            [('from' if t2 == primary_table else ('right join' if t2 == t else 'left join')) + ' ' + t2 + ('' if t2 == primary_table else ' on false') for t2 in tables]) for t in tables])
 
-        inputclass=type(input)
-        inputdict=input.dict()
-        filtering={}
+        inputclass = type(input)
+        inputdict = input.dict()
+        filtering = {}
         for f in [f for f in input.__fields__ if f in inputclass._filters and inputdict.get(f)]:
-            v=inputdict.get(f)
-            filter=inputclass._filters[f]
-            filtering[filter[0](v)]=filter[1](v)
+            v = inputdict.get(f)
+            filter = inputclass._filters[f]
+            filtering[filter[0](v)] = filter[1](v)
 
-        params=[]
+        params = []
         if filtering:
-            for p in filtering.values(): params=params+p
-            filtering='where '+' and '.join(filtering.keys())
+            for p in filtering.values():
+                params = params + p
+            filtering = 'where ' + ' and '.join(filtering.keys())
         else:
-            filtering=''
-        query=query.replace("@FILTERING@",filtering)
+            filtering = ''
+        query = query.replace("@FILTERING@", filtering)
 
-        ordering=inputclass._sorts.get(inputdict.get('sortBy'),'')
-        if ordering: ordering=ordering+' '+inputdict.get('sortOrder','')+', '
-        query=query.replace("@ORDERING@",ordering)
+        ordering = inputclass._sorts.get(inputdict.get('sortBy'), '')
+        if ordering:
+            ordering = ordering + ' ' + inputdict.get('sortOrder', '') + ', '
+        query = query.replace("@ORDERING@", ordering)
 
-        query=query.replace("@LANG@",inputdict.get('lang','en'))
+        query = query.replace("@LANG@", inputdict.get('lang', 'en'))
 
-        meta={}
+        meta = {}
         if 'page' in inputdict and 'pageSize' in inputdict:
-            meta['page']=inputdict.get('page')
-            meta['page']=int(meta['page']) if meta['page'] is not None else 1
-            meta['pageSize']=inputdict.get('pageSize')
-            meta['pageSize']=int(meta['pageSize']) if meta['pageSize'] is not None else 10
-            query=query.replace('@PAGING@','limit '+str(meta['pageSize'])+' offset '+str(meta['pageSize']*(meta['page']-1)));
+            meta['page'] = inputdict.get('page')
+            meta['page'] = int(meta['page']) if meta['page'] is not None else 1
+            meta['pageSize'] = inputdict.get('pageSize')
+            meta['pageSize'] = int(meta['pageSize']) if meta['pageSize'] is not None else 10
+            query = query.replace('@PAGING@', 'limit ' + str(meta['pageSize']) + ' offset ' + str(meta['pageSize'] * (meta['page'] - 1)));
 
-        query=query+"\norder by 1"
+        query = query + "\norder by 1"
 
-        return query,params,meta
+        return query, params, meta
 
-    def read_query(self,query,params,tables,consume=None,process=None):
+    def read_query(self, query, params, tables, consume=None, process=None):
 
-        primary_table=list(tables.keys())[0]
+        primary_table = list(tables.keys())[0]
 
-        re=[]
-        row=None
-        row_count=None
-        re_count=0
-        lists={}
+        re = []
+        row = None
+        row_count = None
+        re_count = 0
+        lists = {}
 
         def handle_row(r):
-            nonlocal re,re_count,process,consume
-            if not r: return
+            nonlocal re, re_count, process, consume
+            if not r:
+                return
             if 'row_count' in r:
                 if consume:
                     consume(r)
                 else:
                     re.append(r)
                 return
-            if process: r=process(r)
-            re_count=re_count+1
+            if process:
+                r = process(r)
+            re_count = re_count + 1
             if consume:
                 consume(r)
                 return
             re.append(r)
 
         def row_consumer(r):
-            nonlocal row,lists,row_count
-            t=r['table_name']
+            nonlocal row, lists, row_count
+            t = r['table_name']
             if r['row_count'] is not None and row_count is None:
-                row_count=r['row_count']
-                handle_row({'row_count':row_count})
+                row_count = r['row_count']
+                handle_row({'row_count': row_count})
 
-            if t==primary_table:
+            if t == primary_table:
                 handle_row(row)
-                row={}
-                data=row
-                lists={}
+                row = {}
+                data = row
+                lists = {}
             else:
-                data={}
+                data = {}
 
-            m_outer_type=None
-            queue=[(t,'',tables[t]['_model'],data)]
+            m_outer_type = None
+            queue = [(t, '', tables[t]['_model'], data)]
             while len(queue):
-                (n,k,m,d)=queue.pop(0)
-                if isinstance(m,tuple):
-                    m_outer_type=m[1]
-                    m=m[0]
+                (n, k, m, d) = queue.pop(0)
+                if isinstance(m, tuple):
+                    m_outer_type = m[1]
+                    m = m[0]
                 if repr(m_outer_type).startswith('typing.List'):
-                    d[k]=[]
-                    lists[m._name if hasattr(m,'_name') else k]=d[k]
+                    d[k] = []
+                    lists[m._name if hasattr(m, '_name') else k] = d[k]
                     continue
-                if not issubclass(m,BaseModel):
-                    d[k]=r.get(n)
+                if not issubclass(m, BaseModel):
+                    d[k] = r.get(n)
                     continue
                 if k:
-                    d[k]={}
-                    d=d[k]
-                queue[0:0]=[((n+'_'+k).strip('_'),k,(m.__fields__[k].type_,m.__fields__[k].outer_type_),d) for k in m.__fields__]
-            if tables[t]['_name'] in lists: lists[tables[t]['_name']].append(data)
+                    d[k] = {}
+                    d = d[k]
+                queue[0:0] = [((n + '_' + k).strip('_'), k, (m.__fields__[k].type_, m.__fields__[k].outer_type_), d) for k in m.__fields__]
+            if tables[t]['_name'] in lists:
+                lists[tables[t]['_name']].append(data)
 
-        self.fetch_all(query,params,row_consumer)
-        handle_row (row)
-        if row_count is None: handle_row({'row_count':0})
-        if consume: re=re_count
+        self.fetch_all(query, params, row_consumer)
+        handle_row(row)
+        if row_count is None:
+            handle_row({'row_count': 0})
+        if consume:
+            re = re_count
         return re
 
 
-from models.gene import Gene,GeneSearched
+from models.gene import Gene, GeneSearched
+
 
 class GeneDAO(BaseDAO):
     """Gene Table fetcher."""
-    def search(self,input):
-        # mangle aliases type to string, to manually split it into list in fixer
-        Gene.__fields__['aliases'].outer_type_=str
 
-        tables=self.prepare_tables(Gene)
-        query,params,meta=self.prepare_query(tables,input)
+    def search(self, input):
+        # mangle aliases type to string, to manually split it into list in fixer
+        Gene.__fields__['aliases'].outer_type_ = str
+
+        tables = self.prepare_tables(Gene)
+        query, params, meta = self.prepare_query(tables, input)
 
         def fixer(r):
-            if not r['origin']['id']:r['origin']=None
-            if not r['familyOrigin']['id']: r['familyOrigin']=None
-            r['aliases']=[a for a in r['aliases'].split(' ') if a]
+            if not r['origin']['id']:
+                r['origin'] = None
+            if not r['familyOrigin']['id']:
+                r['familyOrigin'] = None
+            r['aliases'] = [a for a in r['aliases'].split(' ') if a]
             return r
 
-        re=self.read_query(query,params,tables,process=fixer)
+        re = self.read_query(query, params, tables, process=fixer)
 
         meta.update(re.pop(0))
 
-        return {'options':{'objTotal':meta['row_count'],"pagination":{"page":meta['page'],"pageSize":meta['pageSize'],"pagesTotal":meta['row_count']//meta['pageSize'] + (meta['row_count']%meta['pageSize']!=0)}},'items':re}
+        return {'options': {'objTotal': meta['row_count'],
+                            "pagination": {"page": meta['page'], "pageSize": meta['pageSize'], "pagesTotal": meta['row_count'] // meta['pageSize'] + (meta['row_count'] % meta['pageSize'] != 0)}},
+                'items': re}
 
     def get_duplicates_genes(self):
         cur = self.cnx.cursor(dictionary=True)
@@ -201,7 +223,7 @@ class GeneDAO(BaseDAO):
                             table=table,
                             main_gene=item['MAIN_GENE'],
                             gene=gene_id
-                            )
+                        )
                     )
         self.cnx.commit()
         return True
@@ -238,8 +260,8 @@ class GeneDAO(BaseDAO):
         return cur.fetchone()
 
     def get(
-        self,
-        ncbi_id: int = None,
+            self,
+            ncbi_id: int = None,
     ) -> entities.Gene:
         cur = self.cnx.cursor(dictionary=True)
         cur.execute(
@@ -250,8 +272,8 @@ class GeneDAO(BaseDAO):
         return result
 
     def get_by_symbol(
-        self,
-        gene: str,
+            self,
+            gene: str,
     ) -> entities.Gene:
         cur = self.cnx.cursor(dictionary=True)
         cur.execute(
@@ -261,8 +283,8 @@ class GeneDAO(BaseDAO):
         return result
 
     def add(
-        self,
-        gene: entities.Gene,
+            self,
+            gene: entities.Gene,
     ) -> entities.Gene:
         gene_dict = gene.dict(exclude_none=True)
 
@@ -299,6 +321,13 @@ class GeneDAO(BaseDAO):
         cur.close()
 
         return self.get(ncbi_id=gene_dict['ncbi_id'])
+
+    def get_gene_page(self, symbol: str):
+        query = GENE_QUERY.format(gene_symbol=symbol)
+        cur = self.cnx.cursor()
+        cur.execute(query)
+        result = cur.fetchone()
+        return result
 
 
 class FunctionalClusterDAO(BaseDAO):
@@ -435,8 +464,8 @@ class DiseaseDAO(BaseDAO):
     """Disease Table fetcher."""
 
     def get(
-        self,
-        icd_code: int = None,
+            self,
+            icd_code: int = None,
     ) -> entities.Disease:
         cur = self.cnx.cursor(dictionary=True)
         cur.execute(
@@ -478,12 +507,15 @@ class DiseaseDAO(BaseDAO):
 
         return self.get(icd_code=disease_dict['icd_code'])
 
+
 class GeneSuggestionDAO(BaseDAO):
     """Gene suggestion fetcher for gene table"""
-    def search(self, input:str):
-        terms=[term for term in [[w for w in t.strip().split(' ') if w] for t in input.split(',') if t] if term]
-        re={'items':[],'found':[],'notFound':terms}
-        if not terms: return re
+
+    def search(self, input: str):
+        terms = [term for term in [[w for w in t.strip().split(' ') if w] for t in input.split(',') if t] if term]
+        re = {'items': [], 'found': [], 'notFound': terms}
+        if not terms:
+            return re
 
         # where's block
         term_checks = []
@@ -502,24 +534,26 @@ class GeneSuggestionDAO(BaseDAO):
             nonlocal re, terms
             re['items'].append(r)
             for term in terms:
-                f=True
+                f = True
                 for w in term:
-                    f=f and len([v for v in r.values() if (w.lower() in v.lower() if isinstance(v,str) else w==v) ])>0
+                    f = f and len([v for v in r.values() if (w.lower() in v.lower() if isinstance(v, str) else w == v)]) > 0
 
                 if f and term in re['notFound']:
                     re['found'].append(' '.join(term))
-                    re['notFound']=[t for t in re['notFound'] if t!=term]
+                    re['notFound'] = [t for t in re['notFound'] if t != term]
+
         # sql block
         sql = f"SELECT {names_block} FROM gene WHERE {where_block} AND isHidden=0;"
-        self.fetch_all(sql,{},consume_row)
+        self.fetch_all(sql, {}, consume_row)
 
-        re['notFound']=[' '.join(t) for t in re['notFound']]
+        re['notFound'] = [' '.join(t) for t in re['notFound']]
         return re
 
-    def search_by_genes_id(self, byGeneId:str):
+    def search_by_genes_id(self, byGeneId: str):
         idls = [i.strip() for i in byGeneId.split(',') if i.strip().isdigit()]
-        re={'items':[],'found':[],'notFound':idls}
-        if not idls: return re
+        re = {'items': [], 'found': [], 'notFound': idls}
+        if not idls:
+            return re
 
         # names block
         names_block = ",".join(suggestion_request_builder.get_names())
@@ -533,7 +567,7 @@ class GeneSuggestionDAO(BaseDAO):
 
                 if f and gid in re['notFound']:
                     re['found'].append(gid)
-                    re['notFound']=[t for t in re['notFound'] if t!=gid]
+                    re['notFound'] = [t for t in re['notFound'] if t != gid]
 
         # sql block
         idls_str = ','.join([str(i) for i in idls])
@@ -542,10 +576,11 @@ class GeneSuggestionDAO(BaseDAO):
 
         return re
 
-    def search_by_genes_symbol(self, byGeneSmb:str):
+    def search_by_genes_symbol(self, byGeneSmb: str):
         symbols = [i.strip().upper() for i in byGeneSmb.split(',')]
-        re={'items':[],'found':[],'notFound':symbols}
-        if not symbols: return re
+        re = {'items': [], 'found': [], 'notFound': symbols}
+        if not symbols:
+            return re
 
         # names block
         names_block = ",".join(suggestion_request_builder.get_names())
@@ -559,7 +594,7 @@ class GeneSuggestionDAO(BaseDAO):
 
                 if f and gid in re['notFound']:
                     re['found'].append(gid)
-                    re['notFound']=[t for t in re['notFound'] if t!=gid]
+                    re['notFound'] = [t for t in re['notFound'] if t != gid]
 
         # sql block
         idls_str = ','.join([f"'{i}'" for i in symbols])

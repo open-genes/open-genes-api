@@ -101,22 +101,12 @@ async def dummy_get_gene_by_symbol(symbol: str, lang: Language = Language.en):
 
 @router.get(
     '/test/gene/{symbol}',
-    response_model=Gene,
-    include_in_schema=False,
+    # response_model=Gene,
+    # include_in_schema=False,
 )
 async def get_gene_by_symbol(symbol: str, lang: Language = Language.en):
     if not symbol.isnumeric():
-        return GeneDAO().get_full_by_symbol(symbol)
-        # raise HTTPException( status_code=404, detail='Not implemented',)
-        # return GeneDAO().get()
-    ncbi_id=int(symbol)
-    try:
-        return GeneDAO().get(ncbi_id=ncbi_id)
-    except Exception as e:
-        raise HTTPException(
-            status_code=404,
-            detail=e.args[0],
-        )
+        return GeneDAO().get_gene_page(symbol)
 
 # dummy endpoint, for docs, actual processing is done in get_gene_by_symbol
 @router.get(
