@@ -1,0 +1,2771 @@
+{
+  "id": 1,
+  "origin": {
+    "id": 7,
+    "phylum": "Teleostomi",
+    "age": "",
+    "order": 12
+  },
+  "familyOrigin": {
+    "id": 9,
+    "phylum": "Vertebrata",
+    "age": "490",
+    "order": 10
+  },
+  "homologueTaxon": "Euteleostomi",
+  "symbol": "GHR",
+  "aliases": [
+    "GHBP",
+    "GHIP"
+  ],
+  "name": "growth hormone receptor",
+  "diseases": {
+    "1": {
+      "icdCode": "E78.0",
+      "icdName": "Чистая гиперхолестеринемия",
+      "name": "Гиперхолестеринемия, семейная",
+      "isRare": null
+    },
+    "2": {
+      "icdCode": "E34.3",
+      "icdName": "Низкорослость [карликовость], не классифицированная в других рубриках",
+      "name": "Дефицит гормона роста, изолированный частичный",
+      "isRare": null
+    },
+    "3": {
+      "icdCode": "E34.3",
+      "icdName": "Низкорослость [карликовость], не классифицированная в других рубриках",
+      "name": "Синдром Ларона",
+      "isRare": null
+    },
+    "4": {
+      "icdCode": "E34.3",
+      "icdName": "Низкорослость [карликовость], не классифицированная в других рубриках",
+      "name": "Нечувствительность к гормону роста, частичная",
+      "isRare": null
+    }
+  },
+  "diseaseCategories": {
+    "686": {
+      "icdCode": "E20-E35",
+      "icdCategoryName": "Нарушения других эндокринных желез"
+    },
+    "757": {
+      "icdCode": "E70-E90",
+      "icdCategoryName": "Нарушения обмена веществ"
+    }
+  },
+  "ncbiId": "2690",
+  "uniprot": "GHR_HUMAN",
+  "commentCause": {
+    "10": "Ген регулирует связанные со старением гены",
+    "13": "Изменение активности гена защищает от возрастного ухудшения",
+    "17": "Изменение активности гена усиливает возрастное ухудшение",
+    "2": "Геномные, транскриптомные и протеомные ассоциации с продолжительностью жизни/фенотипом старения",
+    "6": "Изменение активности гена увеличивает продолжительность жизни млекопитающих"
+  },
+  "functionalClusters": [
+    {
+      "id": 11,
+      "name": "митохондриальная функция"
+    },
+    {
+      "id": 21,
+      "name": "чувствительность к инсулину"
+    },
+    {
+      "id": 22,
+      "name": "метаболизм жиров"
+    },
+    {
+      "id": 29,
+      "name": "эндокринная система"
+    },
+    {
+      "id": 36,
+      "name": "мышцы"
+    },
+    {
+      "id": 8,
+      "name": "метаболизм глюкозы"
+    }
+  ],
+  "proteinClasses": [
+    {
+      "id": 118,
+      "name": "Гены, связанные с заболеваниями"
+    },
+    {
+      "id": 119,
+      "name": "Гены-мишени для лекарств, одобренные FDA"
+    },
+    {
+      "id": 58,
+      "name": "Предсказанные мембранные белки"
+    },
+    {
+      "id": 80,
+      "name": "Предсказанные секретируемые белки"
+    }
+  ],
+  "expressionChange": 0,
+  "timestamp": {
+    "changed": "1638371732",
+    "created": null
+  },
+  "methylationCorrelation": "",
+  "agingMechanisms": [
+    {
+      "id": 16,
+      "name": "дисрегуляция молекулярного пути INS/IGF-1"
+    }
+  ],
+  "ensembl": "ENSG00000112964",
+
+
+  "commentEvolution": "Рецепторы гормона роста (GH), пролактина (PRL), пролактина 2 (PRL2) и соматолактина (SL) принадлежат к суперсемейству рецепторов цитокинов класса I. Эволюция рецепторов GH, PRL и SL имеет разные временные точки дупликаций генов самих гормонов и генов рецепторов. Гены рецепторных семейств были идентифицированы в широком диапазоне геномов позвоночных. Они расположены в паралогических блоках хромосом, которые возникли во время тетраплоидизации геномного материала позвоночных, эти события называются 1R и 2R [10.1016/j.ygcen.2017.06.021]. В то же время дублирующиеся гены GHR, вероятно, являются результатом специфической для костистых животных тетраплоидизации, также известной как 3R, произошедешей позже [10.1007/s00239-007-9035-7].",
+  "commentFunction": "Рецептор гормона роста гипофиза, участвующий в регуляции послеродового роста тела. При связывании лиганда пары с путем JAK2 / STAT5 (по сходству) Растворимая форма (GHBP) действует как резервуар гормона роста в плазме и может быть модулятором / ингибитором передачи сигналов GH. Изоформа 2 регулирует выработку GHBP и действует как отрицательный ингибитор передачи сигналов GH. ",
+  "proteinDescriptionUniProt": "Рецептор гормона роста гипофиза, участвующий в регуляции послеродового роста тела. При связывании лиганда пары с путем JAK2 / STAT5 (по сходству) Растворимая форма (GHBP) действует как резервуар гормона роста в плазме и может быть модулятором / ингибитором передачи сигналов GH. Изоформа 2 регулирует выработку GHBP и действует как отрицательный ингибитор передачи сигналов GH. ",
+  "descriptionNCBI": "Этот ген кодирует член семейства рецепторов цитокинов типа I, который является трансмембранным рецептором гормона роста. Связывание гормона роста с рецептором приводит к димеризации рецептора и активации внутри- и межклеточного пути передачи сигнала, ведущего к росту. Мутации в этом гене были связаны с синдромом Ларона, также известным как синдром нечувствительности к гормону роста (GHIS), заболеванием, характеризующимся низким ростом. У людей и кроликов, но не у грызунов, белок, связывающий гормон роста (GHBP), образуется в результате протеолитического отщепления внеклеточного лиганд-связывающего домена от белка рецептора зрелого гормона роста. Для этого гена было обнаружено множество альтернативно сплайсированных вариантов транскриптов [предоставлено RefSeq, июнь 2011].",
+  "descriptionOG": "",
+  "proteinDescriptionOpenGenes": "",
+  "researches": {
+    "increaseLifespan": [
+      {
+        "modelOrganism": "mouse",
+        "organismLine": "C57BL/6J",
+        "sex": "male",
+        "temperatureFrom": 22,
+        "temperatureTo": 22,
+        "diet": "standard chow",
+        "expressionChangeTissue": "",
+        "lifespanTimeUnit": "",
+        "interventionResultForLifespan": "increases lifespan",
+        "expressionMeasurementType": "",
+        "controlCohortSize": 22,
+        "experimentCohortSize": 14,
+        "expressionChangePercent": 0,
+        "lifespanMinControl": 175,
+        "lifespanMeanControl": 756,
+        "lifespanMedianControl": 866,
+        "lifespanMaxControl": 955,
+        "lifespanMinExperiment": 686,
+        "lifespanMeanExperiment": 951,
+        "lifespanMedianExperiment": 941,
+        "lifespanMaxExperiment": 1095,
+        "lifespanMinChangePercent": 292,
+        "lifespanMeanChangePercent": 26,
+        "lifespanMedianChangePercent": 9,
+        "lifespanMaxChangePercent": 14.7,
+        "lMinChangeStatSignificance": null,
+        "lMeanChangeStatSignificance": true,
+        "lMedianChangeStatSignificance": null,
+        "lMaxChangeStatSignificance": null,
+        "doi": "10.1210/en.2003-0374",
+        "pmid": "",
+        "comment": "GHR deletion in mice caused dwarfism, enhanced insulin sensitivity, and significantly extended longevity.\r\nThe average lifespan of GHR −/− C57BL/6J male mice was significantly longer than their controls.",
+        "populationDensity": 2,
+        "inductionByDrugWithdrawal": 0,
+        "interventions": {
+          "controlAndExperiment": [],
+          "experiment": [
+            {
+              "interventionMethod": "gene knockout",
+              "interventionWay": "transgenic animals obtaining",
+              "tissueSpecific": false,
+              "tissueSpecificPromoter": null,
+              "treatmentStart": null,
+              "treatmentEnd": null,
+              "inductionByDrugWithdrawal": "0",
+              "treatmentDescription": "",
+              "startTimeUnit": null,
+              "endTimeUnit": null,
+              "genotype": "-/-",
+              "drugDeliveryWay": null,
+              "drug": null,
+              "startStageOfDevelopment": null,
+              "endStageOfDevelopment": null,
+              "treatmentPeriod": null,
+              "experimentMainEffect": "loss of function",
+              "tissues": []
+            }
+          ]
+        },
+        "interventionImproves": [
+          {
+            "id": "23",
+            "name": "insulin sensitivity"
+          }
+        ],
+        "interventionDeteriorates": [
+          {
+            "id": "39",
+            "name": "body composition"
+          },
+          {
+            "id": "64",
+            "name": "growth"
+          }
+        ]
+      },
+      {
+        "modelOrganism": "mouse",
+        "organismLine": "C57BL/6",
+        "sex": "female",
+        "temperatureFrom": 22,
+        "temperatureTo": 22,
+        "diet": "standard chow",
+        "expressionChangeTissue": "",
+        "lifespanTimeUnit": "",
+        "interventionResultForLifespan": "increases lifespan",
+        "expressionMeasurementType": "",
+        "controlCohortSize": 35,
+        "experimentCohortSize": 35,
+        "expressionChangePercent": 0,
+        "lifespanMinControl": 98.6,
+        "lifespanMeanControl": 122,
+        "lifespanMedianControl": 125.5,
+        "lifespanMaxControl": 137.8,
+        "lifespanMinExperiment": 94,
+        "lifespanMeanExperiment": 128,
+        "lifespanMedianExperiment": 124,
+        "lifespanMaxExperiment": 163.6,
+        "lifespanMinChangePercent": -4.7,
+        "lifespanMeanChangePercent": 5,
+        "lifespanMedianChangePercent": -1.1,
+        "lifespanMaxChangePercent": 18.7,
+        "lMinChangeStatSignificance": null,
+        "lMeanChangeStatSignificance": false,
+        "lMedianChangeStatSignificance": false,
+        "lMaxChangeStatSignificance": true,
+        "doi": "10.1210/en.2016-1649",
+        "pmid": "",
+        "comment": "Knockout of GHR in adult mice resulted in growth retardation and higher adiposity. Knockout mice displayed improved insulin sensitivity but poor glucose tolerance. Female GHR knockout mice had increased maximal lifespan.\r\n",
+        "populationDensity": 0,
+        "inductionByDrugWithdrawal": 0,
+        "interventions": {
+          "controlAndExperiment": [],
+          "experiment": [
+            {
+              "interventionMethod": "gene knockout",
+              "interventionWay": "combined (inducible mutation)",
+              "tissueSpecific": false,
+              "tissueSpecificPromoter": null,
+              "treatmentStart": "6",
+              "treatmentEnd": "6.7",
+              "inductionByDrugWithdrawal": "0",
+              "treatmentDescription": "100-μL ip injections of 10-mg/mL tamoxifen dissolved in peanut oil once per day over 5 consecutive days, for a total of 5 mg of tamoxifen.",
+              "startTimeUnit": "weeks",
+              "endTimeUnit": "weeks",
+              "genotype": "-/-",
+              "drugDeliveryWay": null,
+              "drug": "tamoxifen",
+              "startStageOfDevelopment": "after birth",
+              "endStageOfDevelopment": "after birth",
+              "treatmentPeriod": "multiple times within a certain period",
+              "experimentMainEffect": "loss of function",
+              "tissues": []
+            }
+          ]
+        },
+        "interventionImproves": [
+          {
+            "id": "23",
+            "name": "insulin sensitivity"
+          }
+        ],
+        "interventionDeteriorates": [
+          {
+            "id": "1",
+            "name": "glucose metabolism"
+          },
+          {
+            "id": "39",
+            "name": "body composition"
+          },
+          {
+            "id": "64",
+            "name": "growth"
+          }
+        ]
+      },
+      {
+        "modelOrganism": "mouse",
+        "organismLine": "Ola-BALB/cJ",
+        "sex": "male",
+        "temperatureFrom": 22,
+        "temperatureTo": 22,
+        "diet": "standard chow",
+        "expressionChangeTissue": "",
+        "lifespanTimeUnit": "",
+        "interventionResultForLifespan": "increases lifespan",
+        "expressionMeasurementType": "",
+        "controlCohortSize": 15,
+        "experimentCohortSize": 11,
+        "expressionChangePercent": 0,
+        "lifespanMinControl": 128,
+        "lifespanMeanControl": 656,
+        "lifespanMedianControl": 698,
+        "lifespanMaxControl": 885,
+        "lifespanMinExperiment": 648,
+        "lifespanMeanExperiment": 917,
+        "lifespanMedianExperiment": 888,
+        "lifespanMaxExperiment": 1165,
+        "lifespanMinChangePercent": 406.2,
+        "lifespanMeanChangePercent": 40,
+        "lifespanMedianChangePercent": 27,
+        "lifespanMaxChangePercent": 0,
+        "lMinChangeStatSignificance": null,
+        "lMeanChangeStatSignificance": true,
+        "lMedianChangeStatSignificance": null,
+        "lMaxChangeStatSignificance": null,
+        "doi": "10.1210/en.2003-0374",
+        "pmid": "",
+        "comment": "GHR deletion in mice caused dwarfism, enhanced insulin sensitivity, and significantly extended longevity.\r\nThe average lifespan of GHR −/− Ola-BALB/cJ male mice was significantly longer than their controls.",
+        "populationDensity": 2,
+        "inductionByDrugWithdrawal": 0,
+        "interventions": {
+          "controlAndExperiment": [],
+          "experiment": [
+            {
+              "interventionMethod": "gene knockout",
+              "interventionWay": "transgenic animals obtaining",
+              "tissueSpecific": false,
+              "tissueSpecificPromoter": null,
+              "treatmentStart": null,
+              "treatmentEnd": null,
+              "inductionByDrugWithdrawal": "0",
+              "treatmentDescription": "",
+              "startTimeUnit": null,
+              "endTimeUnit": null,
+              "genotype": "-/-",
+              "drugDeliveryWay": null,
+              "drug": null,
+              "startStageOfDevelopment": null,
+              "endStageOfDevelopment": null,
+              "treatmentPeriod": null,
+              "experimentMainEffect": "loss of function",
+              "tissues": []
+            }
+          ]
+        },
+        "interventionImproves": [
+          {
+            "id": "23",
+            "name": "insulin sensitivity"
+          }
+        ],
+        "interventionDeteriorates": [
+          {
+            "id": "39",
+            "name": "body composition"
+          },
+          {
+            "id": "64",
+            "name": "growth"
+          }
+        ]
+      },
+      {
+        "modelOrganism": "mouse",
+        "organismLine": "Ola-BALB/cJ",
+        "sex": "female",
+        "temperatureFrom": 22,
+        "temperatureTo": 22,
+        "diet": "standard chow",
+        "expressionChangeTissue": "",
+        "lifespanTimeUnit": "",
+        "interventionResultForLifespan": "increases lifespan",
+        "expressionMeasurementType": "",
+        "controlCohortSize": 24,
+        "experimentCohortSize": 30,
+        "expressionChangePercent": 0,
+        "lifespanMinControl": 516,
+        "lifespanMeanControl": 759,
+        "lifespanMedianControl": 765,
+        "lifespanMaxControl": 1004,
+        "lifespanMinExperiment": 525,
+        "lifespanMeanExperiment": 921,
+        "lifespanMedianExperiment": 981,
+        "lifespanMaxExperiment": 1163,
+        "lifespanMinChangePercent": 1.7,
+        "lifespanMeanChangePercent": 21,
+        "lifespanMedianChangePercent": 28,
+        "lifespanMaxChangePercent": 15.8,
+        "lMinChangeStatSignificance": null,
+        "lMeanChangeStatSignificance": true,
+        "lMedianChangeStatSignificance": null,
+        "lMaxChangeStatSignificance": null,
+        "doi": "10.1210/en.2003-0374",
+        "pmid": "",
+        "comment": "GHR deletion in mice caused dwarfism, enhanced insulin sensitivity, and significantly extended longevity.\r\nThe average lifespan of GHR −/− Ola-BALB/cJ female mice was significantly longer than their controls.",
+        "populationDensity": 2,
+        "inductionByDrugWithdrawal": 0,
+        "interventions": {
+          "controlAndExperiment": [],
+          "experiment": [
+            {
+              "interventionMethod": "gene knockout",
+              "interventionWay": "transgenic animals obtaining",
+              "tissueSpecific": false,
+              "tissueSpecificPromoter": null,
+              "treatmentStart": "0",
+              "treatmentEnd": null,
+              "inductionByDrugWithdrawal": "0",
+              "treatmentDescription": "",
+              "startTimeUnit": "days",
+              "endTimeUnit": null,
+              "genotype": "-/-",
+              "drugDeliveryWay": null,
+              "drug": null,
+              "startStageOfDevelopment": null,
+              "endStageOfDevelopment": null,
+              "treatmentPeriod": null,
+              "experimentMainEffect": "loss of function",
+              "tissues": []
+            }
+          ]
+        },
+        "interventionImproves": [
+          {
+            "id": "23",
+            "name": "insulin sensitivity"
+          }
+        ],
+        "interventionDeteriorates": [
+          {
+            "id": "39",
+            "name": "body composition"
+          },
+          {
+            "id": "64",
+            "name": "growth"
+          }
+        ]
+      },
+      {
+        "modelOrganism": "mouse",
+        "organismLine": "129/OlaHsd x BALB/c",
+        "sex": "female",
+        "temperatureFrom": 0,
+        "temperatureTo": 0,
+        "diet": "standard chow",
+        "expressionChangeTissue": "",
+        "lifespanTimeUnit": "days",
+        "interventionResultForLifespan": "increases lifespan",
+        "expressionMeasurementType": "",
+        "controlCohortSize": 13,
+        "experimentCohortSize": 11,
+        "expressionChangePercent": 0,
+        "lifespanMinControl": 0,
+        "lifespanMeanControl": 749,
+        "lifespanMedianControl": 0,
+        "lifespanMaxControl": 0,
+        "lifespanMinExperiment": 0,
+        "lifespanMeanExperiment": 1031,
+        "lifespanMedianExperiment": 0,
+        "lifespanMaxExperiment": 0,
+        "lifespanMinChangePercent": 0,
+        "lifespanMeanChangePercent": 38,
+        "lifespanMedianChangePercent": 0,
+        "lifespanMaxChangePercent": 0,
+        "lMinChangeStatSignificance": null,
+        "lMeanChangeStatSignificance": true,
+        "lMedianChangeStatSignificance": null,
+        "lMaxChangeStatSignificance": null,
+        "doi": "10.1210/endo.141.7.7586",
+        "pmid": "",
+        "comment": "GHR knockout mice had impaired growth and significantly lower levels of plasma IGF1 and IGFBP3. The mean lifespan of GHR knockout female mice was significantly longer than that of control mice.\r\n",
+        "populationDensity": 4,
+        "inductionByDrugWithdrawal": 0,
+        "interventions": {
+          "controlAndExperiment": [],
+          "experiment": [
+            {
+              "interventionMethod": "gene knockout",
+              "interventionWay": "transgenic animals obtaining",
+              "tissueSpecific": false,
+              "tissueSpecificPromoter": null,
+              "treatmentStart": null,
+              "treatmentEnd": null,
+              "inductionByDrugWithdrawal": "0",
+              "treatmentDescription": "",
+              "startTimeUnit": null,
+              "endTimeUnit": null,
+              "genotype": "-/-",
+              "drugDeliveryWay": null,
+              "drug": null,
+              "startStageOfDevelopment": null,
+              "endStageOfDevelopment": null,
+              "treatmentPeriod": null,
+              "experimentMainEffect": "loss of function",
+              "tissues": []
+            }
+          ]
+        },
+        "interventionImproves": [
+          {
+            "id": "62",
+            "name": "INS/IGFR pathway"
+          }
+        ],
+        "interventionDeteriorates": [
+          {
+            "id": "39",
+            "name": "body composition"
+          },
+          {
+            "id": "64",
+            "name": "growth"
+          }
+        ]
+      },
+      {
+        "modelOrganism": "mouse",
+        "organismLine": "C57BL/6J",
+        "sex": "female",
+        "temperatureFrom": 23,
+        "temperatureTo": 23,
+        "diet": "standard chow",
+        "expressionChangeTissue": "",
+        "lifespanTimeUnit": "days",
+        "interventionResultForLifespan": "increases lifespan",
+        "expressionMeasurementType": "",
+        "controlCohortSize": 17,
+        "experimentCohortSize": 19,
+        "expressionChangePercent": 0,
+        "lifespanMinControl": 563,
+        "lifespanMeanControl": 821,
+        "lifespanMedianControl": 850,
+        "lifespanMaxControl": 1060,
+        "lifespanMinExperiment": 578,
+        "lifespanMeanExperiment": 956,
+        "lifespanMedianExperiment": 1023,
+        "lifespanMaxExperiment": 1185,
+        "lifespanMinChangePercent": 2.7,
+        "lifespanMeanChangePercent": 16,
+        "lifespanMedianChangePercent": 20,
+        "lifespanMaxChangePercent": 11.8,
+        "lMinChangeStatSignificance": null,
+        "lMeanChangeStatSignificance": false,
+        "lMedianChangeStatSignificance": null,
+        "lMaxChangeStatSignificance": null,
+        "doi": "10.1210/en.2003-0374",
+        "pmid": "",
+        "comment": "GHR deletion in mice caused dwarfism, enhanced insulin sensitivity, and significantly extended longevity.\r\nThe average lifespan of GHR −/− C57BL/6J female mice wasnt significantly different from their controls.",
+        "populationDensity": 2,
+        "inductionByDrugWithdrawal": 0,
+        "interventions": {
+          "controlAndExperiment": [],
+          "experiment": [
+            {
+              "interventionMethod": "gene knockout",
+              "interventionWay": "transgenic animals obtaining",
+              "tissueSpecific": false,
+              "tissueSpecificPromoter": null,
+              "treatmentStart": null,
+              "treatmentEnd": null,
+              "inductionByDrugWithdrawal": "0",
+              "treatmentDescription": "",
+              "startTimeUnit": null,
+              "endTimeUnit": null,
+              "genotype": "-/-",
+              "drugDeliveryWay": null,
+              "drug": null,
+              "startStageOfDevelopment": null,
+              "endStageOfDevelopment": null,
+              "treatmentPeriod": null,
+              "experimentMainEffect": "loss of function",
+              "tissues": []
+            }
+          ]
+        },
+        "interventionImproves": [
+          {
+            "id": "23",
+            "name": "insulin sensitivity"
+          }
+        ],
+        "interventionDeteriorates": [
+          {
+            "id": "39",
+            "name": "body composition"
+          },
+          {
+            "id": "64",
+            "name": "growth"
+          }
+        ]
+      },
+      {
+        "modelOrganism": "mouse",
+        "organismLine": "129/OlaHsd x BALB/c",
+        "sex": "male",
+        "temperatureFrom": 0,
+        "temperatureTo": 0,
+        "diet": "",
+        "expressionChangeTissue": "",
+        "lifespanTimeUnit": "days",
+        "interventionResultForLifespan": "increases lifespan",
+        "expressionMeasurementType": "",
+        "controlCohortSize": 7,
+        "experimentCohortSize": 7,
+        "expressionChangePercent": 0,
+        "lifespanMinControl": 0,
+        "lifespanMeanControl": 629,
+        "lifespanMedianControl": 0,
+        "lifespanMaxControl": 0,
+        "lifespanMinExperiment": 0,
+        "lifespanMeanExperiment": 975,
+        "lifespanMedianExperiment": 0,
+        "lifespanMaxExperiment": 0,
+        "lifespanMinChangePercent": 0,
+        "lifespanMeanChangePercent": 55,
+        "lifespanMedianChangePercent": 0,
+        "lifespanMaxChangePercent": 0,
+        "lMinChangeStatSignificance": null,
+        "lMeanChangeStatSignificance": true,
+        "lMedianChangeStatSignificance": null,
+        "lMaxChangeStatSignificance": null,
+        "doi": "10.1210/endo.141.7.7586",
+        "pmid": "",
+        "comment": "GHR knockout mice had impaired growth and significantly lower levels of plasma IGF1 and IGFBP3. The mean lifespan of GHR knockout male mice was significantly longer than that of control mice.",
+        "populationDensity": 0,
+        "inductionByDrugWithdrawal": 0,
+        "interventions": {
+          "controlAndExperiment": [],
+          "experiment": [
+            {
+              "interventionMethod": "gene knockout",
+              "interventionWay": null,
+              "tissueSpecific": false,
+              "tissueSpecificPromoter": null,
+              "treatmentStart": null,
+              "treatmentEnd": null,
+              "inductionByDrugWithdrawal": "0",
+              "treatmentDescription": "",
+              "startTimeUnit": null,
+              "endTimeUnit": null,
+              "genotype": "-/-",
+              "drugDeliveryWay": null,
+              "drug": null,
+              "startStageOfDevelopment": null,
+              "endStageOfDevelopment": null,
+              "treatmentPeriod": null,
+              "experimentMainEffect": "loss of function",
+              "tissues": []
+            }
+          ]
+        },
+        "interventionImproves": [
+          {
+            "id": "62",
+            "name": "INS/IGFR pathway"
+          }
+        ],
+        "interventionDeteriorates": [
+          {
+            "id": "39",
+            "name": "body composition"
+          },
+          {
+            "id": "64",
+            "name": "growth"
+          }
+        ]
+      },
+      {
+        "modelOrganism": "mouse",
+        "organismLine": "C57BL/6",
+        "sex": "male",
+        "temperatureFrom": 0,
+        "temperatureTo": 0,
+        "diet": "standard chow",
+        "expressionChangeTissue": "",
+        "lifespanTimeUnit": "",
+        "interventionResultForLifespan": "",
+        "expressionMeasurementType": "",
+        "controlCohortSize": 35,
+        "experimentCohortSize": 35,
+        "expressionChangePercent": 0,
+        "lifespanMinControl": 83.4,
+        "lifespanMeanControl": 120,
+        "lifespanMedianControl": 123,
+        "lifespanMaxControl": 139.5,
+        "lifespanMinExperiment": 98,
+        "lifespanMeanExperiment": 119,
+        "lifespanMedianExperiment": 119,
+        "lifespanMaxExperiment": 138.6,
+        "lifespanMinChangePercent": 17.5,
+        "lifespanMeanChangePercent": -0.8,
+        "lifespanMedianChangePercent": -3.3,
+        "lifespanMaxChangePercent": -0.6,
+        "lMinChangeStatSignificance": null,
+        "lMeanChangeStatSignificance": false,
+        "lMedianChangeStatSignificance": false,
+        "lMaxChangeStatSignificance": null,
+        "doi": "10.1210/en.2016-1649",
+        "pmid": "",
+        "comment": "Knockout of GHR in adult mice resulted in growth retardation and higher adiposity. Knockout mice displayed improved insulin sensitivity but poor glucose tolerance. Male knockout mice didn't exhibit a difference in lifespan.",
+        "populationDensity": 0,
+        "inductionByDrugWithdrawal": 0,
+        "interventions": {
+          "controlAndExperiment": [],
+          "experiment": [
+            {
+              "interventionMethod": "latent genetic modification + substance-inducer of latent genetic modification",
+              "interventionWay": "transgenic animals obtaining",
+              "tissueSpecific": false,
+              "tissueSpecificPromoter": null,
+              "treatmentStart": "6",
+              "treatmentEnd": "6.7",
+              "inductionByDrugWithdrawal": "1",
+              "treatmentDescription": "6-week-old mice received 100-μL ip injections of 10-mg/mL tamoxifen dissolved in peanut oil once per day over 5 consecutive days, for a total of 5 mg of tamoxifen.",
+              "startTimeUnit": "weeks",
+              "endTimeUnit": "weeks",
+              "genotype": "-/-",
+              "drugDeliveryWay": null,
+              "drug": "tamoxifen",
+              "startStageOfDevelopment": "after birth",
+              "endStageOfDevelopment": "after birth",
+              "treatmentPeriod": "multiple times within a certain period",
+              "experimentMainEffect": "loss of function",
+              "tissues": []
+            }
+          ]
+        },
+        "interventionImproves": [
+          {
+            "id": "23",
+            "name": "insulin sensitivity"
+          }
+        ],
+        "interventionDeteriorates": [
+          {
+            "id": "1",
+            "name": "glucose metabolism"
+          },
+          {
+            "id": "39",
+            "name": "body composition"
+          },
+          {
+            "id": "64",
+            "name": "growth"
+          }
+        ]
+      },
+      {
+        "modelOrganism": "mouse",
+        "organismLine": "",
+        "sex": "female",
+        "temperatureFrom": 20,
+        "temperatureTo": 24,
+        "diet": "standard chow",
+        "expressionChangeTissue": "",
+        "lifespanTimeUnit": "",
+        "interventionResultForLifespan": "increases lifespan",
+        "expressionMeasurementType": "",
+        "controlCohortSize": 0,
+        "experimentCohortSize": 0,
+        "expressionChangePercent": 0,
+        "lifespanMinControl": 380,
+        "lifespanMeanControl": 0,
+        "lifespanMedianControl": 712,
+        "lifespanMaxControl": 891,
+        "lifespanMinExperiment": 581,
+        "lifespanMeanExperiment": 0,
+        "lifespanMedianExperiment": 1057,
+        "lifespanMaxExperiment": 1223,
+        "lifespanMinChangePercent": 52.9,
+        "lifespanMeanChangePercent": 0,
+        "lifespanMedianChangePercent": 48.5,
+        "lifespanMaxChangePercent": 37.3,
+        "lMinChangeStatSignificance": null,
+        "lMeanChangeStatSignificance": null,
+        "lMedianChangeStatSignificance": true,
+        "lMaxChangeStatSignificance": true,
+        "doi": "10.1093/gerona/glw193",
+        "pmid": "",
+        "comment": "Mice with GHR knockout had lower insulin and higher adiponectin levels in plasma and improved glucose tolerance, and improved lifespan.",
+        "populationDensity": 0,
+        "inductionByDrugWithdrawal": 0,
+        "interventions": {
+          "controlAndExperiment": [],
+          "experiment": [
+            {
+              "interventionMethod": "gene knockout",
+              "interventionWay": "transgenic animals obtaining",
+              "tissueSpecific": false,
+              "tissueSpecificPromoter": null,
+              "treatmentStart": null,
+              "treatmentEnd": null,
+              "inductionByDrugWithdrawal": "0",
+              "treatmentDescription": "",
+              "startTimeUnit": null,
+              "endTimeUnit": null,
+              "genotype": "-/-",
+              "drugDeliveryWay": null,
+              "drug": null,
+              "startStageOfDevelopment": null,
+              "endStageOfDevelopment": null,
+              "treatmentPeriod": null,
+              "experimentMainEffect": "loss of function",
+              "tissues": []
+            }
+          ]
+        },
+        "interventionImproves": [
+          {
+            "id": "1",
+            "name": "glucose metabolism"
+          }
+        ],
+        "interventionDeteriorates": [
+          {
+            "id": "64",
+            "name": "growth"
+          }
+        ]
+      },
+      {
+        "modelOrganism": "mouse",
+        "organismLine": "C57BL/6",
+        "sex": "male",
+        "temperatureFrom": 22,
+        "temperatureTo": 22,
+        "diet": "standard chow",
+        "expressionChangeTissue": "",
+        "lifespanTimeUnit": "",
+        "interventionResultForLifespan": "increases lifespan",
+        "expressionMeasurementType": "",
+        "controlCohortSize": 0,
+        "experimentCohortSize": 0,
+        "expressionChangePercent": 0,
+        "lifespanMinControl": 679,
+        "lifespanMeanControl": 0,
+        "lifespanMedianControl": 922,
+        "lifespanMaxControl": 1089,
+        "lifespanMinExperiment": 684,
+        "lifespanMeanExperiment": 0,
+        "lifespanMedianExperiment": 1004,
+        "lifespanMaxExperiment": 1156,
+        "lifespanMinChangePercent": 0.7,
+        "lifespanMeanChangePercent": 0,
+        "lifespanMedianChangePercent": 9,
+        "lifespanMaxChangePercent": 6,
+        "lMinChangeStatSignificance": null,
+        "lMeanChangeStatSignificance": null,
+        "lMedianChangeStatSignificance": true,
+        "lMaxChangeStatSignificance": true,
+        "doi": "10.18632/aging.100766",
+        "pmid": "",
+        "comment": "Male mice with muscle-specific GHR knockout had improved glucose metabolism, smaller body size, decreased lean mass, and lived longer than control.",
+        "populationDensity": 0,
+        "inductionByDrugWithdrawal": 0,
+        "interventions": {
+          "controlAndExperiment": [],
+          "experiment": [
+            {
+              "interventionMethod": "gene knockout",
+              "interventionWay": "transgenic animals obtaining",
+              "tissueSpecific": true,
+              "tissueSpecificPromoter": "",
+              "treatmentStart": null,
+              "treatmentEnd": null,
+              "inductionByDrugWithdrawal": "0",
+              "treatmentDescription": "",
+              "startTimeUnit": null,
+              "endTimeUnit": null,
+              "genotype": "-/-",
+              "drugDeliveryWay": null,
+              "drug": null,
+              "startStageOfDevelopment": null,
+              "endStageOfDevelopment": null,
+              "treatmentPeriod": null,
+              "experimentMainEffect": "loss of function",
+              "tissues": [
+                {
+                  "id": "28",
+                  "name": "muscle"
+                }
+              ]
+            }
+          ]
+        },
+        "interventionImproves": [
+          {
+            "id": "1",
+            "name": "glucose metabolism"
+          }
+        ],
+        "interventionDeteriorates": [
+          {
+            "id": "39",
+            "name": "body composition"
+          }
+        ]
+      },
+      {
+        "modelOrganism": "mouse",
+        "organismLine": "C57BL/6",
+        "sex": "female",
+        "temperatureFrom": 22,
+        "temperatureTo": 22,
+        "diet": "standard chow",
+        "expressionChangeTissue": "",
+        "lifespanTimeUnit": "",
+        "interventionResultForLifespan": "",
+        "expressionMeasurementType": "",
+        "controlCohortSize": 0,
+        "experimentCohortSize": 0,
+        "expressionChangePercent": 0,
+        "lifespanMinControl": 582,
+        "lifespanMeanControl": 0,
+        "lifespanMedianControl": 870,
+        "lifespanMaxControl": 1062,
+        "lifespanMinExperiment": 632,
+        "lifespanMeanExperiment": 0,
+        "lifespanMedianExperiment": 898,
+        "lifespanMaxExperiment": 1090,
+        "lifespanMinChangePercent": 8.6,
+        "lifespanMeanChangePercent": 0,
+        "lifespanMedianChangePercent": 3.2,
+        "lifespanMaxChangePercent": 2.6,
+        "lMinChangeStatSignificance": null,
+        "lMeanChangeStatSignificance": null,
+        "lMedianChangeStatSignificance": null,
+        "lMaxChangeStatSignificance": null,
+        "doi": "10.18632/aging.100766",
+        "pmid": "",
+        "comment": "Female mice with muscle-specific GHR knockout had improved glucose metabolism, bigger body size, and increased lean mass, but the same lifespan as control. ",
+        "populationDensity": 0,
+        "inductionByDrugWithdrawal": 0,
+        "interventions": {
+          "controlAndExperiment": [],
+          "experiment": [
+            {
+              "interventionMethod": "gene knockout",
+              "interventionWay": "transgenic animals obtaining",
+              "tissueSpecific": true,
+              "tissueSpecificPromoter": "",
+              "treatmentStart": null,
+              "treatmentEnd": null,
+              "inductionByDrugWithdrawal": "0",
+              "treatmentDescription": "",
+              "startTimeUnit": null,
+              "endTimeUnit": null,
+              "genotype": "-/-",
+              "drugDeliveryWay": null,
+              "drug": null,
+              "startStageOfDevelopment": null,
+              "endStageOfDevelopment": null,
+              "treatmentPeriod": null,
+              "experimentMainEffect": "loss of function",
+              "tissues": [
+                {
+                  "id": "28",
+                  "name": "muscle"
+                }
+              ]
+            }
+          ]
+        },
+        "interventionImproves": [
+          {
+            "id": "1",
+            "name": "glucose metabolism"
+          },
+          {
+            "id": "36",
+            "name": "muscle"
+          },
+          {
+            "id": "39",
+            "name": "body composition"
+          }
+        ],
+        "interventionDeteriorates": []
+      },
+      {
+        "modelOrganism": "mouse",
+        "organismLine": "wild type",
+        "sex": "male",
+        "temperatureFrom": 20,
+        "temperatureTo": 24,
+        "diet": "standard chow",
+        "expressionChangeTissue": "",
+        "lifespanTimeUnit": "",
+        "interventionResultForLifespan": "increases lifespan",
+        "expressionMeasurementType": "",
+        "controlCohortSize": 0,
+        "experimentCohortSize": 0,
+        "expressionChangePercent": 0,
+        "lifespanMinControl": 426,
+        "lifespanMeanControl": 0,
+        "lifespanMedianControl": 747,
+        "lifespanMaxControl": 1007,
+        "lifespanMinExperiment": 592,
+        "lifespanMeanExperiment": 0,
+        "lifespanMedianExperiment": 903,
+        "lifespanMaxExperiment": 1220,
+        "lifespanMinChangePercent": 39,
+        "lifespanMeanChangePercent": 0,
+        "lifespanMedianChangePercent": 20.9,
+        "lifespanMaxChangePercent": 21.2,
+        "lMinChangeStatSignificance": null,
+        "lMeanChangeStatSignificance": null,
+        "lMedianChangeStatSignificance": true,
+        "lMaxChangeStatSignificance": true,
+        "doi": "10.1093/gerona/glw193",
+        "pmid": "",
+        "comment": "Mice with GHR knockout had lower insulin and higher adiponectin levels in plasma and improved glucose tolerance, and improved lifespan.",
+        "populationDensity": 0,
+        "inductionByDrugWithdrawal": 0,
+        "interventions": {
+          "controlAndExperiment": [],
+          "experiment": [
+            {
+              "interventionMethod": "gene knockout",
+              "interventionWay": "transgenic animals obtaining",
+              "tissueSpecific": false,
+              "tissueSpecificPromoter": null,
+              "treatmentStart": null,
+              "treatmentEnd": null,
+              "inductionByDrugWithdrawal": "0",
+              "treatmentDescription": "",
+              "startTimeUnit": null,
+              "endTimeUnit": null,
+              "genotype": "-/-",
+              "drugDeliveryWay": null,
+              "drug": null,
+              "startStageOfDevelopment": null,
+              "endStageOfDevelopment": null,
+              "treatmentPeriod": null,
+              "experimentMainEffect": "loss of function",
+              "tissues": []
+            }
+          ]
+        },
+        "interventionImproves": [
+          {
+            "id": "1",
+            "name": "glucose metabolism"
+          }
+        ],
+        "interventionDeteriorates": [
+          {
+            "id": "64",
+            "name": "growth"
+          }
+        ]
+      },
+      {
+        "modelOrganism": "mouse",
+        "organismLine": "wild type",
+        "sex": "male",
+        "temperatureFrom": 20,
+        "temperatureTo": 24,
+        "diet": "standard chow",
+        "expressionChangeTissue": "",
+        "lifespanTimeUnit": "",
+        "interventionResultForLifespan": "increases lifespan",
+        "expressionMeasurementType": "",
+        "controlCohortSize": 0,
+        "experimentCohortSize": 0,
+        "expressionChangePercent": 0,
+        "lifespanMinControl": 426,
+        "lifespanMeanControl": 0,
+        "lifespanMedianControl": 747,
+        "lifespanMaxControl": 1007,
+        "lifespanMinExperiment": 565,
+        "lifespanMeanExperiment": 0,
+        "lifespanMedianExperiment": 985,
+        "lifespanMaxExperiment": 1193,
+        "lifespanMinChangePercent": 32.6,
+        "lifespanMeanChangePercent": 0,
+        "lifespanMedianChangePercent": 31.9,
+        "lifespanMaxChangePercent": 18.5,
+        "lMinChangeStatSignificance": null,
+        "lMeanChangeStatSignificance": null,
+        "lMedianChangeStatSignificance": true,
+        "lMaxChangeStatSignificance": true,
+        "doi": "10.1093/gerona/glw193",
+        "pmid": "",
+        "comment": "Ames dwarf mice with GHR knockout had lower insulin and higher adiponectin levels in plasma and improved glucose tolerance, and improved lifespan compared with wild type.",
+        "populationDensity": 0,
+        "inductionByDrugWithdrawal": 0,
+        "interventions": {
+          "controlAndExperiment": [],
+          "experiment": [
+            {
+              "interventionMethod": "gene knockout",
+              "interventionWay": "transgenic animals obtaining",
+              "tissueSpecific": false,
+              "tissueSpecificPromoter": null,
+              "treatmentStart": null,
+              "treatmentEnd": null,
+              "inductionByDrugWithdrawal": "0",
+              "treatmentDescription": "",
+              "startTimeUnit": null,
+              "endTimeUnit": null,
+              "genotype": "-/-",
+              "drugDeliveryWay": null,
+              "drug": null,
+              "startStageOfDevelopment": null,
+              "endStageOfDevelopment": null,
+              "treatmentPeriod": null,
+              "experimentMainEffect": "loss of function",
+              "tissues": []
+            },
+            {
+              "interventionMethod": "gene knockout",
+              "interventionWay": "transgenic animals obtaining",
+              "tissueSpecific": false,
+              "tissueSpecificPromoter": null,
+              "treatmentStart": null,
+              "treatmentEnd": null,
+              "inductionByDrugWithdrawal": "0",
+              "treatmentDescription": "",
+              "startTimeUnit": null,
+              "endTimeUnit": null,
+              "genotype": "-/-",
+              "drugDeliveryWay": null,
+              "drug": null,
+              "startStageOfDevelopment": null,
+              "endStageOfDevelopment": null,
+              "treatmentPeriod": null,
+              "experimentMainEffect": "loss of function",
+              "tissues": []
+            }
+          ]
+        },
+        "interventionImproves": [
+          {
+            "id": "1",
+            "name": "glucose metabolism"
+          }
+        ],
+        "interventionDeteriorates": [
+          {
+            "id": "64",
+            "name": "growth"
+          }
+        ]
+      }
+    ],
+    "geneAssociatedWithProgeriaSyndromes": [],
+    "geneAssociatedWithLongevityEffects": [
+      {
+        "longevityEffect": "association with longevity",
+        "allelicPolymorphism": "rs4130113",
+        "sex": "male",
+        "allelicVariant": "AA, GG",
+        "modelOrganism": "human",
+        "changeType": "",
+        "dataType": "genomic",
+        "doi": "10.18632/aging.203133",
+        "pmid": "",
+        "comment": "The longevity-associated AA genotype (frequency 35.3%), but also the GG genotype (frequency 17.1%), of GHR SNP rs4130113 is associated with protection against risk of mortality in hypertensive elderly American men of Japanese ancestry.  This indicated that possession of the GHR longevity-associated genotype can mitigate the adverse effects on lifespan of having hypertension.\r\n"
+      },
+      {
+        "longevityEffect": "association with longevity",
+        "allelicPolymorphism": "d3-GHR",
+        "sex": "male",
+        "allelicVariant": "d3/d3",
+        "modelOrganism": "human",
+        "changeType": "",
+        "dataType": "genomic",
+        "doi": "10.1126/sciadv.1602025",
+        "pmid": "",
+        "comment": "The d3-GHR (exon 3 deletion) genetic polymorphism modulates GH1 sensitivity in humans and has been found to positively affect male longevity. Multivariate regression analysis indicates that being d3 homozygous could add up to 10 years to male lifespan. Homozygous individuals also showed lower serum IGF1 levels.\r\nA linear increased prevalence of d3-GHR homozygosity with age in four independent cohorts of long-lived individuals: 841 participants [567 of the Longevity Genes Project (LGP) (8% increase; P = 0.01), 152 of the Old Order Amish (16% increase; P = 0.02), 61 of the Cardiovascular Health Study (14.2% increase; P = 0.14), and 61 of the French Long-Lived Study (23.5% increase; P = 0.02)]. In addition, mega analysis of males in all cohorts resulted in a significant positive trend with age (26% increase; P = 0.007), suggesting sexual dimorphism for GH action in longevity. "
+      },
+      {
+        "longevityEffect": "association with a longevity-related phenotype",
+        "allelicPolymorphism": "R43X",
+        "sex": "",
+        "allelicVariant": "",
+        "modelOrganism": "human",
+        "changeType": "",
+        "dataType": "genomic",
+        "doi": "10.1126/scitranslmed.3001845",
+        "pmid": "",
+        "comment": "The individuals with GHR deficiency exhibited only one nonlethal malignancy and no cases of diabetes, in contrast to a prevalence of 17% for cancer and 5% for diabetes in control subjects. \r\nThe majority of GHR deficiency subjects in this cohort were homozygous for an A to G splice site mutation at position 180 in exon 6 of the growth hormone receptor (GHR) gene. This mutation, termed E180, results in a protein that lacks 8 amino acids in its extracellular domain and is possibly misfolded and degraded. Two GHRD subjects were homozygous for the R43X mutation, which results in a truncated GHR protein as a result of a premature stop codon and two GHRD subjects were E180/R43X heterozygotes.\r\nStudy subjects were 99 individuals with GHRD who have been followed by one of the authors (J.G-A) at the Institute of Endocrinology, Metabolism and Reproduction (IEMYR) in Ecuador since 1988.\r\n"
+      },
+      {
+        "longevityEffect": "association with a longevity-related phenotype",
+        "allelicPolymorphism": "E180",
+        "sex": "both",
+        "allelicVariant": "GG",
+        "modelOrganism": "human",
+        "changeType": "",
+        "dataType": "genomic",
+        "doi": "10.1126/scitranslmed.3001845",
+        "pmid": "",
+        "comment": "The individuals with GHR deficiency exhibited only one nonlethal malignancy and no cases of diabetes, in contrast to a prevalence of 17% for cancer and 5% for diabetes in control subjects. \r\nThe majority of GHR deficiency subjects in this cohort were homozygous for an A to G splice site mutation at position 180 in exon 6 of the growth hormone receptor (GHR) gene. This mutation, termed E180, results in a protein that lacks 8 amino acids in its extracellular domain and is possibly misfolded and degraded. \r\nStudy subjects were 99 individuals with GHRD who have been followed by one of the authors (J.G-A) at the Institute of Endocrinology, Metabolism and Reproduction (IEMYR) in Ecuador since 1988."
+      }
+    ],
+    "ageRelatedChangesOfGene": [
+      {
+        "changeType": "increased gene expression",
+        "sample": "liver",
+        "modelOrganism": "mouse",
+        "organismLine": "C57BL/6",
+        "ageFrom": "10 months",
+        "ageTo": "17 months",
+        "valueForMale": "",
+        "valueForFemale": "17.9%",
+        "valueForAll": "",
+        "measurementType": "protein",
+        "doi": "10.1210/endo.136.10.7664676",
+        "pmid": "",
+        "comment": "Liver slices from female C57BL/6 mice (10, 17, and 31 months old) were prepared in medium and stimulated with GH. \r\nBasal GHR binding increased more than 2-fold in 31-month-old animals compared to that in either 10- or 17-month-old animals (P < 0.01), whereas the Kd values were similar in the three age groups. \r\n \r\n"
+      },
+      {
+        "changeType": "increased gene expression",
+        "sample": "liver",
+        "modelOrganism": "mouse",
+        "organismLine": "C57BL/6",
+        "ageFrom": "10 months",
+        "ageTo": "31 months",
+        "valueForMale": "",
+        "valueForFemale": "149%",
+        "valueForAll": "",
+        "measurementType": "protein",
+        "doi": "10.1210/endo.136.10.7664676",
+        "pmid": "",
+        "comment": "Liver slices from female C57BL/6 mice (10, 17, and 31 months old) were prepared in medium and stimulated with GH. \r\nBasal GHR binding increased more than 2-fold in 31-month-old animals compared to that in either 10- or 17-month-old animals (P < 0.01), whereas the Kd values were similar in the three age groups. "
+      },
+      {
+        "changeType": "increased protein activity",
+        "sample": "liver",
+        "modelOrganism": "mouse",
+        "organismLine": "C57BL/6",
+        "ageFrom": "10 months",
+        "ageTo": "17 months",
+        "valueForMale": "",
+        "valueForFemale": "63%",
+        "valueForAll": "",
+        "measurementType": "",
+        "doi": "10.1210/endo.136.10.7664676",
+        "pmid": "",
+        "comment": "The phosphorylation of the GHR receptor was measured in response to stimulation with GH."
+      },
+      {
+        "changeType": "reduced protein activity",
+        "sample": "liver",
+        "modelOrganism": "mouse",
+        "organismLine": "C57BL/6",
+        "ageFrom": "17 months",
+        "ageTo": "31 months",
+        "valueForMale": "",
+        "valueForFemale": "80%",
+        "valueForAll": "",
+        "measurementType": "",
+        "doi": "10.1210/endo.136.10.7664676",
+        "pmid": "",
+        "comment": "The phosphorylation of the GHR receptor was measured in response to stimulation with GH."
+      }
+    ],
+    "interventionToGeneImprovesVitalProcesses": [
+      {
+        "id": "1133",
+        "geneIntervention": "gene knockout",
+        "result": "improvement",
+        "resultCode": "1",
+        "vitalProcess": "muscle",
+        "vitalProcessId": "36",
+        "modelOrganism": "mouse",
+        "organismLine": "129/Ola",
+        "age": "0 days",
+        "genotype": "",
+        "sex": "mixed",
+        "doi": "10.1007/s11357-013-9551-x",
+        "pmid": "",
+        "comment": "Marked improvements in the retention of strength, balance, and motor coordination by the longevity-conferring GHR/BP gene disruption,  caloric restriction  regimen, or a combination of the two.GHR-KO mice exhibit superior grip strength, balance, and motor coordination at middle age.",
+        "interventionImproves": [
+          {
+            "id": "36",
+            "name": "muscle"
+          }
+        ],
+        "interventionDeteriorates": []
+      },
+      {
+        "id": "1130",
+        "geneIntervention": "tissue-specific gene knockout",
+        "result": "improvement",
+        "resultCode": "1",
+        "vitalProcess": "insulin sensitivity",
+        "vitalProcessId": "23",
+        "modelOrganism": "mouse",
+        "organismLine": "129/OlaHsd x BALB/c",
+        "age": "0 days",
+        "genotype": "-/-",
+        "sex": "male",
+        "doi": "10.18632/aging.100766",
+        "pmid": "",
+        "comment": "Male muscle-specific GHR disrupted (MuGHRKO) mice had improved fasting blood glucose, insulin, c-peptide, and glucose tolerance. In contrast, female MuGHRKO mice exhibited normal glucose, insulin, and glucose tolerance. Body weight was mildly but significantly altered in opposite directions in males (decreased) and females (increased) compared to controls. Longevity was unchanged in both sexes at Ohio University and significantly increased for males at University of Michigan. ",
+        "interventionImproves": [
+          {
+            "id": "23",
+            "name": "insulin sensitivity"
+          }
+        ],
+        "interventionDeteriorates": []
+      },
+      {
+        "id": "1064",
+        "geneIntervention": "gene knockout",
+        "result": "improvement",
+        "resultCode": "1",
+        "vitalProcess": "insulin sensitivity",
+        "vitalProcessId": "23",
+        "modelOrganism": "mouse",
+        "organismLine": "",
+        "age": "0 days",
+        "genotype": "-/-",
+        "sex": "male",
+        "doi": "10.1093/gerona/60.11.1394",
+        "pmid": "",
+        "comment": "These mice have dramatically reduced plasma levels of insulin-like growth factor 1 (IGF1) and enhanced insulin sensitivity. The levels of PPARgamma and PPARalpha messenger RNA and proteins and the levels of retinoid X receptors messenger RNA were elevated in long-lived GHR-KO mice as compared to normal mice. These findings suggest that enhanced insulin sensitivity of GHR-KO mice may be related to the altered actions of PPARs family members in the liver. ",
+        "interventionImproves": [
+          {
+            "id": "23",
+            "name": "insulin sensitivity"
+          }
+        ],
+        "interventionDeteriorates": []
+      },
+      {
+        "id": "1062",
+        "geneIntervention": "gene knockout",
+        "result": "improvement",
+        "resultCode": "1",
+        "vitalProcess": "bone",
+        "vitalProcessId": "35",
+        "modelOrganism": "mouse",
+        "organismLine": "mixed",
+        "age": "0 days",
+        "genotype": "-/-",
+        "sex": "mixed",
+        "doi": "10.1093/gerona/61.6.562",
+        "pmid": "",
+        "comment": "Compared to controls, long-lived GH receptor knockout (GHR-KO) mice showed an increased percentage of body fat. The percentage of body fat increased with age in knockout mice more than in normal mice. GHR-KO mice have reduced total-body bone mineral density (BMD), bone mineral content, and bone area. These parameters increase with age in normal mice more than in GHR-KO. Thus, bone characteristics of aged GHR-KO mice are similar to those of young normal mice in all groups tested. GH resistance alters body composition, bone growth, and bone maintenance during aging in GHR-KO mice. ",
+        "interventionImproves": [
+          {
+            "id": "35",
+            "name": "bone"
+          }
+        ],
+        "interventionDeteriorates": []
+      },
+      {
+        "id": "1059",
+        "geneIntervention": "gene knockout",
+        "result": "improvement",
+        "resultCode": "1",
+        "vitalProcess": "endocrine system",
+        "vitalProcessId": "31",
+        "modelOrganism": "mouse",
+        "organismLine": "C57BL/6J × C3H/J",
+        "age": "0 days",
+        "genotype": "",
+        "sex": "male",
+        "doi": "10.1093/gerona/gln075",
+        "pmid": "",
+        "comment": " Long-lived GHRKO mice have increased oxygen consumption (VO2) and heat expressed per gram, and decreased respiratory quotient (RQ) compared with normal controls, whereas short-lived  bovine GH-overexpressing transgenic (bGH TG) mice have reduced VO2 and heat expressed per gram body weight, and increased RQ compared with their corresponding controls. \r\nMale GHRKO mice have increased T3 levels and T3/T4 ratio, whereas male bGH TG mice have no significant change in thyroid hormone levels compared with normal controls. These data show that alterations in GH signaling cause marked changes in energy metabolism. Decreased GH signaling causes increased T3 (GHRKO), increased metabolism per body weight, increased fatty acid oxidation, and may have a beneficial effect on mitochondrial flexibility by increasing the ability to utilize fat as a fuel substrate, whereas GH excess has generally opposite effects in mice. These results indicate that increased metabolism is associated with increased life span in these mice. Decreased GH signaling causes increased T3 in (GHRKO), increased metabolism per body weight, increased fatty acid oxidation, and may have a beneficial effect on mitochondrial flexibility by increasing the ability to utilize fat as a fuel substrate, whereas GH excess has generally opposite effects in mice. These results indicate that increased metabolism is associated with increased life span in these mice.  Long-lived GHRKO mice have increased oxygen consumption (VO2) and heat expressed per gram, and decreased respiratory quotient (RQ) compared with normal controls, whereas short-lived  bovine GH-overexpressing transgenic (bGH TG) mice have reduced VO2 and heat expressed per gram body weight, and increased RQ compared with their corresponding controls. \r\nMale GHRKO mice have increased T3 levels and T3/T4 ratio, whereas male bGH TG mice have no significant change in thyroid hormone levels compared with normal controls. These data show that alterations in GH signaling cause marked changes in energy metabolism. Decreased GH signaling causes increased T3 (GHRKO), increased metabolism per body weight, increased fatty acid oxidation, and may have a beneficial effect on mitochondrial flexibility by increasing the ability to utilize fat as a fuel substrate, whereas GH excess has generally opposite effects in mice. These results indicate that increased metabolism is associated with increased life span in these mice.",
+        "interventionImproves": [
+          {
+            "id": "31",
+            "name": "endocrine system"
+          }
+        ],
+        "interventionDeteriorates": []
+      },
+      {
+        "id": "1059",
+        "geneIntervention": "gene knockout",
+        "result": "improvement",
+        "resultCode": "1",
+        "vitalProcess": "metabolism",
+        "vitalProcessId": "25",
+        "modelOrganism": "mouse",
+        "organismLine": "C57BL/6J × C3H/J",
+        "age": "0 days",
+        "genotype": "",
+        "sex": "male",
+        "doi": "10.1093/gerona/gln075",
+        "pmid": "",
+        "comment": " Long-lived GHRKO mice have increased oxygen consumption (VO2) and heat expressed per gram, and decreased respiratory quotient (RQ) compared with normal controls, whereas short-lived  bovine GH-overexpressing transgenic (bGH TG) mice have reduced VO2 and heat expressed per gram body weight, and increased RQ compared with their corresponding controls. \r\nMale GHRKO mice have increased T3 levels and T3/T4 ratio, whereas male bGH TG mice have no significant change in thyroid hormone levels compared with normal controls. These data show that alterations in GH signaling cause marked changes in energy metabolism. Decreased GH signaling causes increased T3 (GHRKO), increased metabolism per body weight, increased fatty acid oxidation, and may have a beneficial effect on mitochondrial flexibility by increasing the ability to utilize fat as a fuel substrate, whereas GH excess has generally opposite effects in mice. These results indicate that increased metabolism is associated with increased life span in these mice. Decreased GH signaling causes increased T3 in (GHRKO), increased metabolism per body weight, increased fatty acid oxidation, and may have a beneficial effect on mitochondrial flexibility by increasing the ability to utilize fat as a fuel substrate, whereas GH excess has generally opposite effects in mice. These results indicate that increased metabolism is associated with increased life span in these mice.  Long-lived GHRKO mice have increased oxygen consumption (VO2) and heat expressed per gram, and decreased respiratory quotient (RQ) compared with normal controls, whereas short-lived  bovine GH-overexpressing transgenic (bGH TG) mice have reduced VO2 and heat expressed per gram body weight, and increased RQ compared with their corresponding controls. \r\nMale GHRKO mice have increased T3 levels and T3/T4 ratio, whereas male bGH TG mice have no significant change in thyroid hormone levels compared with normal controls. These data show that alterations in GH signaling cause marked changes in energy metabolism. Decreased GH signaling causes increased T3 (GHRKO), increased metabolism per body weight, increased fatty acid oxidation, and may have a beneficial effect on mitochondrial flexibility by increasing the ability to utilize fat as a fuel substrate, whereas GH excess has generally opposite effects in mice. These results indicate that increased metabolism is associated with increased life span in these mice.",
+        "interventionImproves": [
+          {
+            "id": "25",
+            "name": "metabolism"
+          }
+        ],
+        "interventionDeteriorates": []
+      },
+      {
+        "id": "1059",
+        "geneIntervention": "gene knockout",
+        "result": "improvement",
+        "resultCode": "1",
+        "vitalProcess": "mitochondrial function",
+        "vitalProcessId": "2",
+        "modelOrganism": "mouse",
+        "organismLine": "C57BL/6J × C3H/J",
+        "age": "0 days",
+        "genotype": "",
+        "sex": "male",
+        "doi": "10.1093/gerona/gln075",
+        "pmid": "",
+        "comment": " Long-lived GHRKO mice have increased oxygen consumption (VO2) and heat expressed per gram, and decreased respiratory quotient (RQ) compared with normal controls, whereas short-lived  bovine GH-overexpressing transgenic (bGH TG) mice have reduced VO2 and heat expressed per gram body weight, and increased RQ compared with their corresponding controls. \r\nMale GHRKO mice have increased T3 levels and T3/T4 ratio, whereas male bGH TG mice have no significant change in thyroid hormone levels compared with normal controls. These data show that alterations in GH signaling cause marked changes in energy metabolism. Decreased GH signaling causes increased T3 (GHRKO), increased metabolism per body weight, increased fatty acid oxidation, and may have a beneficial effect on mitochondrial flexibility by increasing the ability to utilize fat as a fuel substrate, whereas GH excess has generally opposite effects in mice. These results indicate that increased metabolism is associated with increased life span in these mice. Decreased GH signaling causes increased T3 in (GHRKO), increased metabolism per body weight, increased fatty acid oxidation, and may have a beneficial effect on mitochondrial flexibility by increasing the ability to utilize fat as a fuel substrate, whereas GH excess has generally opposite effects in mice. These results indicate that increased metabolism is associated with increased life span in these mice.  Long-lived GHRKO mice have increased oxygen consumption (VO2) and heat expressed per gram, and decreased respiratory quotient (RQ) compared with normal controls, whereas short-lived  bovine GH-overexpressing transgenic (bGH TG) mice have reduced VO2 and heat expressed per gram body weight, and increased RQ compared with their corresponding controls. \r\nMale GHRKO mice have increased T3 levels and T3/T4 ratio, whereas male bGH TG mice have no significant change in thyroid hormone levels compared with normal controls. These data show that alterations in GH signaling cause marked changes in energy metabolism. Decreased GH signaling causes increased T3 (GHRKO), increased metabolism per body weight, increased fatty acid oxidation, and may have a beneficial effect on mitochondrial flexibility by increasing the ability to utilize fat as a fuel substrate, whereas GH excess has generally opposite effects in mice. These results indicate that increased metabolism is associated with increased life span in these mice.",
+        "interventionImproves": [
+          {
+            "id": "2",
+            "name": "mitochondrial function"
+          }
+        ],
+        "interventionDeteriorates": []
+      },
+      {
+        "id": "1054",
+        "geneIntervention": "tissue-specific suppression of gene expression",
+        "result": "improvement",
+        "resultCode": "1",
+        "vitalProcess": "body composition",
+        "vitalProcessId": "39",
+        "modelOrganism": "mouse",
+        "organismLine": "C57BL/6",
+        "age": "0 days",
+        "genotype": "-/-",
+        "sex": "mixed",
+        "doi": "10.1210/en.2013-2086",
+        "pmid": "",
+        "comment": "Mice with liver-specific GHR gene knockout (LiGHRKO) were smaller than controls, with body length and body weight being significantly decreased in both sexes. LiGHRKO mice had a higher percentage of body fat at early ages followed by lower percentage of body fat in adulthood. Local IGF-I mRNA levels were significantly increased in skeletal muscle and select adipose tissue depots. Grip strength was increased in LiGHRKO mice. Finally, circulating levels of leptin, resistin, and adiponectin were increased in LiGHRKO mice. In conclusion, LiGHRKO mice are smaller despite increased local mRNA expression of IGF-I in several tissues, suggesting that liver-derived IGF-I is indeed important for normal body growth.",
+        "interventionImproves": [
+          {
+            "id": "39",
+            "name": "body composition"
+          }
+        ],
+        "interventionDeteriorates": []
+      },
+      {
+        "id": "1052",
+        "geneIntervention": "gene knockout",
+        "result": "improvement",
+        "resultCode": "1",
+        "vitalProcess": "insulin sensitivity",
+        "vitalProcessId": "23",
+        "modelOrganism": "mouse",
+        "organismLine": "C57BL/6",
+        "age": "6 4",
+        "genotype": "",
+        "sex": "mixed",
+        "doi": "10.1210/en.2016-1649",
+        "pmid": "",
+        "comment": "Both female and male aGHRKO mice (mice where GHR is interrupted in adulthood) had significantly improved insulin sensitivity at 9 months of age. On the other hand, their glucose tolerance was impaired in comparison to control mice. Both female and male aGHRKO mice (mice where GHR is interrupted in adulthood) had significantly improved insulin sensitivity at 9 months of age. On the other hand, their glucose tolerance was impaired in comparison to control mice.",
+        "interventionImproves": [
+          {
+            "id": "23",
+            "name": "insulin sensitivity"
+          }
+        ],
+        "interventionDeteriorates": []
+      },
+      {
+        "id": "1051",
+        "geneIntervention": "gene knockout",
+        "result": "improvement",
+        "resultCode": "1",
+        "vitalProcess": "insulin sensitivity",
+        "vitalProcessId": "23",
+        "modelOrganism": "mouse",
+        "organismLine": "C57BL/6J",
+        "age": "0 days",
+        "genotype": "-/-",
+        "sex": "mixed",
+        "doi": "10.1210/en.2003-0374",
+        "pmid": "",
+        "comment": "GHRKO mice are dwarf with low levels of IGF-I and absent GH activity from conception. They have increased insulin sensitivity and are less prone to several age-associated disorders including cancer and diabetes\r\nthan controls. Both sets of control mice displayed an age-associated rise in fasting insulin levels (3- to 5-fold increase between 1 and 11 months of age, P < 0.0005), but not in the GHR −/− mice.",
+        "interventionImproves": [
+          {
+            "id": "23",
+            "name": "insulin sensitivity"
+          }
+        ],
+        "interventionDeteriorates": []
+      },
+      {
+        "id": "1051",
+        "geneIntervention": "gene knockout",
+        "result": "improvement",
+        "resultCode": "1",
+        "vitalProcess": "glucose metabolism",
+        "vitalProcessId": "1",
+        "modelOrganism": "mouse",
+        "organismLine": "C57BL/6J",
+        "age": "0 days",
+        "genotype": "-/-",
+        "sex": "mixed",
+        "doi": "10.1210/en.2003-0374",
+        "pmid": "",
+        "comment": "GHRKO mice are dwarf with low levels of IGF-I and absent GH activity from conception. They have increased insulin sensitivity and are less prone to several age-associated disorders including cancer and diabetes\r\nthan controls. Both sets of control mice displayed an age-associated rise in fasting insulin levels (3- to 5-fold increase between 1 and 11 months of age, P < 0.0005), but not in the GHR −/− mice.",
+        "interventionImproves": [
+          {
+            "id": "1",
+            "name": "glucose metabolism"
+          }
+        ],
+        "interventionDeteriorates": []
+      },
+      {
+        "id": "1050",
+        "geneIntervention": "gene knockout",
+        "result": "improvement",
+        "resultCode": "1",
+        "vitalProcess": "glucose metabolism",
+        "vitalProcessId": "1",
+        "modelOrganism": "mouse",
+        "organismLine": "Ames dwarf",
+        "age": "0 days",
+        "genotype": "",
+        "sex": "male",
+        "doi": "10.1093/gerona/glw193",
+        "pmid": "",
+        "comment": "Ames mice, which lack GH1 due to a mutation in PROP1, have increased health span and lifespan. Ames mice have been crossbred with GHR knockout mice, producing a new lineage lacking both GH1 and the GHR. These mice have improved glucose tolerance and increased adiponectin levels. Whilst these mice show the same increased longevity as their progenitors they do not show any further increases in longevity.",
+        "interventionImproves": [
+          {
+            "id": "1",
+            "name": "glucose metabolism"
+          }
+        ],
+        "interventionDeteriorates": []
+      },
+      {
+        "id": "1062",
+        "geneIntervention": "gene knockout",
+        "result": "deterioration",
+        "resultCode": "2",
+        "vitalProcess": "body composition",
+        "vitalProcessId": "39",
+        "modelOrganism": "mouse",
+        "organismLine": "mixed",
+        "age": "0 days",
+        "genotype": "-/-",
+        "sex": "mixed",
+        "doi": "10.1093/gerona/61.6.562",
+        "pmid": "",
+        "comment": "Compared to controls, long-lived GH receptor knockout (GHR-KO) mice showed an increased percentage of body fat. The percentage of body fat increased with age in knockout mice more than in normal mice. GHR-KO mice have reduced total-body bone mineral density (BMD), bone mineral content, and bone area. These parameters increase with age in normal mice more than in GHR-KO. Thus, bone characteristics of aged GHR-KO mice are similar to those of young normal mice in all groups tested. GH resistance alters body composition, bone growth, and bone maintenance during aging in GHR-KO mice. ",
+        "interventionImproves": [],
+        "interventionDeteriorates": [
+          {
+            "id": "39",
+            "name": "body composition"
+          }
+        ]
+      },
+      {
+        "id": "1052",
+        "geneIntervention": "gene knockout",
+        "result": "deterioration",
+        "resultCode": "2",
+        "vitalProcess": "glucose metabolism",
+        "vitalProcessId": "1",
+        "modelOrganism": "mouse",
+        "organismLine": "C57BL/6",
+        "age": "6 4",
+        "genotype": "",
+        "sex": "mixed",
+        "doi": "10.1210/en.2016-1649",
+        "pmid": "",
+        "comment": "Both female and male aGHRKO mice (mice where GHR is interrupted in adulthood) had significantly improved insulin sensitivity at 9 months of age. On the other hand, their glucose tolerance was impaired in comparison to control mice. Both female and male aGHRKO mice (mice where GHR is interrupted in adulthood) had significantly improved insulin sensitivity at 9 months of age. On the other hand, their glucose tolerance was impaired in comparison to control mice.",
+        "interventionImproves": [],
+        "interventionDeteriorates": [
+          {
+            "id": "1",
+            "name": "glucose metabolism"
+          }
+        ]
+      }
+    ],
+    "proteinRegulatesOtherGenes": [
+      {
+        "proteinActivity": "upregulates, mechanism not established",
+        "regulationType": "protein activity",
+        "doi": "10.1016/j.celrep.2016.01.044",
+        "pmid": "",
+        "comment": "Growth hormone receptor (GH-R)-dependent downregulation of NLRP3 inflammasome in macrophages is linked to pro-longevity effects that maintain immune system homeostasis in aging. Deletion of GH-R prevented the macrophage-driven age-related activation of inflammasome in response to NLRP3 ligands and also increased the preservation of naive T cells, even in advanced age and with higher IFNγ secretion from effector cells.",
+        "regulatedGene": {
+          "id": "338",
+          "symbol": "NLRP3",
+          "name": "NLR family pyrin domain containing 3",
+          "ncbiId": "114548"
+        }
+      },
+      {
+        "proteinActivity": "upregulates, mechanism not established",
+        "regulationType": "protein level",
+        "doi": "10.1210/endo.141.7.7586",
+        "pmid": "",
+        "comment": "Mice homozygous for the disruption GHR/BP gene -/- were significantly smaller than normal wild-type (+/+) mice as well as mice heterozygous for the disruption, even at 1.5 yr of age. IGF-I levels were also significantly lower in the -/- mice and remained low as the mice aged. IGFBP-3 levels were severely reduced in the -/- mice, whereas IGFBP-1, -2, and -4 levels remained unchanged. ",
+        "regulatedGene": {
+          "id": "73",
+          "symbol": "IGFBP3",
+          "name": "insulin-like growth factor binding protein 3",
+          "ncbiId": "3486"
+        }
+      },
+      {
+        "proteinActivity": "upregulates, mechanism not established",
+        "regulationType": "protein level",
+        "doi": "10.1093/gerona/60.11.1394",
+        "pmid": "",
+        "comment": "Growth hormone receptor/binding protein knockout (GHR-KO) mice live approximately 40% longer than their normal siblings do. These mice have dramatically reduced plasma levels of insulin-like growth factor 1 (IGF1) and enhanced insulin sensitivity. ",
+        "regulatedGene": {
+          "id": "28",
+          "symbol": "IGF1",
+          "name": "insulin-like growth factor 1",
+          "ncbiId": "3479"
+        }
+      },
+      {
+        "proteinActivity": "downregulates, mechanism not established",
+        "regulationType": "protein activity",
+        "doi": "10.1371/journal.pone.0004567",
+        "pmid": "",
+        "comment": "Livers of GHR knockout mice (GHRKO) responded to insulin by increased activation of the early steps of insulin signaling, which was dissipated by altered PI3K subunit abundance which putatively inhibited AKT (Alpha Serine/Threonine-Protein Kinase) activation. In the muscle of GHRKO mice, there was elevated downstream activation of the insulin signaling cascade (IRS/PI3K/AKT) in the absence of elevated insulin receptor activation. ",
+        "regulatedGene": {
+          "id": "36",
+          "symbol": "PIK3CB",
+          "name": "phosphatidylinositol-4,5-bisphosphate 3-kinase, catalytic subunit beta",
+          "ncbiId": "5291"
+        }
+      },
+      {
+        "proteinActivity": "downregulates, mechanism not established",
+        "regulationType": "protein activity",
+        "doi": "10.1371/journal.pone.0004567",
+        "pmid": "",
+        "comment": "Livers of GHR knockout mice (GHRKO) responded to insulin by increased activation of the early steps of insulin signaling, which was dissipated by altered PI3K subunit abundance which putatively inhibited AKT (Alpha Serine/Threonine-Protein Kinase) activation. In the muscle of GHRKO mice, there was elevated downstream activation of the insulin signaling cascade (IRS/PI3K/AKT) in the absence of elevated insulin receptor activation. ",
+        "regulatedGene": {
+          "id": "284",
+          "symbol": "PIK3CA",
+          "name": "phosphatidylinositol-4,5-bisphosphate 3-kinase, catalytic subunit alpha",
+          "ncbiId": "5290"
+        }
+      },
+      {
+        "proteinActivity": "downregulates, mechanism not established",
+        "regulationType": "mRNA level ",
+        "doi": "10.1093/gerona/60.11.1394",
+        "pmid": "",
+        "comment": "Growth hormone receptor/binding protein knockout (GHR-KO) mice live approximately 40% longer than their normal siblings do. These mice have dramatically reduced plasma levels of insulin-like growth factor 1 (IGF1) and enhanced insulin sensitivity. The levels of PPARgamma and PPARalpha messenger RNA and proteins and the levels of retinoid X receptors messenger RNA were elevated in long-lived GHR-KO mice as compared to normal mice. These findings suggest that enhanced insulin sensitivity of GHR-KO mice may be related to the altered actions of PPARs family members in the liver. ",
+        "regulatedGene": {
+          "id": "262",
+          "symbol": "PPARG",
+          "name": "peroxisome proliferator-activated receptor gamma",
+          "ncbiId": "5468"
+        }
+      },
+      {
+        "proteinActivity": "downregulates, mechanism not established",
+        "regulationType": "mRNA level ",
+        "doi": "10.1093/gerona/60.11.1394",
+        "pmid": "",
+        "comment": "Growth hormone receptor/binding protein knockout (GHR-KO) mice live approximately 40% longer than their normal siblings do. These mice have dramatically reduced plasma levels of insulin-like growth factor 1 (IGF1) and enhanced insulin sensitivity. The levels of PPARgamma and PPARalpha messenger RNA and proteins and the levels of retinoid X receptors messenger RNA were elevated in long-lived GHR-KO mice as compared to normal mice. These findings suggest that enhanced insulin sensitivity of GHR-KO mice may be related to the altered actions of PPARs family members in the liver. ",
+        "regulatedGene": {
+          "id": "55",
+          "symbol": "PPARA",
+          "name": "peroxisome proliferator-activated receptor alpha",
+          "ncbiId": "5465"
+        }
+      },
+      {
+        "proteinActivity": "downregulates, mechanism not established",
+        "regulationType": "protein modification affecting activity",
+        "doi": "10.1371/journal.pone.0004567",
+        "pmid": "",
+        "comment": "A major reduction of inhibitory Ser phosphorylation of IRS-1(Insulin receptor substrate 1) seen exclusively in GHR knockout mice muscle which may underpin their elevated insulin sensitivity was detected. ",
+        "regulatedGene": {
+          "id": "32",
+          "symbol": "IRS1",
+          "name": "insulin receptor substrate 1",
+          "ncbiId": "3667"
+        }
+      },
+      {
+        "proteinActivity": "downregulates, mechanism not established",
+        "regulationType": "protein activity",
+        "doi": "10.1371/journal.pone.0004567",
+        "pmid": "",
+        "comment": "Livers of GHR knockout mice (GHRKO) responded to insulin by increased activation of the early steps of insulin signaling, which was dissipated by altered PI3K subunit abundance which putatively inhibited AKT (Alpha Serine/Threonine-Protein Kinase) activation. In the muscle of GHRKO mice, there was elevated downstream activation of the insulin signaling cascade (IRS/PI3K/AKT) in the absence of elevated insulin receptor activation. ",
+        "regulatedGene": {
+          "id": "35",
+          "symbol": "AKT1",
+          "name": "AKT serine/threonine kinase 1",
+          "ncbiId": "207"
+        }
+      }
+    ],
+    "additionalEvidences": [
+      {
+        "doi": "10.1073/pnas.0600161103",
+        "pmid": "",
+        "comment": "Mice with disrupted GHR (GHRKO) do not live longer when subjected to calorie restriction, which suggests a role for GHR and possibly the associated GH1/IGF1 signalling in caloric restriction."
+      },
+      {
+        "doi": "10.1016/j.mad.2004.08.022",
+        "pmid": "",
+        "comment": "It was found, that patients with Laron syndrome (with IGF-I deficiency due to deletions or mutations of the GH receptor gene) despite signs of early aging (wrinkled skin, obesity, insulin resistance and osteopenia) have a long life span reaching ages of 80-90 years. "
+      },
+      {
+        "doi": "10.1111/acel.13256",
+        "pmid": "",
+        "comment": "GHR was selected using machine-learning as one of the genes of aging clock, from the expression of which the age of a person can be predicted."
+      }
+    ]
+  },
+  "expression": [
+    {
+      "name": "fat",
+      "exp_rpkm": "43.5812"
+    },
+    {
+      "name": "liver",
+      "exp_rpkm": "35.0356"
+    },
+    {
+      "name": "prostate",
+      "exp_rpkm": "4.90496"
+    },
+    {
+      "name": "kidney",
+      "exp_rpkm": "4.41523"
+    },
+    {
+      "name": "ovary",
+      "exp_rpkm": "3.29511"
+    },
+    {
+      "name": "gall bladder",
+      "exp_rpkm": "2.52519"
+    },
+    {
+      "name": "heart",
+      "exp_rpkm": "2.4982"
+    },
+    {
+      "name": "adrenal",
+      "exp_rpkm": "2.37154"
+    },
+    {
+      "name": "colon",
+      "exp_rpkm": "2.24114"
+    },
+    {
+      "name": "lung",
+      "exp_rpkm": "1.78997"
+    },
+    {
+      "name": "placenta",
+      "exp_rpkm": "1.78067"
+    },
+    {
+      "name": "esophagus",
+      "exp_rpkm": "1.69938"
+    },
+    {
+      "name": "thyroid",
+      "exp_rpkm": "1.67234"
+    },
+    {
+      "name": "skin",
+      "exp_rpkm": "1.63025"
+    },
+    {
+      "name": "endometrium",
+      "exp_rpkm": "1.60843"
+    },
+    {
+      "name": "urinary bladder",
+      "exp_rpkm": "1.47225"
+    },
+    {
+      "name": "spleen",
+      "exp_rpkm": "1.46393"
+    },
+    {
+      "name": "testis",
+      "exp_rpkm": "1.04536"
+    },
+    {
+      "name": "stomach",
+      "exp_rpkm": "0.904031"
+    },
+    {
+      "name": "small intestine",
+      "exp_rpkm": "0.871427"
+    },
+    {
+      "name": "appendix",
+      "exp_rpkm": "0.783587"
+    },
+    {
+      "name": "brain",
+      "exp_rpkm": "0.647378"
+    },
+    {
+      "name": "lymph node",
+      "exp_rpkm": "0.535719"
+    },
+    {
+      "name": "salivary gland",
+      "exp_rpkm": "0.520533"
+    },
+    {
+      "name": "duodenum",
+      "exp_rpkm": "0.443233"
+    },
+    {
+      "name": "pancreas",
+      "exp_rpkm": "0.195168"
+    },
+    {
+      "name": "bone marrow",
+      "exp_rpkm": "0.0241762"
+    }
+  ],
+  "band": "5p13-p12",
+  "locationStart": "42423775",
+  "locationEnd": "42721878",
+  "orientation": "1",
+  "accPromoter": "",
+  "accOrf": "NM_000163",
+  "accCds": "NP_000154",
+  "terms": {
+    "biological_process": [
+      {
+        "GO:0000187": "activation of MAPK activity"
+      },
+      {
+        "GO:0006897": "endocytosis"
+      },
+      {
+        "GO:0007259": "receptor signaling pathway via JAK-STAT"
+      },
+      {
+        "GO:0019221": "cytokine-mediated signaling pathway"
+      },
+      {
+        "GO:0019530": "taurine metabolic process"
+      },
+      {
+        "GO:0032870": "cellular response to hormone stimulus"
+      },
+      {
+        "GO:0040014": "regulation of multicellular organism growth"
+      },
+      {
+        "GO:0040018": "positive regulation of multicellular organism growth"
+      },
+      {
+        "GO:0042445": "hormone metabolic process"
+      },
+      {
+        "GO:0042531": "positive regulation of tyrosine phosphorylation of STAT protein"
+      },
+      {
+        "GO:0042976": "activation of Janus kinase activity"
+      },
+      {
+        "GO:0048009": "insulin-like growth factor receptor signaling pathway"
+      },
+      {
+        "GO:0050731": "positive regulation of peptidyl-tyrosine phosphorylation"
+      },
+      {
+        "GO:0060396": "growth hormone receptor signaling pathway"
+      },
+      {
+        "GO:0060397": "growth hormone receptor signaling pathway via JAK-STAT"
+      },
+      {
+        "GO:0046427": "positive regulation of receptor signaling pathway via JAK-STAT"
+      },
+      {
+        "GO:0000187": "activation of MAPK activity"
+      },
+      {
+        "GO:0006897": "endocytosis"
+      },
+      {
+        "GO:0007259": "receptor signaling pathway via JAK-STAT"
+      },
+      {
+        "GO:0019221": "cytokine-mediated signaling pathway"
+      },
+      {
+        "GO:0019530": "taurine metabolic process"
+      },
+      {
+        "GO:0032870": "cellular response to hormone stimulus"
+      },
+      {
+        "GO:0040014": "regulation of multicellular organism growth"
+      },
+      {
+        "GO:0040018": "positive regulation of multicellular organism growth"
+      },
+      {
+        "GO:0042445": "hormone metabolic process"
+      },
+      {
+        "GO:0042531": "positive regulation of tyrosine phosphorylation of STAT protein"
+      },
+      {
+        "GO:0042976": "activation of Janus kinase activity"
+      },
+      {
+        "GO:0048009": "insulin-like growth factor receptor signaling pathway"
+      },
+      {
+        "GO:0050731": "positive regulation of peptidyl-tyrosine phosphorylation"
+      },
+      {
+        "GO:0060396": "growth hormone receptor signaling pathway"
+      },
+      {
+        "GO:0060397": "growth hormone receptor signaling pathway via JAK-STAT"
+      },
+      {
+        "GO:0046427": "positive regulation of receptor signaling pathway via JAK-STAT"
+      },
+      {
+        "GO:0000187": "activation of MAPK activity"
+      },
+      {
+        "GO:0006897": "endocytosis"
+      },
+      {
+        "GO:0007259": "receptor signaling pathway via JAK-STAT"
+      },
+      {
+        "GO:0019221": "cytokine-mediated signaling pathway"
+      },
+      {
+        "GO:0019530": "taurine metabolic process"
+      },
+      {
+        "GO:0032870": "cellular response to hormone stimulus"
+      },
+      {
+        "GO:0040014": "regulation of multicellular organism growth"
+      },
+      {
+        "GO:0040018": "positive regulation of multicellular organism growth"
+      },
+      {
+        "GO:0042445": "hormone metabolic process"
+      },
+      {
+        "GO:0042531": "positive regulation of tyrosine phosphorylation of STAT protein"
+      },
+      {
+        "GO:0042976": "activation of Janus kinase activity"
+      },
+      {
+        "GO:0048009": "insulin-like growth factor receptor signaling pathway"
+      },
+      {
+        "GO:0050731": "positive regulation of peptidyl-tyrosine phosphorylation"
+      },
+      {
+        "GO:0060396": "growth hormone receptor signaling pathway"
+      },
+      {
+        "GO:0060397": "growth hormone receptor signaling pathway via JAK-STAT"
+      },
+      {
+        "GO:0046427": "positive regulation of receptor signaling pathway via JAK-STAT"
+      },
+      {
+        "GO:0000187": "activation of MAPK activity"
+      },
+      {
+        "GO:0006897": "endocytosis"
+      },
+      {
+        "GO:0007259": "receptor signaling pathway via JAK-STAT"
+      },
+      {
+        "GO:0019221": "cytokine-mediated signaling pathway"
+      },
+      {
+        "GO:0019530": "taurine metabolic process"
+      },
+      {
+        "GO:0032870": "cellular response to hormone stimulus"
+      },
+      {
+        "GO:0040014": "regulation of multicellular organism growth"
+      },
+      {
+        "GO:0040018": "positive regulation of multicellular organism growth"
+      },
+      {
+        "GO:0042445": "hormone metabolic process"
+      },
+      {
+        "GO:0042531": "positive regulation of tyrosine phosphorylation of STAT protein"
+      },
+      {
+        "GO:0042976": "activation of Janus kinase activity"
+      },
+      {
+        "GO:0048009": "insulin-like growth factor receptor signaling pathway"
+      },
+      {
+        "GO:0050731": "positive regulation of peptidyl-tyrosine phosphorylation"
+      },
+      {
+        "GO:0060396": "growth hormone receptor signaling pathway"
+      },
+      {
+        "GO:0060397": "growth hormone receptor signaling pathway via JAK-STAT"
+      },
+      {
+        "GO:0046427": "positive regulation of receptor signaling pathway via JAK-STAT"
+      },
+      {
+        "GO:0009755": "hormone-mediated signaling pathway"
+      },
+      {
+        "GO:0032094": "response to food"
+      },
+      {
+        "GO:0032869": "cellular response to insulin stimulus"
+      },
+      {
+        "GO:0043278": "response to morphine"
+      },
+      {
+        "GO:0045597": "positive regulation of cell differentiation"
+      },
+      {
+        "GO:0051384": "response to glucocorticoid"
+      },
+      {
+        "GO:0060351": "cartilage development involved in endochondral bone morphogenesis"
+      },
+      {
+        "GO:0070555": "response to interleukin-1"
+      },
+      {
+        "GO:1901215": "negative regulation of neuron death"
+      }
+    ],
+    "cellular_component": [
+      {
+        "GO:0005576": "extracellular region"
+      },
+      {
+        "GO:0005615": "extracellular space"
+      },
+      {
+        "GO:0005829": "cytosol"
+      },
+      {
+        "GO:0005886": "plasma membrane"
+      },
+      {
+        "GO:0005887": "integral component of plasma membrane"
+      },
+      {
+        "GO:0009986": "cell surface"
+      },
+      {
+        "GO:0016021": "integral component of membrane"
+      },
+      {
+        "GO:0036464": "cytoplasmic ribonucleoprotein granule"
+      },
+      {
+        "GO:0043235": "receptor complex"
+      },
+      {
+        "GO:0070195": "growth hormone receptor complex"
+      },
+      {
+        "GO:0009897": "external side of plasma membrane"
+      },
+      {
+        "GO:0005576": "extracellular region"
+      },
+      {
+        "GO:0005615": "extracellular space"
+      },
+      {
+        "GO:0005829": "cytosol"
+      },
+      {
+        "GO:0005886": "plasma membrane"
+      },
+      {
+        "GO:0005887": "integral component of plasma membrane"
+      },
+      {
+        "GO:0009986": "cell surface"
+      },
+      {
+        "GO:0016021": "integral component of membrane"
+      },
+      {
+        "GO:0036464": "cytoplasmic ribonucleoprotein granule"
+      },
+      {
+        "GO:0043235": "receptor complex"
+      },
+      {
+        "GO:0070195": "growth hormone receptor complex"
+      },
+      {
+        "GO:0009897": "external side of plasma membrane"
+      },
+      {
+        "GO:0005576": "extracellular region"
+      },
+      {
+        "GO:0005615": "extracellular space"
+      },
+      {
+        "GO:0005829": "cytosol"
+      },
+      {
+        "GO:0005886": "plasma membrane"
+      },
+      {
+        "GO:0005887": "integral component of plasma membrane"
+      },
+      {
+        "GO:0009986": "cell surface"
+      },
+      {
+        "GO:0016021": "integral component of membrane"
+      },
+      {
+        "GO:0036464": "cytoplasmic ribonucleoprotein granule"
+      },
+      {
+        "GO:0043235": "receptor complex"
+      },
+      {
+        "GO:0070195": "growth hormone receptor complex"
+      },
+      {
+        "GO:0009897": "external side of plasma membrane"
+      },
+      {
+        "GO:0005576": "extracellular region"
+      },
+      {
+        "GO:0005615": "extracellular space"
+      },
+      {
+        "GO:0005829": "cytosol"
+      },
+      {
+        "GO:0005886": "plasma membrane"
+      },
+      {
+        "GO:0005887": "integral component of plasma membrane"
+      },
+      {
+        "GO:0009986": "cell surface"
+      },
+      {
+        "GO:0016021": "integral component of membrane"
+      },
+      {
+        "GO:0036464": "cytoplasmic ribonucleoprotein granule"
+      },
+      {
+        "GO:0043235": "receptor complex"
+      },
+      {
+        "GO:0070195": "growth hormone receptor complex"
+      },
+      {
+        "GO:0009897": "external side of plasma membrane"
+      },
+      {
+        "GO:0005634": "nucleus"
+      },
+      {
+        "GO:0005739": "mitochondrion"
+      },
+      {
+        "GO:0043025": "neuronal cell body"
+      }
+    ],
+    "molecular_activity": [
+      {
+        "GO:0005515": "protein binding"
+      },
+      {
+        "GO:0017046": "peptide hormone binding"
+      },
+      {
+        "GO:0019901": "protein kinase binding"
+      },
+      {
+        "GO:0042802": "identical protein binding"
+      },
+      {
+        "GO:0042803": "protein homodimerization activity"
+      },
+      {
+        "GO:0070064": "proline-rich region binding"
+      },
+      {
+        "GO:0019955": "cytokine binding"
+      },
+      {
+        "GO:0004903": "growth hormone receptor activity"
+      },
+      {
+        "GO:0019838": "growth factor binding"
+      },
+      {
+        "GO:0004896": "cytokine receptor activity"
+      },
+      {
+        "GO:0005515": "protein binding"
+      },
+      {
+        "GO:0017046": "peptide hormone binding"
+      },
+      {
+        "GO:0019901": "protein kinase binding"
+      },
+      {
+        "GO:0042802": "identical protein binding"
+      },
+      {
+        "GO:0042803": "protein homodimerization activity"
+      },
+      {
+        "GO:0070064": "proline-rich region binding"
+      },
+      {
+        "GO:0019955": "cytokine binding"
+      },
+      {
+        "GO:0004903": "growth hormone receptor activity"
+      },
+      {
+        "GO:0019838": "growth factor binding"
+      },
+      {
+        "GO:0004896": "cytokine receptor activity"
+      },
+      {
+        "GO:0005515": "protein binding"
+      },
+      {
+        "GO:0017046": "peptide hormone binding"
+      },
+      {
+        "GO:0019901": "protein kinase binding"
+      },
+      {
+        "GO:0042802": "identical protein binding"
+      },
+      {
+        "GO:0042803": "protein homodimerization activity"
+      },
+      {
+        "GO:0070064": "proline-rich region binding"
+      },
+      {
+        "GO:0019955": "cytokine binding"
+      },
+      {
+        "GO:0004903": "growth hormone receptor activity"
+      },
+      {
+        "GO:0019838": "growth factor binding"
+      },
+      {
+        "GO:0004896": "cytokine receptor activity"
+      },
+      {
+        "GO:0005515": "protein binding"
+      },
+      {
+        "GO:0017046": "peptide hormone binding"
+      },
+      {
+        "GO:0019901": "protein kinase binding"
+      },
+      {
+        "GO:0042802": "identical protein binding"
+      },
+      {
+        "GO:0042803": "protein homodimerization activity"
+      },
+      {
+        "GO:0070064": "proline-rich region binding"
+      },
+      {
+        "GO:0019955": "cytokine binding"
+      },
+      {
+        "GO:0004903": "growth hormone receptor activity"
+      },
+      {
+        "GO:0019838": "growth factor binding"
+      },
+      {
+        "GO:0004896": "cytokine receptor activity"
+      },
+      {
+        "GO:0019903": "protein phosphatase binding"
+      },
+      {
+        "GO:0042169": "SH2 domain binding"
+      }
+    ]
+  },
+  "orthologs": {
+    "Danio rerio": "ghra",
+    "Mus musculus": "Ghr",
+    "Rattus norvegicus": "Ghr",
+    "": ""
+  },
+  "humanProteinAtlas": {
+    "Gene": "GHR",
+    "GeneSynonym": [
+      "GHBP"
+    ],
+    "Ensembl": "ENSG00000112964",
+    "GeneDescription": "Growth hormone receptor",
+    "Uniprot": [
+      "P10912"
+    ],
+    "Chromosome": "5",
+    "Position": "42423777-42721878",
+    "ProteinClass": [
+      "Disease related genes",
+      "FDA approved drug targets",
+      "Predicted membrane proteins",
+      "Predicted secreted proteins"
+    ],
+    "BiologicalProcess": [
+      "Endocytosis"
+    ],
+    "MolecularFunction": [
+      "Receptor"
+    ],
+    "DiseaseInvolvement": [
+      "Disease mutation",
+      "Dwarfism",
+      "FDA approved drug targets"
+    ],
+    "Evidence": "Evidence at protein level",
+    "HPAEvidence": "Evidence at protein level",
+    "UniProtEvidence": "Evidence at protein level",
+    "NeXtProtEvidence": "Evidence at protein level",
+    "MSEvidence": "Evidence at protein level",
+    "RNATissueSpecificity": "Group enriched",
+    "RNATissueDistribution": "Detected in many",
+    "RNATissueSpecificityScore": "5",
+    "RNATissueSpecificNX": {
+      "AdiposeTissue": "44.4",
+      "Breast": "31.5",
+      "Liver": "82.4",
+      "SkeletalMuscle": "23.4"
+    },
+    "RNACellLineSpecificity": "Group enriched",
+    "RNACellLineDistribution": "Detected in some",
+    "RNACellLineSpecificityScore": "5",
+    "RNACellLineSpecificNX": {
+      "HSkMC": "13.3",
+      "T47d": "33.9"
+    },
+    "RNACancerSpecificity": "Low cancer specificity",
+    "RNACancerDistribution": "Detected in many",
+    "RNACancerSpecificityScore": null,
+    "RNACancerSpecificFPKM": null,
+    "RNABrainRegionalSpecificity": "Low region specificity",
+    "RNABrainRegionalDistribution": "Detected in many",
+    "RNABrainRegionalSpecificityScore": null,
+    "RNABrainRegionalSpecificNX": null,
+    "RNABloodCellSpecificity": "Low cell type specificity",
+    "RNABloodCellDistribution": "Detected in some",
+    "RNABloodCellSpecificityScore": null,
+    "RNABloodCellSpecificNX": null,
+    "RNABloodLineageSpecificity": "Low lineage specificity",
+    "RNABloodLineageDistribution": "Detected in single",
+    "RNABloodLineageSpecificityScore": null,
+    "RNABloodLineageSpecificNX": null,
+    "RNAMouseBrainRegionalSpecificity": "Low region specificity",
+    "RNAMouseBrainRegionalDistribution": "Detected in all",
+    "RNAMouseBrainRegionalSpecificityScore": null,
+    "RNAMouseBrainRegionalSpecificPTPM": null,
+    "RNAPigBrainRegionalSpecificity": "Low region specificity",
+    "RNAPigBrainRegionalDistribution": "Detected in all",
+    "RNAPigBrainRegionalSpecificityScore": null,
+    "RNAPigBrainRegionalSpecificPTPM": null,
+    "Antibody": [
+      "HPA045339",
+      "HPA057705"
+    ],
+    "ReliabilityIH": "Enhanced",
+    "ReliabilityMouseBrain": null,
+    "ReliabilityIF": "Supported",
+    "SubcellularLocation": [
+      "Plasma membrane",
+      "Cytosol",
+      "Cytoplasmic bodies"
+    ],
+    "SecretomeLocation": "Secreted to blood",
+    "BloodConcentrationConcBloodIMPgL": "21000000",
+    "BloodConcentrationConcBloodMSPgL": "21000000",
+    "SubcellularMainLocation": [
+      "Plasma membrane",
+      "Cytosol",
+      "Cytoplasmic bodies"
+    ],
+    "SubcellularAdditionalLocation": null,
+    "AntibodyRRID": {
+      "HPA045339": null,
+      "HPA057705": null
+    },
+    "PathologyPrognosticsBreastCancer": {
+      "PrognosticType": "unfavourable",
+      "IsPrognostic": false,
+      "PVal": "2.18e-2"
+    },
+    "PathologyPrognosticsCervicalCancer": {
+      "PrognosticType": "unfavourable",
+      "IsPrognostic": false,
+      "PVal": "5.45e-2"
+    },
+    "PathologyPrognosticsColorectalCancer": {
+      "PrognosticType": "unfavourable",
+      "IsPrognostic": false,
+      "PVal": "1.63e-1"
+    },
+    "PathologyPrognosticsEndometrialCancer": {
+      "PrognosticType": "unfavourable",
+      "IsPrognostic": false,
+      "PVal": "1.96e-2"
+    },
+    "PathologyPrognosticsGlioma": {
+      "PrognosticType": "favourable",
+      "IsPrognostic": false,
+      "PVal": "3.12e-1"
+    },
+    "PathologyPrognosticsHeadAndNeckCancer": {
+      "PrognosticType": "unfavourable",
+      "IsPrognostic": false,
+      "PVal": "1.57e-1"
+    },
+    "PathologyPrognosticsLiverCancer": {
+      "PrognosticType": "favourable",
+      "IsPrognostic": true,
+      "PVal": "2.73e-6"
+    },
+    "PathologyPrognosticsLungCancer": {
+      "PrognosticType": "favourable",
+      "IsPrognostic": false,
+      "PVal": "1.06e-1"
+    },
+    "PathologyPrognosticsMelanoma": {
+      "PrognosticType": "unfavourable",
+      "IsPrognostic": false,
+      "PVal": "3.92e-2"
+    },
+    "PathologyPrognosticsOvarianCancer": {
+      "PrognosticType": "unfavourable",
+      "IsPrognostic": false,
+      "PVal": "3.73e-2"
+    },
+    "PathologyPrognosticsPancreaticCancer": {
+      "PrognosticType": "favourable",
+      "IsPrognostic": false,
+      "PVal": "6.15e-3"
+    },
+    "PathologyPrognosticsProstateCancer": {
+      "PrognosticType": "favourable",
+      "IsPrognostic": false,
+      "PVal": "2.67e-2"
+    },
+    "PathologyPrognosticsRenalCancer": {
+      "PrognosticType": "favourable",
+      "IsPrognostic": false,
+      "PVal": "1.67e-3"
+    },
+    "PathologyPrognosticsStomachCancer": {
+      "PrognosticType": "unfavourable",
+      "IsPrognostic": false,
+      "PVal": "4.29e-4"
+    },
+    "PathologyPrognosticsTestisCancer": {
+      "PrognosticType": "unfavourable",
+      "IsPrognostic": false,
+      "PVal": "7.82e-2"
+    },
+    "PathologyPrognosticsThyroidCancer": {
+      "PrognosticType": "unfavourable",
+      "IsPrognostic": false,
+      "PVal": "7.33e-4"
+    },
+    "PathologyPrognosticsUrothelialCancer": {
+      "PrognosticType": "unfavourable",
+      "IsPrognostic": false,
+      "PVal": "8.35e-6"
+    },
+    "TissueRNAAdiposeTissueNX": "44.4",
+    "TissueRNAAdrenalGlandNX": "2.8",
+    "TissueRNAAmygdalaNX": "0.7",
+    "TissueRNAAppendixNX": "5.4",
+    "TissueRNABasalGangliaNX": "1.3",
+    "TissueRNABoneMarrowNX": "0.3",
+    "TissueRNABreastNX": "31.5",
+    "TissueRNACerebellumNX": "0.4",
+    "TissueRNACerebralCortexNX": "1.4",
+    "TissueRNACervixUterineNX": "4.0",
+    "TissueRNAColonNX": "6.9",
+    "TissueRNACorpusCallosumNX": "0.5",
+    "TissueRNADuctusDeferensNX": "1.7",
+    "TissueRNADuodenumNX": "0.6",
+    "TissueRNAEndometrium1NX": "5.7",
+    "TissueRNAEpididymisNX": "3.9",
+    "TissueRNAEsophagusNX": "2.4",
+    "TissueRNAFallopianTubeNX": "2.5",
+    "TissueRNAGallbladderNX": "3.9",
+    "TissueRNAHeartMuscleNX": "6.0",
+    "TissueRNAHippocampalFormationNX": "1.3",
+    "TissueRNAHypothalamusNX": "1.6",
+    "TissueRNAKidneyNX": "5.3",
+    "TissueRNALiverNX": "82.4",
+    "TissueRNALungNX": "2.3",
+    "TissueRNALymphNodeNX": "2.2",
+    "TissueRNAMidbrainNX": "1.2",
+    "TissueRNAOlfactoryRegionNX": "1.4",
+    "TissueRNAOvaryNX": "5.0",
+    "TissueRNAPancreasNX": "1.3",
+    "TissueRNAParathyroidGlandNX": "3.6",
+    "TissueRNAPituitaryGlandNX": "2.0",
+    "TissueRNAPlacentaNX": "4.0",
+    "TissueRNAPonsAndMedullaNX": "2.0",
+    "TissueRNAProstateNX": "8.7",
+    "TissueRNARectumNX": "2.5",
+    "TissueRNARetinaNX": "2.4",
+    "TissueRNASalivaryGlandNX": "2.3",
+    "TissueRNASeminalVesicleNX": "7.4",
+    "TissueRNASkeletalMuscleNX": "23.4",
+    "TissueRNASkin1NX": "3.0",
+    "TissueRNASmallIntestineNX": "2.4",
+    "TissueRNASmoothMuscleNX": "5.2",
+    "TissueRNASpinalCordNX": "1.0",
+    "TissueRNASpleenNX": "2.6",
+    "TissueRNAStomach1NX": "3.5",
+    "TissueRNATestisNX": "1.6",
+    "TissueRNAThalamusNX": "0.2",
+    "TissueRNAThymusNX": "0.1",
+    "TissueRNAThyroidGlandNX": "2.9",
+    "TissueRNATongueNX": "4.3",
+    "TissueRNATonsilNX": "0.5",
+    "TissueRNAUrinaryBladderNX": "3.8",
+    "TissueRNAVaginaNX": "8.4",
+    "TissueRNABCellsNX": "0.6",
+    "TissueRNADendriticCellsNX": "0.3",
+    "TissueRNAGranulocytesNX": "1.8",
+    "TissueRNAMonocytesNX": "0.5",
+    "TissueRNANKCellsNX": "0.4",
+    "TissueRNATCellsNX": "0.3",
+    "TissueRNATotalPBMCNX": "0.1",
+    "CellRNAA431NX": "0.0",
+    "CellRNAA549NX": "0.0",
+    "CellRNAAF22NX": "0.3",
+    "CellRNAAN3CANX": "3.0",
+    "CellRNAASCDiffNX": "2.0",
+    "CellRNAASCTERT1NX": "0.5",
+    "CellRNABEWONX": "0.0",
+    "CellRNABJNX": "0.8",
+    "CellRNABJHTERT+NX": "0.0",
+    "CellRNABJHTERT+SV40LargeT+NX": "0.0",
+    "CellRNABJHTERT+SV40LargeT+RasG12VNX": "0.0",
+    "CellRNACACO2NX": "0.0",
+    "CellRNACAPAN2NX": "0.0",
+    "CellRNADaudiNX": "0.0",
+    "CellRNAEFO21NX": "0.0",
+    "CellRNAFHDFTERT166NX": "0.8",
+    "CellRNAHaCaTNX": "0.0",
+    "CellRNAHAP1NX": "0.1",
+    "CellRNAHBEC3KTNX": "2.5",
+    "CellRNAHBFTERT88NX": "0.0",
+    "CellRNAHDLM2NX": "0.0",
+    "CellRNAHEK293NX": "1.6",
+    "CellRNAHELNX": "0.0",
+    "CellRNAHeLaNX": "0.0",
+    "CellRNAHepG2NX": "0.0",
+    "CellRNAHHSteCNX": "0.4",
+    "CellRNAHL60NX": "0.0",
+    "CellRNAHMC1NX": "0.0",
+    "CellRNAHSkMCNX": "13.3",
+    "CellRNAHTCEpiNX": "4.3",
+    "CellRNAHTECSVTERT24BNX": "0.0",
+    "CellRNAHTERTHME1NX": "0.6",
+    "CellRNAHUVECTERT2NX": "0.0",
+    "CellRNAK562NX": "0.0",
+    "CellRNAKarpas707NX": "0.0",
+    "CellRNALHCNM2NX": "1.1",
+    "CellRNAMCF7NX": "0.1",
+    "CellRNAMOLT4NX": "0.0",
+    "CellRNANB4NX": "0.0",
+    "CellRNANTERA2NX": "0.2",
+    "CellRNAPC3NX": "0.4",
+    "CellRNAREHNX": "0.0",
+    "CellRNARH30NX": "0.1",
+    "CellRNARPMI8226NX": "0.0",
+    "CellRNARPTECTERT1NX": "0.0",
+    "CellRNART4NX": "0.3",
+    "CellRNASCLC21HNX": "0.0",
+    "CellRNASHSY5YNX": "0.0",
+    "CellRNASiHaNX": "0.1",
+    "CellRNASKBR3NX": "0.0",
+    "CellRNASKMEL30NX": "2.1",
+    "CellRNAT47dNX": "33.9",
+    "CellRNATHP1NX": "0.0",
+    "CellRNATIMENX": "1.8",
+    "CellRNAU138MGNX": "3.0",
+    "CellRNAU2OSNX": "1.3",
+    "CellRNAU2197NX": "1.6",
+    "CellRNAU251MGNX": "0.3",
+    "CellRNAU26670NX": "0.3",
+    "CellRNAU26684NX": "0.0",
+    "CellRNAU698NX": "0.0",
+    "CellRNAU87MGNX": "0.3",
+    "CellRNAU937NX": "0.0",
+    "CellRNAWM115NX": "1.5",
+    "BloodRNABasophilNX": "1.8",
+    "BloodRNAClassicalMonocyteNX": "0.3",
+    "BloodRNAEosinophilNX": "0.4",
+    "BloodRNAGdTCellNX": "0.2",
+    "BloodRNAIntermediateMonocyteNX": "0.2",
+    "BloodRNAMAITTCellNX": "0.1",
+    "BloodRNAMemoryBCellNX": "0.3",
+    "BloodRNAMemoryCD4TCellNX": "0.2",
+    "BloodRNAMemoryCD8TCellNX": "0.1",
+    "BloodRNAMyeloidDCNX": "0.1",
+    "BloodRNANaiveBCellNX": "0.6",
+    "BloodRNANaiveCD4TCellNX": "0.2",
+    "BloodRNANaiveCD8TCellNX": "0.3",
+    "BloodRNANeutrophilNX": "1.7",
+    "BloodRNANKCellNX": "0.4",
+    "BloodRNANonClassicalMonocyteNX": "0.5",
+    "BloodRNAPlasmacytoidDCNX": "0.3",
+    "BloodRNATRegNX": "0.2",
+    "BloodRNATotalPBMCNX": "0.1",
+    "BrainRNAAmygdalaNX": "0.7",
+    "BrainRNABasalGangliaNX": "1.3",
+    "BrainRNACerebellumNX": "0.4",
+    "BrainRNACerebralCortexNX": "1.4",
+    "BrainRNAHippocampalFormationNX": "1.3",
+    "BrainRNAHypothalamusNX": "1.6",
+    "BrainRNAMidbrainNX": "1.2",
+    "BrainRNAOlfactoryRegionNX": "1.4",
+    "BrainRNAPonsAndMedullaNX": "2.0",
+    "BrainRNAThalamusNX": "0.2"
+  },
+  "source": [
+    "GeneAge"
+  ]
+}
+
+select JSON_OBJECT(
+'id', gene.id,
+'origin', (select JSON_OBJECT(
+'id', p.id,
+'phylum', IFNULL(p.name_phylo, ''),
+'age', IFNULL(p.name_mya, ''),
+'order', p.order
+)
+from phylum p
+where p.id = gene.phylum_id),
+'familyOrigin', (select JSON_OBJECT(
+'id', fp.id,
+'phylum', IFNULL(fp.name_phylo, ''),
+'age', IFNULL(fp.name_mya, ''),
+'order', fp.order
+)
+from phylum fp
+where fp.id = gene.family_phylum_id),
+'homologueTaxon', (select COALESCE(NULLIF(t.name_en, ''), NULLIF(t.name_en, ''), '') from taxon t where t.id = gene.taxon_id),
+'symbol', IFNULL(gene.symbol, ''),
+'name', IFNULL(gene.name, ''),
+'aliases', CAST(CONCAT_WS('"', '[', REPLACE(gene.aliases, ' ', '","'), ']') AS JSON),
+'diseases', (select JSON_OBJECTAGG(
+IFNULL(d.id, 'null'),
+JSON_OBJECT(
+'icdCode', IFNULL(d.icd_code, ''),
+'name', COALESCE(NULLIF(d.name_en, ''), NULLIF(d.name_en, ''), ''),
+'icdName', COALESCE(NULLIF(d.icd_name_en, ''), NULLIF(d.icd_name_en, ''), ''),
+'isRare', 'null'
+))
+from disease d
+where d.id in (select gtd.disease_id from gene_to_disease gtd where gtd.gene_id = gene.id)),
+'diseaseCategories', (select JSON_OBJECTAGG(IFNULL(disease_category.id, 'null'), JSON_OBJECT(
+'icdCode', IFNULL(disease_category.icd_code, ''),
+'icdCategoryName', COALESCE(NULLIF(disease_category.icd_name_en, ''), NULLIF(disease_category.icd_name_en, ''), ''))
+)
+FROM disease disease_category
+WHERE disease_category.icd_code in (select d.icd_code_visible
+from disease d
+where d.id in (select gtd.disease_id from gene_to_disease gtd where gtd.gene_id = gene.id)
+AND d.icd_name_en != "")
+),
+'ncbiId', gene.ncbi_id,
+'uniprot', IFNULL(gene.uniprot, ''),
+'commentCause', (select JSON_OBJECTAGG(IFNULL(cc.id, 'null'), COALESCE(NULLIF(cc.name_en, ''), NULLIF(cc.name_en, ''), ''))
+FROM comment_cause cc
+WHERE cc.id IN (SELECT gtcc.comment_cause_id FROM gene_to_comment_cause gtcc WHERE gtcc.gene_id = gene.id)),
+'functionalClusters', (select JSON_ARRAYAGG(
+JSON_OBJECT('id', IFNULL(fc.id, 0), 'name', COALESCE(NULLIF(fc.name_en, ''), NULLIF(fc.name_en, '')))
+)
+FROM functional_cluster fc
+WHERE fc.id IN (select gtfc.functional_cluster_id from gene_to_functional_cluster gtfc where gtfc.gene_id = gene.id)
+),
+'proteinClasses', (select JSON_ARRAYAGG(
+JSON_OBJECT('id', IFNULL(pc.id, 0), 'name', COALESCE(NULLIF(pc.name_en, ''), NULLIF(pc.name_en, '')))
+)
+FROM protein_class pc
+WHERE pc.id IN (select gtpc.protein_class_id from gene_to_protein_class gtpc where gtpc.gene_id = gene.id)
+),
+'expressionChange', gene.expressionChange,
+'timestamp', JSON_OBJECT('created', IFNULL(gene.created_at, ''), 'changed', IFNULL(gene.updated_at, '')),
+'methylationCorrelation', IFNULL(gene.methylation_horvath, ''),
+'ensembl', gene.ensembl,
+'agingMechanisms', (SELECT JSON_ARRAYAGG(
+JSON_OBJECT('id', IFNULL(am.id, 0), 'name', COALESCE(NULLIF(am.name_en, ''), NULLIF(am.name_en, '')))
+)
+FROM aging_mechanism am
+WHERE am.id IN (SELECT ggg.aging_mechanism_id
+FROM gene_ontology_to_aging_mechanism_visible ggg
+WHERE ggg.gene_ontology_id IN (
+SELECT gto.gene_ontology_id
+FROM gene_to_ontology gto
+WHERE gto.gene_id = gene.id))
+AND am.name_en != ''
+)
+)
+FROM gene
+WHERE gene.id = 1;
+
+

@@ -1,5 +1,5 @@
 from mysql import connector
-
+from json import loads
 from config import CONFIG
 from entities import entities
 from pydantic import BaseModel
@@ -327,6 +327,8 @@ class GeneDAO(BaseDAO):
         cur = self.cnx.cursor()
         cur.execute(query)
         result = cur.fetchone()
+        if result and len(result)>0:
+            return loads(result[0])
         return result
 
 
