@@ -34,6 +34,7 @@ class BaseDAO:
             queue=[('','',model,tables,None)]
             while len(queue):
                 (n,k,m,t,p)=queue.pop(0)
+                if hasattr(m,'_supress') and m._supress: continue
                 if not issubclass(m,BaseModel):
                     t[n]=p._select.get(k,k) if hasattr(p,'_select') else k
                     continue
@@ -132,6 +133,7 @@ class BaseDAO:
             queue=[(t,'',tables[t]['_model'],data)]
             while len(queue):
                 (n,k,m,d)=queue.pop(0)
+                if hasattr(m,'_supress') and m._supress: continue
                 if isinstance(m,tuple):
                     m_outer_type=m[1]
                     m=m[0]
@@ -160,7 +162,7 @@ from models.gene import Gene,GeneSearched
 class GeneDAO(BaseDAO):
     """Gene Table fetcher."""
     def search(self,input):
-        if not input.researches: del Gene.__fields__['researches']
+        Gene.__fields__['researches'].type_._supress= not input.researches=='1'
         # mangle aliases type to string, to manually split it into list in fixer
         Gene.__fields__['aliases'].outer_type_=str
 
