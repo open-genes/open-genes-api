@@ -20,7 +20,8 @@ async def gene_search(
         bySelectionCriteria: str = None, byAgingMechanism: str = None, byProteinClass: str = None,
         bySpecies: str = None, byGeneId: str = None,
         sortBy: SortVariant = SortVariant.default, sortOrder: str = "DESC",
-        researches: str=None, isHidden:str = None
+        researches: str = None, isHidden:str = None, byOrigin: str = None, byFamilyOrigin: str = None,
+        byConservativeIn: str = None
 
 ):
     lang=lang.value

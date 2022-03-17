@@ -476,6 +476,12 @@ join gene_regulation_type on gene_regulation_type.id = protein_to_gene.regulatio
             filtering['(select count(distinct aging_mechanism_id) from gene_to_ontology o join gene_ontology_to_aging_mechanism_visible a on a.gene_ontology_id=o.gene_ontology_id where o.gene_id=gene.id and aging_mechanism_id in ('+','.join(['%s' for v in request['byAgingMechanism'].split(',')])+'))=%s']=request['byAgingMechanism'].split(',')+[len(request['byAgingMechanism'].split(','))]
         if request.get('byProteinClass'):
             filtering['(select count(*) from gene_to_protein_class where gene_id=gene.id and protein_class_id in ('+','.join(['%s' for v in request['byProteinClass'].split(',')])+'))=%s']=request['byProteinClass'].split(',')+[len(request['byProteinClass'].split(','))]
+        if request.get('byOrigin'):
+            filtering['(select count(*) from phylum where gene.phylum_id=phylum.id and phylum.name_phylo in (' + ','.join(['%s' for v in request['byOrigin'].split(',')]) + '))=%s'] = request['byOrigin'].split(',') + [len(request['byOrigin'].split(','))]
+        if request.get('byFamilyOrigin'):
+            filtering['(select count(*) from phylum where gene.family_phylum_id=phylum.id and phylum.name_phylo in (' + ','.join(['%s' for v in request['byFamilyOrigin'].split(',')]) + '))=%s'] = request['byFamilyOrigin'].split(',') + [len(request['byFamilyOrigin'].split(','))]
+        if request.get('byConservativeIn'):
+            filtering['(select count(*) from taxon where gene.taxon_id=taxon.id and taxon.name_en in (' + ','.join(['%s' for v in request['byConservativeIn'].split(',')]) + '))=%s'] = request['byConservativeIn'].split(',') + [len(request['byConservativeIn'].split(','))]
         if request.get('bySpecies'):
             filtering['(select count(distinct model_organism_id) from lifespan_experiment where lifespan_experiment.gene_id=gene.id and model_organism_id in ('+','.join(['%s' for v in request['bySpecies'].split(',')])+'))=%s']=request['bySpecies'].split(',')+[len(request['bySpecies'].split(','))]
         params=[]
