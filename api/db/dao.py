@@ -160,6 +160,7 @@ from models.gene import Gene,GeneSearched
 class GeneDAO(BaseDAO):
     """Gene Table fetcher."""
     def search(self,input):
+        if not input.researches: del Gene.__fields__['researches']
         # mangle aliases type to string, to manually split it into list in fixer
         Gene.__fields__['aliases'].outer_type_=str
 

@@ -30,6 +30,9 @@ class AgingMechanism(BaseModel):
     id:int
     name:str
 
+
+from models.researches import *
+
 class Gene(BaseModel):
     id: int
     homologueTaxon:str|None
@@ -119,6 +122,8 @@ LEFT JOIN `gene_ontology_to_aging_mechanism_visible` ON gene_to_ontology.gene_on
 INNER JOIN `aging_mechanism` ON gene_ontology_to_aging_mechanism_visible.aging_mechanism_id = aging_mechanism.id AND aging_mechanism.name_en != '' """,
     )]
 
+    researches:None|Researches
+
     _name='gene'
     _select= {
         'id':'gene.id',
@@ -129,7 +134,7 @@ INNER JOIN `aging_mechanism` ON gene_ontology_to_aging_mechanism_visible.aging_m
         'uniprot':"gene.uniprot",
         'ensembl':"gene.ensembl",
         'methylationCorrelation':"gene.methylation_horvath",
-        'aliases':"gene.aliases", # TODO split into array in the controller
+        'aliases':"gene.aliases",
     }
 
     _from="""
