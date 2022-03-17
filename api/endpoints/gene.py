@@ -3,6 +3,7 @@ from json import loads
 from typing import List
 
 from fastapi import APIRouter, HTTPException
+from fastapi import Depends
 
 from config import Language, SortVariant
 from db.dao import GeneDAO, GeneSuggestionDAO
@@ -10,22 +11,22 @@ from db.request_handler import RequestHandler
 from presenters.gene import GeneShort, Gene, GeneForMethylation, GeneWithResearches, GeneSuggestionOutput
 
 router = APIRouter()
+def common_parameters(q: str | None = None, skip: int = 0, limit: int = 100):
+    return {"q": q, "skip": skip, "limit": limit}
+
+class CommonQueryParams2:
+    def __init__(self, pageSize: int | None = None, page: int = 1):
+        self.pageSize = pageSize
+        self.page = page
+
+from models.gene import GeneSearchInput,GeneSearched
 
 @router.get(
     '/gene/search',
+    response_model=GeneSearched
 )
-async def gene_search(
-        lang: Language = Language.en, page: int = None, pageSize: int = None, byDiseases: str = None,
-        byDiseaseCategories: str = None, byAgeRelatedProcess: str = None, byExpressionChange: str = None,
-        bySelectionCriteria: str = None, byAgingMechanism: str = None, byProteinClass: str = None,
-        bySpecies: str = None, byGeneId: str = None,
-        sortBy: SortVariant = SortVariant.default, sortOrder: str = "DESC",
-        researches: str=None, isHidden:str = None
-
-):
-    lang=lang.value
-    sortBy=sortBy.value
-    return GeneDAO().search(locals())
+async def gene_search(input:GeneSearchInput=Depends(GeneSearchInput))->List:
+    return GeneDAO().search(input)
 
 @router.get(
     '/gene/suggestions',
