@@ -227,7 +227,211 @@ left join statistical_significance as ssmedian on ssmedian.id = general_lifespan
 left join statistical_significance as ssmax on ssmax.id = general_lifespan_experiment.lifespan_max_change_stat_sign_id
 """
 
+class GeneAssociatedWithProgeriaSyndrome(BaseModel):
+    progeriaSyndrome:str
+    doi:None|str
+    pmid:None|str
+    comment:None|str
+    _select={
+        'progeriaSyndrome':'progeria_syndrome.name_@LANG@',
+        'doi':'gene_to_progeria.reference',
+        'pmid':'gene_to_progeria.pmid',
+        'comment':'gene_to_progeria.comment_@LANG@',
+    }
+    _from="""
+from gene
+join gene_to_progeria on gene_to_progeria.gene_id=gene.id
+join progeria_syndrome on progeria_syndrome.id=gene_to_progeria.progeria_syndrome_id
+"""
 
+class GeneAssociatedWithLongevityEffect(BaseModel):
+    longevityEffect:str
+    allelicPolymorphism:None|str
+    sex:None|str
+    allelicVariant:None|str
+    modelOrganism:str
+    changeType:None|str
+    dataType:None|str
+    doi:None|str
+    pmid:None|str
+    comment:None|str
+    _select={
+        'longevityEffect':'longevity_effect.name_@LANG@',
+        'allelicPolymorphism':'polymorphism.name_@LANG@',
+        'sex':'gene_to_longevity_effect.sex_of_organism',
+        'allelicVariant':'gene_to_longevity_effect.allele_variant',
+        'modelOrganism':'longevity_effect_model_organism.name_@LANG@',
+        'changeType':'longevity_effect_age_related_change_type.name_@LANG@',
+        'dataType':'gene_to_longevity_effect.data_type',
+        'doi':'gene_to_longevity_effect.reference',
+        'pmid':'gene_to_longevity_effect.pmid',
+        'comment':'gene_to_longevity_effect.comment_@LANG@',
+    }
+    _from="""
+from gene
+join gene_to_longevity_effect on gene_to_longevity_effect.gene_id=gene.id
+join longevity_effect on longevity_effect.id = gene_to_longevity_effect.longevity_effect_id
+left join polymorphism on polymorphism.id = gene_to_longevity_effect.polymorphism_id
+left join age_related_change_type as longevity_effect_age_related_change_type on longevity_effect_age_related_change_type.id = gene_to_longevity_effect.age_related_change_type_id
+left join model_organism as longevity_effect_model_organism on longevity_effect_model_organism.id=gene_to_longevity_effect.model_organism_id
+"""
+
+class AgeRelatedChangeOfGene(BaseModel):
+    changeType:str
+    sample:None|str
+    modelOrganism:str
+    organismLine:str|None
+    ageFrom:None|str
+    ageTo:None|str
+    ageUnit:None|str
+    valueForMale:None|str
+    valueForFemale:None|str
+    valueForAll:None|str
+    measurementType:None|str
+    doi:None|str
+    pmid:None|str
+    comment:str
+    _select= {
+        'changeType':'age_related_change_age_related_change_type.name_@LANG@',
+        'sample':'sample.name_@LANG@',
+        'modelOrganism':'age_related_change_model_organism.name_@LANG@',
+        'organismLine':'age_related_change_organism_line.name_@LANG@',
+        'ageFrom':'age_related_change.age_from',
+        'ageTo':'age_related_change.age_to',
+        'ageUnit':'age_related_change.age_unit',
+        'valueForMale':'age_related_change.change_value_male',
+        'valueForFemale':'age_related_change.change_value_female',
+        'valueForAll':'age_related_change.change_value_common',
+        'measurementType':'age_related_change.measurement_type',
+        'doi':'age_related_change.reference',
+        'pmid':'age_related_change.pmid',
+        'comment':'age_related_change.comment_@LANG@',
+    }
+    _from="""
+from gene
+join age_related_change on age_related_change.gene_id=gene.id
+join age_related_change_type as age_related_change_age_related_change_type on age_related_change_age_related_change_type.id=age_related_change.age_related_change_type_id
+left join sample on sample.id = age_related_change.sample_id
+left join model_organism as age_related_change_model_organism on age_related_change_model_organism.id = age_related_change.model_organism_id
+left join organism_line as age_related_change_organism_line on age_related_change_organism_line.id = age_related_change.organism_line_id """
+
+class InterventionImproveVitalProcess(BaseModel):
+    id:str
+    name:str
+    _name='interventionImproveVitalProcess'
+    _select={
+        'id':"vitalProcessId",
+        'name':"vitalProcess",
+    }
+    _from=""" from interventionToGeneImprovesVitalProcesses where resultCode=1 /* IMPROVE */ """
+
+class InterventionDeteriorateVitalProcess(BaseModel):
+    id:str
+    name:str
+    _name='interventionDeteriorateVitalProcess'
+    _select={
+        'id':"vitalProcessId",
+        'name':"vitalProcess",
+    }
+    _from=""" from interventionToGeneImprovesVitalProcesses where resultCode=2 /* DETERIOR */ """
+
+class InterventionToGeneImprovesVitalProcess(BaseModel):
+    id:str
+    geneIntervention:str
+    result:str
+    resultCode:str
+    vitalProcess:str
+    vitalProcessId:str
+    modelOrganism:str
+    organismLine:None|str
+    age:None|str
+    genotype:None|str
+    ageUnit:None|str
+    sex:None|str
+    doi:None|str
+    pmid:None|str
+    comment:None|str
+    interventionImproves:List[InterventionImproveVitalProcess]
+    interventionDeteriorates:List[InterventionDeteriorateVitalProcess]
+    _select= {
+        'id':'gene_intervention_to_vital_process.id',
+        'geneIntervention':'gene_intervention_method.name_@LANG@',
+        'result':'intervention_result_for_vital_process.name_@LANG@',
+        'resultCode':'intervention_result_for_vital_process.id',
+        'vitalProcess':'vital_process.name_@LANG@',
+        'vitalProcessId':'vital_process.id',
+        'modelOrganism':'gene_intervention_to_vital_process_model_organism.name_@LANG@',
+        'organismLine':'gene_intervention_to_vital_process_organism_line.name_@LANG@',
+        'age':'gene_intervention_to_vital_process.age',
+        'genotype':'gene_intervention_to_vital_process.genotype',
+        'ageUnit':'gene_intervention_to_vital_process.age_unit',
+        'sex':'gene_intervention_to_vital_process_organism_sex.name_@LANG@',
+        'doi':'gene_intervention_to_vital_process.reference',
+        'pmid':'gene_intervention_to_vital_process.pmid',
+        'comment':'gene_intervention_to_vital_process.comment_@LANG@',
+    }
+    _from="""
+from gene
+join gene_intervention_to_vital_process on gene_intervention_to_vital_process.gene_id=gene.id
+join gene_intervention_result_to_vital_process on gene_intervention_to_vital_process.id = gene_intervention_result_to_vital_process.gene_intervention_to_vital_process_id
+join vital_process on vital_process.id = gene_intervention_result_to_vital_process.vital_process_id
+join intervention_result_for_vital_process on intervention_result_for_vital_process.id = gene_intervention_result_to_vital_process.intervention_result_for_vital_process_id
+join gene_intervention_method on gene_intervention_method.id = gene_intervention_to_vital_process.gene_intervention_method_id
+left join organism_sex as gene_intervention_to_vital_process_organism_sex on gene_intervention_to_vital_process_organism_sex.id = gene_intervention_to_vital_process.sex_of_organism
+left join model_organism as gene_intervention_to_vital_process_model_organism on gene_intervention_to_vital_process_model_organism.id = gene_intervention_to_vital_process.model_organism_id
+left join organism_line as gene_intervention_to_vital_process_organism_line on gene_intervention_to_vital_process_organism_line.id = gene_intervention_to_vital_process.organism_line_id
+"""
+
+class RegulatedGene(BaseModel):
+    id:int
+    symbol:str
+    name:str
+    ncbiId:int
+    _select= {
+        'id':'regulated_gene.id',
+        'symbol':'regulated_gene.symbol',
+        'name':'regulated_gene.name',
+        'ncbiId':'regulated_gene.ncbi_id',
+    }
+
+class ProteinRegulatesOtherGene(BaseModel):
+    proteinActivity:str
+    regulationType:str
+    doi:None|str
+    pmid:None|str
+    comment:None|str
+    regulatedGene:RegulatedGene
+    _select={
+        'proteinActivity':'protein_activity.name_@LANG@',
+        'regulationType':'gene_regulation_type.name_@LANG@',
+        'doi':'protein_to_gene.reference',
+        'pmid':'protein_to_gene.pmid',
+        'comment':'protein_to_gene.comment_@LANG@',
+    }
+    _from="""
+from gene
+join protein_to_gene on protein_to_gene.gene_id=gene.id
+join open_genes.gene as regulated_gene on regulated_gene.id = protein_to_gene.regulated_gene_id
+join protein_activity on protein_activity.id = protein_to_gene.protein_activity_id
+join gene_regulation_type on gene_regulation_type.id = protein_to_gene.regulation_type_id
+"""
+
+class AdditionalEvidence(BaseModel):
+    doi:None|str
+    pmid:None|str
+    comment:str
+    _select={
+        'doi':'gene_to_additional_evidence.reference',
+        'pmid':'gene_to_additional_evidence.pmid',
+        'comment':'gene_to_additional_evidence.comment_@LANG@',
+    }
+    _from=""" from gene join gene_to_additional_evidence on gene_to_additional_evidence.gene_id=gene.id """
 
 class Researches(BaseModel):
     increaseLifespan:List[IncreaseLifespan]
+    geneAssociatedWithProgeriaSyndromes:List[GeneAssociatedWithProgeriaSyndrome]
+    geneAssociatedWithLongevityEffects:List[GeneAssociatedWithLongevityEffect]
+    ageRelatedChangesOfGene:List[AgeRelatedChangeOfGene]
+    interventionToGeneImprovesVitalProcesses:List[InterventionToGeneImprovesVitalProcess]
+    proteinRegulatesOtherGenes:List[ProteinRegulatesOtherGene]
+    additionalEvidences:List[AdditionalEvidence]
