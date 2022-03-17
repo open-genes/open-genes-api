@@ -30,6 +30,9 @@ class AgingMechanism(BaseModel):
     id:int
     name:str
 
+class FunctionalCluster(BaseModel):
+    id:int
+    name:str
 
 from models.researches import *
 
@@ -44,6 +47,7 @@ class Gene(BaseModel):
     ensembl:str|None
     methylationCorrelation:str|None
     aliases:List[str]|None
+    expressionChange:int
 
     origin:None|ogmodel(Phylum,
         _select=
@@ -122,6 +126,19 @@ LEFT JOIN `gene_ontology_to_aging_mechanism_visible` ON gene_to_ontology.gene_on
 INNER JOIN `aging_mechanism` ON gene_ontology_to_aging_mechanism_visible.aging_mechanism_id = aging_mechanism.id AND aging_mechanism.name_en != '' """,
     )]
 
+    functionalClusters:List[ogmodel(FunctionalCluster,
+        _select=
+        {
+            'id':'functional_cluster.id',
+            'name':'coalesce(functional_cluster.name_@LANG@,functional_cluster.name_en)',
+        },
+        _from="""
+FROM gene
+LEFT JOIN `gene_to_functional_cluster` ON gene_to_functional_cluster.gene_id = gene.id
+join functional_cluster on functional_cluster.id=gene_to_functional_cluster.functional_cluster_id
+"""
+    )]
+
     researches:None|Researches
 
     _name='gene'
@@ -135,6 +152,7 @@ INNER JOIN `aging_mechanism` ON gene_ontology_to_aging_mechanism_visible.aging_m
         'ensembl':"gene.ensembl",
         'methylationCorrelation':"gene.methylation_horvath",
         'aliases':"gene.aliases",
+        'expressionChange':'gene.expressionChange',
     }
 
     _from="""

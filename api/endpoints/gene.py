@@ -11,13 +11,6 @@ from db.request_handler import RequestHandler
 from presenters.gene import GeneShort, Gene, GeneForMethylation, GeneWithResearches, GeneSuggestionOutput
 
 router = APIRouter()
-def common_parameters(q: str | None = None, skip: int = 0, limit: int = 100):
-    return {"q": q, "skip": skip, "limit": limit}
-
-class CommonQueryParams2:
-    def __init__(self, pageSize: int | None = None, page: int = 1):
-        self.pageSize = pageSize
-        self.page = page
 
 from models.gene import GeneSearchInput,GeneSearched
 
