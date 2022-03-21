@@ -27,7 +27,7 @@ JSON_OBJECT(
     'line', ol.name_@LANG@,
     'sex', os.name_@LANG@,
     'tissue', s.name_@LANG@,
-    'experimentGroupsQuantity', cre.experiment_number,
+    'experimentGroupQuantity', cre.experiment_number,
     'doi', cre.doi,
     'expressionChangePercent', CAST(cre.expression_change_percent AS FLOAT ),
     'isoform', i.name_@LANG@
