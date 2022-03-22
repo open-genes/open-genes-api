@@ -15,7 +15,7 @@ JSON_OBJECT(
     'id', cre.id,
     'lexpressionChangeLogFc', cre.expression_change_log_fc,
     'pValue', cre.p_val,
-    'crResult', cre.result,
+    'crResult', cre.result_@LANG@,
     'measurementMethod', mm.name_@LANG@,
     'measurementType', mt.name_@LANG@,
     'restrictionPercent', cre.restriction_percent,
