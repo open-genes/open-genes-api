@@ -115,7 +115,7 @@ left join treatment_stage_of_development ts on lifespan_experiment.treatment_sta
 left join treatment_stage_of_development te on lifespan_experiment.treatment_end_stage_of_development_id=te.id
 left join experiment_treatment_period on lifespan_experiment.treatment_period_id=experiment_treatment_period.id
 left join active_substance on lifespan_experiment.active_substance_id=active_substance.id
-where lifespan_experiment.type='control'
+where lifespan_experiment.type='control' and lifespan_experiment.gene_id<>increaseLifespan.gene_id
 """
 
 class Experiment(LifespanExperiment):
@@ -175,6 +175,7 @@ class IncreaseLifespan(GeneralLifespanExperiment):
     interventionDeteriorates:List[InterventionDeteriorate]
     _select= {
         'id':'general_lifespan_experiment.id',
+        'gene_id':'gene.id',
         'modelOrganism':'lifespan_experiment_model_organism.name_@LANG@',
         'organismLine':'lifespan_experiment_organism_line.name_@LANG@',
         'sex':'lifespan_experiment_organism_sex.name_@LANG@',
