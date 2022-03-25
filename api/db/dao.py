@@ -75,6 +75,7 @@ class BaseDAO:
         query=query.replace("@ORDERING@",ordering)
 
         query=query.replace("@LANG@",inputdict.get('lang','en'))
+        query=query.replace("@LANG2@",inputdict.get('lang','en').upper().replace('RU',''))
 
         meta={}
         if 'page' in inputdict and 'pageSize' in inputdict:
@@ -157,16 +158,17 @@ class BaseDAO:
         return re
 
 
-from models.gene import Gene,GeneSearched
+from models.gene import GeneSearched,GeneSearchOutput,GeneSingle
+import json
 
 class GeneDAO(BaseDAO):
     """Gene Table fetcher."""
     def search(self,input):
-        Gene.__fields__['researches'].type_._supress= not input.researches=='1'
+        GeneSearched.__fields__['researches'].type_._supress= not input.researches=='1'
         # mangle aliases type to string, to manually split it into list in fixer
-        Gene.__fields__['aliases'].outer_type_=str
+        GeneSearched.__fields__['aliases'].outer_type_=str
 
-        tables=self.prepare_tables(Gene)
+        tables=self.prepare_tables(GeneSearched)
         query,params,meta=self.prepare_query(tables,input)
 
         def fixer(r):
@@ -180,6 +182,49 @@ class GeneDAO(BaseDAO):
         meta.update(re.pop(0))
 
         return {'options':{'objTotal':meta['row_count'],"pagination":{"page":meta['page'],"pageSize":meta['pageSize'],"pagesTotal":meta['row_count']//meta['pageSize'] + (meta['row_count']%meta['pageSize']!=0)}},'items':re}
+
+    def single(self,input):
+        GeneSingle.__fields__['researches'].type_._supress= not input.researches=='1'
+        GeneSingle.__fields__['ortholog'].type_._supress= not input.ortholog=='1'
+        # mangle aliases type to string, to manually split it into list in fixer
+        GeneSingle.__fields__['aliases'].outer_type_=str
+
+        tables=self.prepare_tables(GeneSingle)
+        query,params,meta=self.prepare_query(tables,input)
+
+        hpa_fields=[ 'Ensembl', 'Uniprot', 'Chromosome', 'Position', 'ProteinClass', 'BiologicalProcess', 'MolecularFunction', 'SubcellularLocation', 'SubcellularMainLocation', 'SubcellularAdditionalLocation', 'DiseaseInvolvement', 'Evidence', ]
+
+        def fixer(r):
+            nonlocal hpa_fields
+            if not r['origin']['id']:r['origin']=None
+            if not r['familyOrigin']['id']: r['familyOrigin']=None
+            r['aliases']=[a for a in r['aliases'].split(' ') if a]
+            terms={}
+            for t in r['terms'].split('||'):
+                t=t.split('|')
+                if len(t)!=3: continue
+                identifier,name,category=t
+                if category not in terms: terms[category]=[]
+                terms[category].append({identifier:name})
+            r['terms']=terms
+            orthologs={}
+            for o in r['orthologs'].split(';'):
+                if not o:continue
+                organism,gene=o.split(',')
+                if organism not in orthologs: orthologs[organism]=gene
+            r['orthologs']=orthologs
+
+            hpa=json.loads(r['humanProteinAtlas'])
+            for f in list(hpa.keys()):
+                if f not in hpa_fields: del hpa[f]
+            r['humanProteinAtlas']=hpa
+
+            return r
+
+        re=self.read_query(query,params,tables,process=fixer)
+        if len(re)!=2: return None
+
+        return re[1]
 
     def get_duplicates_genes(self):
         cur = self.cnx.cursor(dictionary=True)

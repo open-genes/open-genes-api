@@ -12,14 +12,26 @@ from presenters.gene import GeneShort, Gene, GeneForMethylation, GeneWithResearc
 
 router = APIRouter()
 
-from models.gene import GeneSearchInput,GeneSearched
+from models.gene import GeneSearchInput,GeneSearchOutput,GeneSingleInput,GeneSingle
 
 @router.get(
     '/gene/search',
-    response_model=GeneSearched
+    response_model=GeneSearchOutput
 )
 async def gene_search(input:GeneSearchInput=Depends(GeneSearchInput))->List:
     return GeneDAO().search(input)
+
+@router.get(
+    '/gene/{id_or_symbol}',
+    response_model=GeneSingle
+)
+async def gene_search(id_or_symbol:int|str,input:GeneSingleInput=Depends(GeneSingleInput))->GeneSingle:
+    if isinstance(id_or_symbol,int): input.byGeneId=id_or_symbol;
+    if isinstance(id_or_symbol,str): input.bySymbol=id_or_symbol;
+    re=GeneDAO().single(input)
+    if not re:
+        raise HTTPException( status_code=404, detail='Gene not found',)
+    return re
 
 @router.get(
     '/gene/suggestions',
