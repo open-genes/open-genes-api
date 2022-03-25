@@ -185,7 +185,6 @@ class GeneDAO(BaseDAO):
 
     def single(self,input):
         GeneSingle.__fields__['researches'].type_._supress= not input.researches=='1'
-        GeneSingle.__fields__['ortholog'].type_._supress= not input.ortholog=='1'
         # mangle aliases type to string, to manually split it into list in fixer
         GeneSingle.__fields__['aliases'].outer_type_=str
 
@@ -207,12 +206,6 @@ class GeneDAO(BaseDAO):
                 if category not in terms: terms[category]=[]
                 terms[category].append({identifier:name})
             r['terms']=terms
-            orthologs={}
-            for o in r['orthologs'].split(';'):
-                if not o:continue
-                organism,gene=o.split(',')
-                if organism not in orthologs: orthologs[organism]=gene
-            r['orthologs']=orthologs
 
             hpa=json.loads(r['humanProteinAtlas'])
             for f in list(hpa.keys()):

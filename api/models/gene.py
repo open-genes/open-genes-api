@@ -203,7 +203,6 @@ class GeneSingleInput(LanguageInput):
     byGeneId:int|None
     bySymbol:str|None
     researches: str='1'
-    ortholog: str='1'
     _filters = {
             'byGeneId':[lambda value: 'gene.id = %s',lambda value:[value]],
             'bySymbol':[lambda value: 'gene.symbol = %s',lambda value:[value]],
@@ -269,7 +268,6 @@ class GeneSingle(GeneCommon):
     accCds: str|None
     expression:List[ExpressionInSample]
     terms:dict
-    orthologs:dict
     ortholog:List[Ortholog]
     humanProteinAtlas:dict
     _select = GeneCommon._select | {
@@ -293,7 +291,6 @@ from gene_to_ontology
 join gene_ontology on gene_ontology.id = gene_to_ontology.gene_ontology_id
 where gene_to_ontology.gene_id=gene.id)
 """,
-        'orthologs':'gene.orthologs',
         'humanProteinAtlas':'gene.human_protein_atlas',
     }
     _from="""
