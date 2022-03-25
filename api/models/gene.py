@@ -254,10 +254,8 @@ left join model_organism on ortholog.model_organism_id = model_organism.id
 
 class GeneSingle(GeneCommon):
     commentEvolution:str|None
-    commentFunction:str|None
     proteinDescriptionUniProt:str|None
     descriptionNCBI:str|None
-    descriptionOG:str|None
     proteinDescriptionOpenGenes:str|None
     band:str|None
     locationStart:int|None
@@ -273,10 +271,8 @@ class GeneSingle(GeneCommon):
     _select = GeneCommon._select | {
         'test':'(select count(*) from gene)',
         'commentEvolution':'gene.commentEvolution@LANG2@',
-        'commentFunction':'gene.uniprot_summary_@LANG@',
         'proteinDescriptionUniProt':'gene.uniprot_summary_@LANG@',
         'descriptionNCBI':'gene.ncbi_summary_@LANG@',
-        'descriptionOG':'gene.og_summary_@LANG@',
         'proteinDescriptionOpenGenes':'gene.og_summary_@LANG@',
         'band':'gene.band',
         'locationStart': 'gene.locationStart',
