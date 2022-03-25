@@ -269,7 +269,6 @@ class GeneSingle(GeneCommon):
     ortholog:List[Ortholog]
     humanProteinAtlas:dict
     _select = GeneCommon._select | {
-        'test':'(select count(*) from gene)',
         'commentEvolution':'gene.commentEvolution@LANG2@',
         'proteinDescriptionUniProt':'gene.uniprot_summary_@LANG@',
         'descriptionNCBI':'gene.ncbi_summary_@LANG@',
