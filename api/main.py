@@ -7,7 +7,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 from pydantic import BaseModel
 
-from endpoints import gene, disease, calorie_experiment, aging_mechanism, functional_cluster, criteria, protein_class
+from endpoints import gene, disease, calorie_experiment, aging_mechanism, functional_cluster, criteria, protein_class, \
+    phylum
 from config import CONFIG, VERSION
 
 
@@ -19,6 +20,10 @@ def assembling_endpoints(app: FastAPI):
     app.include_router(
         protein_class.router,
         tags=["protein_classes"],
+    )
+    app.include_router(
+        phylum.router,
+        tags=["phylum"],
     )
     app.include_router(
         disease.router,
@@ -41,6 +46,7 @@ def assembling_endpoints(app: FastAPI):
         tags=["criteria"],
     )
 
+
 origins = [
     "*",
 ]
@@ -48,7 +54,7 @@ origins = [
 
 def init():
     app = FastAPI(
-        debug=CONFIG.get('DEBUG',False),
+        debug=CONFIG.get('DEBUG', False),
         title='Open Genes backend API',
         root_path=getenv('ROOT_PATH')
     )
@@ -77,27 +83,30 @@ class Version(BaseModel):
     major: str
     minor: str
     build: Optional[str]
-    date:Optional[str]
-    revision:Optional[str]
-    branch:Optional[str]
+    date: Optional[str]
+    revision: Optional[str]
+    branch: Optional[str]
 
-@app.get("/version",tags=["version"],summary="Version info",response_model=Version)
-def version()->dict:
+
+@app.get("/version", tags=["version"], summary="Version info", response_model=Version)
+def version() -> dict:
     """
     Version information for the running application instance
     """
     return VERSION
 
+
 def custom_openapi():
     if app.openapi_schema: return app.openapi_schema
     openapi_schema = get_openapi(
         title=app.title,
-        version=str(VERSION.get('major','0'))+'.'+str(VERSION.get('minor','0'))+'.'+VERSION.get('build','-'),
+        version=str(VERSION.get('major', '0')) + '.' + str(VERSION.get('minor', '0')) + '.' + VERSION.get('build', '-'),
         routes=app.routes,
-        servers=[{'url':CONFIG.get('API_URL','')}],
+        servers=[{'url': CONFIG.get('API_URL', '')}],
     )
     app.openapi_schema = openapi_schema
     return app.openapi_schema
+
 
 app.openapi = custom_openapi
 
@@ -106,6 +115,6 @@ if __name__ == "__main__":
         "main:app",
         host=CONFIG['API_HOST'],
         port=int(CONFIG['API_PORT']),
-        reload=CONFIG.get('RELOAD',False),
-        debug=CONFIG.get('DEBUG',False), # debug=True implies reload=True
+        reload=CONFIG.get('RELOAD', False),
+        debug=CONFIG.get('DEBUG', False),  # debug=True implies reload=True
     )
