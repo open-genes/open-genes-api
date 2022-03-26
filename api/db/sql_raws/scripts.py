@@ -9,6 +9,7 @@ JSON_OBJECT(
 'symbol',IFNULL(gene.symbol,''),
 'name',IFNULL(gene.name,''),
 'ncbiId',gene.ncbi_id,
+'isHidden', gene.isHidden,
 'uniprot',IFNULL(gene.uniprot,''),
 'ensembl',gene.ensembl,
 'calorieRestrictionExperiments', CAST(CONCAT('[',GROUP_CONCAT(distinct JSON_OBJECT(
