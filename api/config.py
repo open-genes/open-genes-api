@@ -15,7 +15,7 @@ version_file = os.path.join(os.path.dirname(os.path.dirname(__file__)), '/VERSIO
 if os.path.exists(version_file):
     VERSION = dotenv_values(version_file)
     VERSION['major'] = 0
-    VERSION['minor'] = 3
+    VERSION['minor'] = 4
 
 
 class Language(Enum):
