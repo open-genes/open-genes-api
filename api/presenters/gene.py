@@ -87,6 +87,7 @@ class GeneWithDiet:
     name: str = Field(title="Gene name")
     symbol: str = Field(title="Gene symbol (HGNC)")
     ncbiId: Optional[str] = Field(title="Entrez Gene id")
+    isHidden: int = Field()
     uniprot: str = Field(title="UniProt id")
     ensembl: Optional[str] = Field(title="Ensembl id")
     calorieRestrictionExperiments: List[CalorieRestrictionExperiment] = Field()

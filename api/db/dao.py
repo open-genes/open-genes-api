@@ -724,3 +724,20 @@ class ProteinClassDAO(BaseDAO):
             FROM protein_class'''.format(lang)
         )
         return cur.fetchall()
+
+
+class PhylumDAO(BaseDAO):
+    def get_all(self):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute('SET SESSION group_concat_max_len = 100000;')
+        cur.execute(
+            '''
+            SELECT CAST(CONCAT('[', GROUP_CONCAT( distinct JSON_OBJECT(
+            'id', phylum.id,
+            'name', phylum.name_phylo,
+            'age', phylum.name_mya,
+            'order', phylum.`order`
+            ) separator ","), ']') AS JSON) AS jsonobj
+            FROM phylum'''
+        )
+        return cur.fetchall()

@@ -18,7 +18,7 @@ class CalorieRestrictionExperiment:
     line: str
     sex: str
     tissue: str
-    experimentGroupsQuantity: str
+    experimentGroupQuantity: str
     doi: str
     expressionChangePercent: float
     isoform: Optional[str]
