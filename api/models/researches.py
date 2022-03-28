@@ -436,3 +436,49 @@ class Researches(BaseModel):
     interventionToGeneImprovesVitalProcesses:List[InterventionToGeneImprovesVitalProcess]
     proteinRegulatesOtherGenes:List[ProteinRegulatesOtherGene]
     additionalEvidences:List[AdditionalEvidence]
+
+class IncreaseLifespanSearchInput(PaginationInput, LanguageInput, SortInput):
+    byGeneId:int|None
+    _filters = {
+        'byGeneId':[lambda value: 'gene.id=%s',lambda value:[value]],
+    }
+    _sorts = {
+    }
+
+class IncreaseLifespanSearched(IncreaseLifespan):
+    geneId:int
+    geneNcbiId:int|None
+    geneName:str|None
+    geneSymbol:str|None
+    geneAliases:List[str]
+    _select=IncreaseLifespan._select|{
+        'geneId':'gene.id',
+        'geneSymbol':'gene.symbol',
+        'geneNcbiId':'gene.ncbi_id',
+        'geneName':'gene.name',
+        'geneAliases':'gene.aliases',
+    }
+    _name='increaseLifespan'
+    _from="""
+from general_lifespan_experiment
+join lifespan_experiment on lifespan_experiment.general_lifespan_experiment_id=general_lifespan_experiment.id
+join gene on gene.id = lifespan_experiment.gene_id
+left join intervention_result_for_longevity on intervention_result_for_longevity.id = general_lifespan_experiment.intervention_result_id
+left join model_organism as lifespan_experiment_model_organism on lifespan_experiment_model_organism.id = lifespan_experiment.model_organism_id
+left join organism_line as lifespan_experiment_organism_line on lifespan_experiment_organism_line.id = general_lifespan_experiment.organism_line_id
+left join organism_sex as lifespan_experiment_organism_sex on lifespan_experiment_organism_sex.id = general_lifespan_experiment.organism_sex_id
+left join diet as lifespan_experiment_diet on lifespan_experiment_diet.id = general_lifespan_experiment.diet_id
+left join sample as general_lifespan_experiment_sample on general_lifespan_experiment_sample.id = general_lifespan_experiment.changed_expression_tissue_id
+left join time_unit general_lifespan_experiment_time_unit on general_lifespan_experiment_time_unit.id = general_lifespan_experiment.age_unit_id
+left join measurement_type as general_lifespan_experiment_measurement_type on general_lifespan_experiment_measurement_type.id = general_lifespan_experiment.measurement_type
+left join statistical_significance as ssmin on ssmin.id = general_lifespan_experiment.lifespan_min_change_stat_sign_id
+left join statistical_significance as ssmean on ssmean.id = general_lifespan_experiment.lifespan_mean_change_stat_sign_id
+left join statistical_significance as ssmedian on ssmedian.id = general_lifespan_experiment.lifespan_median_change_stat_sign_id
+left join statistical_significance as ssmax on ssmax.id = general_lifespan_experiment.lifespan_max_change_stat_sign_id
+@FILTERING@
+order by @ORDERING@ gene.id, general_lifespan_experiment.id
+@PAGING@
+"""
+
+class IncreaseLifespanSearchOutput(PaginatedOutput):
+    items:List[IncreaseLifespanSearched]
