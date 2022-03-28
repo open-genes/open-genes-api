@@ -19,6 +19,16 @@ from models.gene import GeneSearchInput,GeneSearched
     response_model=GeneSearched
 )
 async def gene_search(input:GeneSearchInput=Depends(GeneSearchInput))->List:
+    #
+    if input.bySuggestions is not None:
+        sls = GeneSuggestionDAO().search(input.bySuggestions)
+        idls = []
+        for item in sls['items']:
+            idls.append(item['id'])
+        suggfilter = ','.join(str(f) for f in idls)
+        input.bySuggestions = None
+        input.byGeneId = suggfilter
+    #
     return GeneDAO().search(input)
 
 @router.get(
