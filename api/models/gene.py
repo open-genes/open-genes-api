@@ -164,6 +164,9 @@ LEFT JOIN taxon ON gene.taxon_id = taxon.id
 order by @ORDERING@ gene.id
 @PAGING@
 """
+    _select = GeneCommon._select | {
+        'total_count':'(select count(*) from gene where isHidden<>1)',
+    }
 
 class GeneSearchOutput(PaginatedOutput):
     items:List[GeneSearched]
