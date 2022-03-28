@@ -120,7 +120,7 @@ class BaseDAO:
             t=r['table_name']
             if r['row_count'] is not None and row_count is None:
                 row_count=r['row_count']
-                handle_row({'row_count':row_count}|{'total_count':r[t+'_total_count']} if t+'_total_count' in r else {})
+                handle_row({'row_count':row_count}|({'total_count':r[t+'_total_count']} if t+'_total_count' in r else {}))
 
             if t==primary_table:
                 handle_row(row)
