@@ -156,6 +156,9 @@ class GeneSearchInput(PaginationInput, LanguageInput, SortInput):
     byAgingMechanism: str = None
     byProteinClass: str = None
     bySpecies: str = None
+    byOrigin: str = None
+    byFamilyOrigin: str = None
+    byConservativeIn: str = None
     byGeneId: str = None
     byGeneSymbol: str = None
     bySuggestions: str = None
@@ -176,7 +179,9 @@ class GeneSearchInput(PaginationInput, LanguageInput, SortInput):
         'byAgingMechanism': [lambda value:'(select count(distinct aging_mechanism_id) from gene_to_ontology o join gene_ontology_to_aging_mechanism_visible a on a.gene_ontology_id=o.gene_ontology_id where o.gene_id=gene.id and aging_mechanism_id in ('+','.join(['%s' for v in value.split(',')])+'))=%s',lambda value:value.split(',')+[len(value.split(','))]],
         'byProteinClass': [lambda value:'(select count(*) from gene_to_protein_class where gene_id=gene.id and protein_class_id in ('+','.join(['%s' for v in value.split(',')])+'))=%s',lambda value:value.split(',')+[len(value.split(','))]],
         'bySpecies': [lambda value:'(select count(distinct model_organism_id) from lifespan_experiment where lifespan_experiment.gene_id=gene.id and model_organism_id in ('+','.join(['%s' for v in value.split(',')])+'))=%s',lambda value:value.split(',')+[len(value.split(','))]],
-
+        'byOrigin': [lambda value:'(select count(*) from phylum where gene.phylum_id=phylum.id and phylum.name_phylo in (' + ','.join(['%s' for v in value.split(',')]) + '))=%s', lambda value:value.split(',') + [len(value.split(','))]],
+        'byFamilyOrigin': [lambda value: '(select count(*) from phylum where gene.phylum_id=family_phylum_id.id and phylum.id in (' + ','.join(['%s' for v in value.split(',')]) + '))=%s', lambda value: value.split(',') + [len(value.split(','))]],
+        'byConservativeIn': [lambda value: '(select count(*) from taxon where gene.taxon_id=taxon.id and taxon.id in (' + ','.join(['%s' for v in value.split(',')]) + '))=%s', lambda value: value.split(',') + [len(value.split(','))]],
     }
     _sorts = {
         'criteriaQuantity':'(select count(*) from gene_to_comment_cause where gene_id=gene.id)',
