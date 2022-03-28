@@ -145,3 +145,13 @@ async def get_gene_by_id(ncbi_id: int, lang: Language = Language.en):
 )
 async def get_gene_by_id(ncbi_id: int, lang: Language = Language.en):
     return 'dummy'
+
+from db.dao import ResearchesDAO
+from models.researches import IncreaseLifespanSearchInput, IncreaseLifespanSearchOutput
+@router.get(
+    '/lifespan-change',
+    response_model=IncreaseLifespanSearchOutput
+)
+async def increase_lifespan_search(input:IncreaseLifespanSearchInput=Depends(IncreaseLifespanSearchInput))->List:
+    return ResearchesDAO().increase_lifespan_search(input)
+
