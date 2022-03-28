@@ -36,6 +36,7 @@ async def gene_search(input:GeneSearchInput=Depends(GeneSearchInput))->List:
     response_model=GeneSingle
 )
 async def gene_search(id_or_symbol:int|str,input:GeneSingleInput=Depends(GeneSingleInput))->GeneSingle:
+    raise HTTPException( status_code=404, detail='Not yet',)
     if isinstance(id_or_symbol,int): input.byGeneId=id_or_symbol;
     if isinstance(id_or_symbol,str): input.bySymbol=id_or_symbol;
     re=GeneDAO().single(input)
