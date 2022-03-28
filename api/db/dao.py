@@ -52,7 +52,7 @@ class BaseDAO:
         primary_table=list(tables.keys())[0]
         for table in [tables[t] for t in tables if '@JOINS@' not in tables[t]['_from']]: table['_from']=table['_from'].strip()+"\n@JOINS@\n"
         query="with "+",\n".join([t+' as ( select concat('+((tables[t]['_parent']+'.ordering, ') if tables[t]['_parent'] else '')+"lpad(row_number() over(),5,'0')) as ordering"+(', count(*) over() as row_count' if t==primary_table else '')+', '+', '.join([tables[t][f]+' as "'+f+'"' for f in tables[t].keys() if not f.startswith('_')]+[tables[t]['_model']._select[s]+' as "'+s+'"' for s in tables[t]['_model']._select if s not in tables[t]])+'\n'+tables[t]['_from'].lstrip().replace('@JOINS@',tables[t].get('_join',''))+')' for t in tables])
-        query=query+"\n"+"\nunion ".join(['select '+t+'.ordering, '+(t+'.row_count' if t==primary_table else 'null')+" as row_count, '"+str(tables[t]['_name'])+"' as table_name,"+', '.join([', '.join([t+'.'+f+' as '+t+'_'+f for f in tables[t] if not f.startswith('_')]) for t in tables])+' '+' '.join([('from'if t2==primary_table else ('right join' if t2==t else 'left join'))+' '+t2+('' if t2==primary_table else ' on false') for t2 in tables]) for t in tables])
+        query=query+"\n"+"\nunion ".join(['select '+t+'.ordering, '+(t+'.row_count' if t==primary_table else 'null')+" as row_count, '"+str(tables[t]['_name'])+"' as table_name,"+', '.join([', '.join([t+'.'+f+' as '+t+'_'+f for f in [f for f in tables[t] if not f.startswith('_')]+[s for s  in tables[t]['_model']._select if s not in tables[t]]]) for t in tables])+' '+' '.join([('from'if t2==primary_table else ('right join' if t2==t else 'left join'))+' '+t2+('' if t2==primary_table else ' on false') for t2 in tables]) for t in tables])
 
         inputclass=type(input)
         inputdict=input.dict()
@@ -75,6 +75,7 @@ class BaseDAO:
         query=query.replace("@ORDERING@",ordering)
 
         query=query.replace("@LANG@",inputdict.get('lang','en'))
+        query=query.replace("@LANG2@",inputdict.get('lang','en').upper().replace('RU',''))
 
         meta={}
         if 'page' in inputdict and 'pageSize' in inputdict:
@@ -119,7 +120,7 @@ class BaseDAO:
             t=r['table_name']
             if r['row_count'] is not None and row_count is None:
                 row_count=r['row_count']
-                handle_row({'row_count':row_count})
+                handle_row({'row_count':row_count}|({'total_count':r[t+'_total_count']} if t+'_total_count' in r else {}))
 
             if t==primary_table:
                 handle_row(row)
@@ -134,6 +135,7 @@ class BaseDAO:
             while len(queue):
                 (n,k,m,d)=queue.pop(0)
                 if hasattr(m,'_supress') and m._supress: continue
+
                 if isinstance(m,tuple):
                     m_outer_type=m[1]
                     m=m[0]
@@ -157,16 +159,17 @@ class BaseDAO:
         return re
 
 
-from models.gene import Gene,GeneSearched
+from models.gene import GeneSearched,GeneSearchOutput,GeneSingle
+import json
 
 class GeneDAO(BaseDAO):
     """Gene Table fetcher."""
     def search(self,input):
-        Gene.__fields__['researches'].type_._supress= not input.researches=='1'
+        GeneSearched.__fields__['researches'].type_._supress= not input.researches=='1'
         # mangle aliases type to string, to manually split it into list in fixer
-        Gene.__fields__['aliases'].outer_type_=str
+        GeneSearched.__fields__['aliases'].outer_type_=str
 
-        tables=self.prepare_tables(Gene)
+        tables=self.prepare_tables(GeneSearched)
         query,params,meta=self.prepare_query(tables,input)
 
         def fixer(r):
@@ -179,7 +182,43 @@ class GeneDAO(BaseDAO):
 
         meta.update(re.pop(0))
 
-        return {'options':{'objTotal':meta['row_count'],"pagination":{"page":meta['page'],"pageSize":meta['pageSize'],"pagesTotal":meta['row_count']//meta['pageSize'] + (meta['row_count']%meta['pageSize']!=0)}},'items':re}
+        return {'options':{'objTotal':meta['row_count'],'total':meta['total_count'],"pagination":{"page":meta['page'],"pageSize":meta['pageSize'],"pagesTotal":meta['row_count']//meta['pageSize'] + (meta['row_count']%meta['pageSize']!=0)}},'items':re}
+
+    def single(self,input):
+        GeneSingle.__fields__['researches'].type_._supress= not input.researches=='1'
+        # mangle aliases type to string, to manually split it into list in fixer
+        GeneSingle.__fields__['aliases'].outer_type_=str
+
+        tables=self.prepare_tables(GeneSingle)
+        query,params,meta=self.prepare_query(tables,input)
+
+        hpa_fields=[ 'Ensembl', 'Uniprot', 'Chromosome', 'Position', 'ProteinClass', 'BiologicalProcess', 'MolecularFunction', 'SubcellularLocation', 'SubcellularMainLocation', 'SubcellularAdditionalLocation', 'DiseaseInvolvement', 'Evidence', ]
+
+        def fixer(r):
+            nonlocal hpa_fields
+            if not r['origin']['id']:r['origin']=None
+            if not r['familyOrigin']['id']: r['familyOrigin']=None
+            r['aliases']=[a for a in r['aliases'].split(' ') if a]
+            terms={}
+            for t in r['terms'].split('||'):
+                t=t.split('|')
+                if len(t)!=3: continue
+                identifier,name,category=t
+                if category not in terms: terms[category]=[]
+                terms[category].append({identifier:name})
+            r['terms']=terms
+
+            hpa=json.loads(r['humanProteinAtlas'])
+            for f in list(hpa.keys()):
+                if f not in hpa_fields: del hpa[f]
+            r['humanProteinAtlas']=hpa
+
+            return r
+
+        re=self.read_query(query,params,tables,process=fixer)
+        if len(re)!=2: return None
+
+        return re[1]
 
     def get_duplicates_genes(self):
         cur = self.cnx.cursor(dictionary=True)

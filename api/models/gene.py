@@ -36,7 +36,7 @@ class FunctionalCluster(BaseModel):
 
 from models.researches import *
 
-class Gene(BaseModel):
+class GeneCommon(BaseModel):
     id: int
     homologueTaxon:str|None
     symbol:str|None
@@ -157,6 +157,7 @@ join functional_cluster on functional_cluster.id=gene_to_functional_cluster.func
         'expressionChange':'gene.expressionChange',
     }
 
+class GeneSearched(GeneCommon):
     _from="""
 FROM gene
 LEFT JOIN taxon ON gene.taxon_id = taxon.id
@@ -164,11 +165,13 @@ LEFT JOIN taxon ON gene.taxon_id = taxon.id
 @FILTERING@
 order by @ORDERING@ gene.id
 @PAGING@
-
 """
+    _select = GeneCommon._select | {
+        'total_count':'(select count(*) from gene where isHidden<>1)',
+    }
 
-class GeneSearched(PaginatedOutput):
-    items:List[Gene]
+class GeneSearchOutput(PaginatedOutput):
+    items:List[GeneSearched]
 
 class GeneSearchInput(PaginationInput, LanguageInput, SortInput):
     byDiseases: str = None
@@ -205,4 +208,100 @@ class GeneSearchInput(PaginationInput, LanguageInput, SortInput):
         'criteriaQuantity':'(select count(*) from gene_to_comment_cause where gene_id=gene.id)',
         'familyPhylum':'(select `order` from phylum where phylum.id=family_phylum_id)',
     }
+
+class GeneSingleInput(LanguageInput):
+    byGeneId:int|None
+    bySymbol:str|None
+    researches: str='1'
+    _filters = {
+            'byGeneId':[lambda value: 'gene.id = %s',lambda value:[value]],
+            'bySymbol':[lambda value: 'gene.symbol = %s',lambda value:[value]],
+    }
+    _sorts = {}
+
+class ExpressionInSample(BaseModel):
+    name:str|None
+    exp_rpkm:float
+    _select={
+        'name':'sample.name_@LANG@',
+        'exp_rpkm':'expression_value',
+    }
+    _from="""
+from gene
+join gene_expression_in_sample  on gene_expression_in_sample.gene_id=gene.id
+join sample on gene_expression_in_sample.sample_id=sample.id
+order by 2 desc
+"""
+
+class OrthologSpecies(BaseModel):
+    latinName:str
+    commonName:None|str
+    _select={
+        'latinName':'model_organism.name_lat',
+        'commonName':'model_organism.name_@LANG@',
+    }
+
+
+class Ortholog(BaseModel):
+    id:int
+    symbol:str
+    species:OrthologSpecies
+    externalBaseName:str|None
+    externalBaseId:str|None
+
+    _select= {
+        'id':'ortholog.id',
+        'symbol':'ortholog.symbol',
+        'externalBaseName':'ortholog.external_base_name',
+        'externalBaseId':'ortholog.external_base_id',
+    }
+    _from="""
+from gene
+join gene_to_ortholog on gene_to_ortholog.gene_id = gene.id
+join ortholog on gene_to_ortholog.ortholog_id = ortholog.id
+left join model_organism on ortholog.model_organism_id = model_organism.id
+"""
+
+class GeneSingle(GeneCommon):
+    commentEvolution:str|None
+    proteinDescriptionUniProt:str|None
+    descriptionNCBI:str|None
+    proteinDescriptionOpenGenes:str|None
+    band:str|None
+    locationStart:int|None
+    locationEnd:int|None
+    orientation: int|None
+    accPromoter: str|None
+    accOrf: str|None
+    accCds: str|None
+    expression:List[ExpressionInSample]
+    terms:dict
+    ortholog:List[Ortholog]
+    humanProteinAtlas:dict
+    _select = GeneCommon._select | {
+        'commentEvolution':'gene.commentEvolution@LANG2@',
+        'proteinDescriptionUniProt':'gene.uniprot_summary_@LANG@',
+        'descriptionNCBI':'gene.ncbi_summary_@LANG@',
+        'proteinDescriptionOpenGenes':'gene.og_summary_@LANG@',
+        'band':'gene.band',
+        'locationStart': 'gene.locationStart',
+        'locationEnd': 'gene.locationEnd',
+        'orientation': 'gene.orientation',
+        'accPromoter': "gene.accPromoter",
+        'accOrf': 'accOrf',
+        'accCds': 'accCds',
+        'terms':"""
+(select group_concat(distinct concat(`gene_ontology`.`ontology_identifier`,'|',`gene_ontology`.`name_@LANG@`,'|',`gene_ontology`.`category`) separator  '||')
+from gene_to_ontology
+join gene_ontology on gene_ontology.id = gene_to_ontology.gene_ontology_id
+where gene_to_ontology.gene_id=gene.id)
+""",
+        'humanProteinAtlas':'gene.human_protein_atlas',
+    }
+    _from="""
+FROM gene
+LEFT JOIN taxon ON gene.taxon_id = taxon.id
+@JOINS@
+@FILTERING@
+"""
 

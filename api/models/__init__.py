@@ -38,16 +38,18 @@ class SortInput(BaseModel):
 class LanguageInput(BaseModel):
     lang:Literal['en','ru']|None='en'
 
+class PaginationData(BaseModel):
+    page:int
+    pageSize:int
+    pagesTotal:int
+
+class PaginationOptions(BaseModel):
+    objTotal:int
+    total:int|None
+    pagination:PaginationData
 
 class PaginatedOutput(BaseModel):
-    options:create_model('PaginationOptions',
-            objTotal=(int,...),
-            pagination=(create_model('PaginationData',
-                page=(int,...),
-                pageSize=(int,...),
-                pagesTotal=(int,...),
-            ),...)
-    )
+    options:PaginationOptions
     items:List
 
 class Timestamp(BaseModel):
