@@ -88,6 +88,21 @@ async def get_gene_by_expression_change(expression_change: str, lang: Language =
     raise HTTPException( status_code=404, detail='Not implemented',)
     return GeneDAO().get()
 
+
+@router.get(
+    '/gene/{id_or_symbol}',
+    response_model=GeneSingle
+)
+async def gene_search(id_or_symbol:int|str,input:GeneSingleInput=Depends(GeneSingleInput))->GeneSingle:
+    raise HTTPException( status_code=404, detail='Not yet',)
+    if isinstance(id_or_symbol,int): input.byGeneId=id_or_symbol;
+    if isinstance(id_or_symbol,str): input.bySymbol=id_or_symbol;
+    re=GeneDAO().single(input)
+    if not re:
+        raise HTTPException( status_code=404, detail='Gene not found',)
+    return re
+
+
 @router.get( '/gene/{symbol}', response_model=Gene,)
 async def dummy_get_gene_by_symbol(symbol: str, lang: Language = Language.en):
         raise HTTPException( status_code=404, detail='Not implemented',)
@@ -133,19 +148,6 @@ async def get_gene_by_id(ncbi_id: int, lang: Language = Language.en):
 )
 async def get_gene_by_id(ncbi_id: int, lang: Language = Language.en):
     return 'dummy'
-
-@router.get(
-    '/gene/{id_or_symbol}',
-    response_model=GeneSingle
-)
-async def gene_search(id_or_symbol:int|str,input:GeneSingleInput=Depends(GeneSingleInput))->GeneSingle:
-    raise HTTPException( status_code=404, detail='Not yet',)
-    if isinstance(id_or_symbol,int): input.byGeneId=id_or_symbol;
-    if isinstance(id_or_symbol,str): input.bySymbol=id_or_symbol;
-    re=GeneDAO().single(input)
-    if not re:
-        raise HTTPException( status_code=404, detail='Gene not found',)
-    return re
 
 
 from db.dao import ResearchesDAO
