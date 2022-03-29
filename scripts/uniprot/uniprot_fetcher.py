@@ -26,10 +26,8 @@ logging.basicConfig(
 
 
 counter = 0
-for gene_object in dao.GeneDAO().fetch_all("SELECT ncbi_id, symbol, uniprot, uniprot_summary_ru FROM `gene`"):
-    if gene_object['uniprot'] and gene_object['uniprot_summary_ru']:
-        continue
-        
+for gene_object in dao.GeneDAO().get_list(request="SELECT ncbi_id, symbol, uniprot, uniprot_summary_ru FROM `gene` "
+                                                  "WHERE uniprot IS NULL OR uniprot='' OR uniprot_summary_ru IS NULL"):
     try:
         response_raw = requests.get(
             'https://www.ebi.ac.uk/proteins/api/proteins',
