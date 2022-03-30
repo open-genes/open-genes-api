@@ -12,11 +12,11 @@ from presenters.gene import GeneShort, Gene, GeneForMethylation, GeneWithResearc
 
 router = APIRouter()
 
-from models.gene import GeneSearchInput,GeneSearched
+from models.gene import GeneSearchInput,GeneSearchOutput,GeneSingleInput,GeneSingle
 
 @router.get(
     '/gene/search',
-    response_model=GeneSearched
+    response_model=GeneSearchOutput
 )
 async def gene_search(input:GeneSearchInput=Depends(GeneSearchInput))->List:
     #
@@ -88,6 +88,21 @@ async def get_gene_by_expression_change(expression_change: str, lang: Language =
     raise HTTPException( status_code=404, detail='Not implemented',)
     return GeneDAO().get()
 
+
+@router.get(
+    '/gene/{id_or_symbol}',
+    response_model=GeneSingle
+)
+async def gene_search(id_or_symbol:int|str,input:GeneSingleInput=Depends(GeneSingleInput))->GeneSingle:
+    #raise HTTPException( status_code=404, detail='Not yet',)
+    if isinstance(id_or_symbol,int): input.byGeneId=id_or_symbol;
+    if isinstance(id_or_symbol,str): input.bySymbol=id_or_symbol;
+    re=GeneDAO().single(input)
+    if not re:
+        raise HTTPException( status_code=404, detail='Gene not found',)
+    return re
+
+
 @router.get( '/gene/{symbol}', response_model=Gene,)
 async def dummy_get_gene_by_symbol(symbol: str, lang: Language = Language.en):
         raise HTTPException( status_code=404, detail='Not implemented',)
@@ -133,3 +148,14 @@ async def get_gene_by_id(ncbi_id: int, lang: Language = Language.en):
 )
 async def get_gene_by_id(ncbi_id: int, lang: Language = Language.en):
     return 'dummy'
+
+
+from db.dao import ResearchesDAO
+from models.researches import IncreaseLifespanSearchInput, IncreaseLifespanSearchOutput
+@router.get(
+    '/lifespan-change',
+    response_model=IncreaseLifespanSearchOutput
+)
+async def increase_lifespan_search(input:IncreaseLifespanSearchInput=Depends(IncreaseLifespanSearchInput))->List:
+    return ResearchesDAO().increase_lifespan_search(input)
+

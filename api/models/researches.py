@@ -28,24 +28,24 @@ class GeneralLifespanExperiment(BaseModel):
     lifespanMeanChangePercent:float|None
     lifespanMedianChangePercent:float|None
     lifespanMaxChangePercent:float|None
-    lMinChangeStatSignificance:str|None
-    lMeanChangeStatSignificance:str|None
-    lMedianChangeStatSignificance:str|None
-    lMaxChangeStatSignificance:str|None
+    lMinChangeStatSignificance:bool|None
+    lMeanChangeStatSignificance:bool|None
+    lMedianChangeStatSignificance:bool|None
+    lMaxChangeStatSignificance:bool|None
     doi:str|None
     pmid:str|None
     comment:str|None
-    populationDensity:str|None
+    populationDensity:int|None
 
 class LifespanExperiment(BaseModel):
     id: int
     interventionMethod:str|None
     interventionWay:str|None
-    tissueSpecific:str|None
-    tissueSpecificPromoter:str|None
-    treatmentStart:str|None
-    treatmentEnd:str|None
-    inductionByDrugWithdrawal:str|None
+    tissueSpecific:bool|None
+    tissueSpecificPromoter:bool|None
+    treatmentStart:float|None
+    treatmentEnd:float|None
+    inductionByDrugWithdrawal:int|None
     treatmentDescription:str|None
     startTimeUnit:str|None
     endTimeUnit:str|None
@@ -55,6 +55,7 @@ class LifespanExperiment(BaseModel):
     startStageOfDevelopment:str|None
     endStageOfDevelopment:str|None
     treatmentPeriod:str|None
+    experimentMainEffect:str|None
     _select= {
         'id':'lifespan_experiment.id',
         'interventionMethod':'gene_intervention_method.name_@LANG@',
@@ -73,7 +74,23 @@ class LifespanExperiment(BaseModel):
         "startStageOfDevelopment": 'ts.name_@LANG@',
         "endStageOfDevelopment": 'te.name_@LANG@',
         "treatmentPeriod": 'experiment_treatment_period.name_@LANG@',
+        "experimentMainEffect": "experiment_main_effect.name_@LANG@",
     }
+    _from="""
+from increaseLifespan
+join lifespan_experiment on lifespan_experiment.general_lifespan_experiment_id=increaseLifespan.id
+left join gene_intervention_method on lifespan_experiment.gene_intervention_method_id=gene_intervention_method.id
+left join gene_intervention_way on lifespan_experiment.gene_intervention_way_id=gene_intervention_way.id
+left join time_unit start_time_unit on lifespan_experiment.treatment_start_time_unit_id=start_time_unit.id
+left join time_unit end_time_unit on lifespan_experiment.treatment_end_time_unit_id=end_time_unit.id
+left join genotype on lifespan_experiment.genotype=genotype.id
+left join active_substance_delivery_way on lifespan_experiment.active_substance_delivery_way_id=active_substance_delivery_way.id
+left join treatment_stage_of_development ts on lifespan_experiment.treatment_start_stage_of_development_id=ts.id
+left join treatment_stage_of_development te on lifespan_experiment.treatment_end_stage_of_development_id=te.id
+left join experiment_treatment_period on lifespan_experiment.treatment_period_id=experiment_treatment_period.id
+left join active_substance on lifespan_experiment.active_substance_id=active_substance.id
+left join experiment_main_effect on lifespan_experiment.experiment_main_effect_id=experiment_main_effect.id
+"""
 
 class Tissue(BaseModel):
     id:int
@@ -99,40 +116,15 @@ join lifespan_experiment_to_tissue on lifespan_experiment_to_tissue.lifespan_exp
 join sample on lifespan_experiment_to_tissue.tissue_id=sample.id
 """
 
-
 class ControlAndExperiment(LifespanExperiment):
     tissues:List[ControlAndExperimentTissue]
-    _from="""
-from increaseLifespan
-join lifespan_experiment on lifespan_experiment.general_lifespan_experiment_id=increaseLifespan.id
-left join gene_intervention_method on lifespan_experiment.gene_intervention_method_id=gene_intervention_method.id
-left join gene_intervention_way on lifespan_experiment.gene_intervention_way_id=gene_intervention_way.id
-left join time_unit start_time_unit on lifespan_experiment.treatment_start_time_unit_id=start_time_unit.id
-left join time_unit end_time_unit on lifespan_experiment.treatment_end_time_unit_id=end_time_unit.id
-left join genotype on lifespan_experiment.genotype=genotype.id
-left join active_substance_delivery_way on lifespan_experiment.active_substance_delivery_way_id=active_substance_delivery_way.id
-left join treatment_stage_of_development ts on lifespan_experiment.treatment_start_stage_of_development_id=ts.id
-left join treatment_stage_of_development te on lifespan_experiment.treatment_end_stage_of_development_id=te.id
-left join experiment_treatment_period on lifespan_experiment.treatment_period_id=experiment_treatment_period.id
-left join active_substance on lifespan_experiment.active_substance_id=active_substance.id
+    _from=LifespanExperiment._from+"""
 where lifespan_experiment.type='control' and lifespan_experiment.gene_id<>increaseLifespan.gene_id
 """
 
 class Experiment(LifespanExperiment):
     tissues:List[ExperimentTissue]
-    _from="""
-from increaseLifespan
-join lifespan_experiment on lifespan_experiment.general_lifespan_experiment_id=increaseLifespan.id
-left join gene_intervention_method on lifespan_experiment.gene_intervention_method_id=gene_intervention_method.id
-left join gene_intervention_way on lifespan_experiment.gene_intervention_way_id=gene_intervention_way.id
-left join time_unit start_time_unit on lifespan_experiment.treatment_start_time_unit_id=start_time_unit.id
-left join time_unit end_time_unit on lifespan_experiment.treatment_end_time_unit_id=end_time_unit.id
-left join genotype on lifespan_experiment.genotype=genotype.id
-left join active_substance_delivery_way on lifespan_experiment.active_substance_delivery_way_id=active_substance_delivery_way.id
-left join treatment_stage_of_development ts on lifespan_experiment.treatment_start_stage_of_development_id=ts.id
-left join treatment_stage_of_development te on lifespan_experiment.treatment_end_stage_of_development_id=te.id
-left join experiment_treatment_period on lifespan_experiment.treatment_period_id=experiment_treatment_period.id
-left join active_substance on lifespan_experiment.active_substance_id=active_substance.id
+    _from=LifespanExperiment._from+"""
 where lifespan_experiment.type='experiment'
 """
 
@@ -176,7 +168,7 @@ class IncreaseLifespan(GeneralLifespanExperiment):
     _select= {
         'id':'general_lifespan_experiment.id',
         'gene_id':'gene.id',
-        'modelOrganism':'lifespan_experiment_model_organism.name_@LANG@',
+        'modelOrganism':'general_lifespan_experiment_model_organism.name_@LANG@',
         'organismLine':'lifespan_experiment_organism_line.name_@LANG@',
         'sex':'lifespan_experiment_organism_sex.name_@LANG@',
         'temperatureFrom': 'general_lifespan_experiment.temperature_from',
@@ -214,13 +206,13 @@ class IncreaseLifespan(GeneralLifespanExperiment):
 from gene
 join lifespan_experiment on lifespan_experiment.gene_id=gene.id
 join general_lifespan_experiment on general_lifespan_experiment.id = lifespan_experiment.general_lifespan_experiment_id
+join model_organism as general_lifespan_experiment_model_organism on general_lifespan_experiment_model_organism.id = general_lifespan_experiment.model_organism_id
 left join intervention_result_for_longevity on intervention_result_for_longevity.id = general_lifespan_experiment.intervention_result_id
-left join model_organism as lifespan_experiment_model_organism on lifespan_experiment_model_organism.id = lifespan_experiment.model_organism_id
 left join organism_line as lifespan_experiment_organism_line on lifespan_experiment_organism_line.id = general_lifespan_experiment.organism_line_id
 left join organism_sex as lifespan_experiment_organism_sex on lifespan_experiment_organism_sex.id = general_lifespan_experiment.organism_sex_id
 left join diet as lifespan_experiment_diet on lifespan_experiment_diet.id = general_lifespan_experiment.diet_id
 left join sample as general_lifespan_experiment_sample on general_lifespan_experiment_sample.id = general_lifespan_experiment.changed_expression_tissue_id
-left join time_unit general_lifespan_experiment_time_unit on general_lifespan_experiment_time_unit.id = general_lifespan_experiment.age_unit_id
+left join time_unit general_lifespan_experiment_time_unit on general_lifespan_experiment_time_unit.id = general_lifespan_experiment.lifespan_change_time_unit_id
 left join measurement_type as general_lifespan_experiment_measurement_type on general_lifespan_experiment_measurement_type.id = general_lifespan_experiment.measurement_type
 left join statistical_significance as ssmin on ssmin.id = general_lifespan_experiment.lifespan_min_change_stat_sign_id
 left join statistical_significance as ssmean on ssmean.id = general_lifespan_experiment.lifespan_mean_change_stat_sign_id
@@ -259,11 +251,11 @@ class GeneAssociatedWithLongevityEffect(BaseModel):
     _select={
         'longevityEffect':'longevity_effect.name_@LANG@',
         'allelicPolymorphism':'polymorphism.name_@LANG@',
-        'sex':'gene_to_longevity_effect.sex_of_organism',
+        'sex':"concat(gene_to_longevity_effect.sex_of_organism,'@LANG@')",
         'allelicVariant':'gene_to_longevity_effect.allele_variant',
         'modelOrganism':'longevity_effect_model_organism.name_@LANG@',
         'changeType':'longevity_effect_age_related_change_type.name_@LANG@',
-        'dataType':'gene_to_longevity_effect.data_type',
+        'dataType':"concat(gene_to_longevity_effect.data_type,'@LANG@')",
         'doi':'gene_to_longevity_effect.reference',
         'pmid':'gene_to_longevity_effect.pmid',
         'comment':'gene_to_longevity_effect.comment_@LANG@',
@@ -284,7 +276,6 @@ class AgeRelatedChangeOfGene(BaseModel):
     organismLine:str|None
     ageFrom:None|str
     ageTo:None|str
-    ageUnit:None|str
     valueForMale:None|str
     valueForFemale:None|str
     valueForAll:None|str
@@ -297,13 +288,12 @@ class AgeRelatedChangeOfGene(BaseModel):
         'sample':'sample.name_@LANG@',
         'modelOrganism':'age_related_change_model_organism.name_@LANG@',
         'organismLine':'age_related_change_organism_line.name_@LANG@',
-        'ageFrom':'age_related_change.age_from',
-        'ageTo':'age_related_change.age_to',
-        'ageUnit':'age_related_change.age_unit',
+        'ageFrom':"concat(age_related_change.age_from,' ',age_related_change_time_unit.name_@LANG@)",
+        'ageTo':"concat(age_related_change.age_to,' ',age_related_change_time_unit.name_@LANG@)",
         'valueForMale':'age_related_change.change_value_male',
         'valueForFemale':'age_related_change.change_value_female',
         'valueForAll':'age_related_change.change_value_common',
-        'measurementType':'age_related_change.measurement_type',
+        'measurementType':"concat(age_related_change.measurement_type,'@LANG@')",
         'doi':'age_related_change.reference',
         'pmid':'age_related_change.pmid',
         'comment':'age_related_change.comment_@LANG@',
@@ -314,7 +304,9 @@ join age_related_change on age_related_change.gene_id=gene.id
 join age_related_change_type as age_related_change_age_related_change_type on age_related_change_age_related_change_type.id=age_related_change.age_related_change_type_id
 left join sample on sample.id = age_related_change.sample_id
 left join model_organism as age_related_change_model_organism on age_related_change_model_organism.id = age_related_change.model_organism_id
-left join organism_line as age_related_change_organism_line on age_related_change_organism_line.id = age_related_change.organism_line_id """
+left join organism_line as age_related_change_organism_line on age_related_change_organism_line.id = age_related_change.organism_line_id
+left join time_unit age_related_change_time_unit on age_related_change_time_unit.id = age_related_change.age_unit_id
+"""
 
 class InterventionImproveVitalProcess(BaseModel):
     id:str
@@ -340,14 +332,13 @@ class InterventionToGeneImprovesVitalProcess(BaseModel):
     id:str
     geneIntervention:str
     result:str
-    resultCode:str
+    resultCode:int
     vitalProcess:str
     vitalProcessId:str
     modelOrganism:str
     organismLine:None|str
     age:None|str
     genotype:None|str
-    ageUnit:None|str
     sex:None|str
     doi:None|str
     pmid:None|str
@@ -363,9 +354,8 @@ class InterventionToGeneImprovesVitalProcess(BaseModel):
         'vitalProcessId':'vital_process.id',
         'modelOrganism':'gene_intervention_to_vital_process_model_organism.name_@LANG@',
         'organismLine':'gene_intervention_to_vital_process_organism_line.name_@LANG@',
-        'age':'gene_intervention_to_vital_process.age',
+        'age':"concat(gene_intervention_to_vital_process.age,' ',gene_intervention_to_vital_process_time_unit.name_@LANG@)",
         'genotype':'gene_intervention_to_vital_process.genotype',
-        'ageUnit':'gene_intervention_to_vital_process.age_unit',
         'sex':'gene_intervention_to_vital_process_organism_sex.name_@LANG@',
         'doi':'gene_intervention_to_vital_process.reference',
         'pmid':'gene_intervention_to_vital_process.pmid',
@@ -381,6 +371,7 @@ join gene_intervention_method on gene_intervention_method.id = gene_intervention
 left join organism_sex as gene_intervention_to_vital_process_organism_sex on gene_intervention_to_vital_process_organism_sex.id = gene_intervention_to_vital_process.sex_of_organism
 left join model_organism as gene_intervention_to_vital_process_model_organism on gene_intervention_to_vital_process_model_organism.id = gene_intervention_to_vital_process.model_organism_id
 left join organism_line as gene_intervention_to_vital_process_organism_line on gene_intervention_to_vital_process_organism_line.id = gene_intervention_to_vital_process.organism_line_id
+left join time_unit gene_intervention_to_vital_process_time_unit on gene_intervention_to_vital_process_time_unit.id=gene_intervention_to_vital_process.age_unit
 """
 
 class RegulatedGene(BaseModel):
@@ -436,3 +427,55 @@ class Researches(BaseModel):
     interventionToGeneImprovesVitalProcesses:List[InterventionToGeneImprovesVitalProcess]
     proteinRegulatesOtherGenes:List[ProteinRegulatesOtherGene]
     additionalEvidences:List[AdditionalEvidence]
+
+class IncreaseLifespanSearchInput(PaginationInput, LanguageInput, SortInput):
+    byGeneId:int|None
+    sortBy: Literal['lifespanMinChangePercent','lifespanMeanChangePercent',
+            'lifespanMedianChangePercent','lifespanMaxChangePercent']|None = None
+    _filters = {
+        'byGeneId':[lambda value: 'gene.id=%s',lambda value:[value]],
+    }
+    _sorts = {
+        'lifespanMinChangePercent': 'general_lifespan_experiment.lifespan_min_change',
+        'lifespanMeanChangePercent': 'general_lifespan_experiment.lifespan_mean_change',
+        'lifespanMedianChangePercent': 'general_lifespan_experiment.lifespan_median_change',
+        'lifespanMaxChangePercent': 'general_lifespan_experiment.lifespan_max_change',
+    }
+
+class IncreaseLifespanSearched(IncreaseLifespan):
+    geneId:int
+    geneNcbiId:int|None
+    geneName:str|None
+    geneSymbol:str|None
+    geneAliases:List[str]
+    _select=IncreaseLifespan._select|{
+        'geneId':'gene.id',
+        'geneSymbol':'gene.symbol',
+        'geneNcbiId':'gene.ncbi_id',
+        'geneName':'gene.name',
+        'geneAliases':'gene.aliases',
+    }
+    _name='increaseLifespan'
+    _from="""
+from general_lifespan_experiment
+join lifespan_experiment on lifespan_experiment.general_lifespan_experiment_id=general_lifespan_experiment.id
+join gene on gene.id = lifespan_experiment.gene_id
+left join intervention_result_for_longevity on intervention_result_for_longevity.id = general_lifespan_experiment.intervention_result_id
+left join model_organism as lifespan_experiment_model_organism on lifespan_experiment_model_organism.id = lifespan_experiment.model_organism_id
+left join organism_line as lifespan_experiment_organism_line on lifespan_experiment_organism_line.id = general_lifespan_experiment.organism_line_id
+left join organism_sex as lifespan_experiment_organism_sex on lifespan_experiment_organism_sex.id = general_lifespan_experiment.organism_sex_id
+left join diet as lifespan_experiment_diet on lifespan_experiment_diet.id = general_lifespan_experiment.diet_id
+left join sample as general_lifespan_experiment_sample on general_lifespan_experiment_sample.id = general_lifespan_experiment.changed_expression_tissue_id
+left join time_unit general_lifespan_experiment_time_unit on general_lifespan_experiment_time_unit.id = general_lifespan_experiment.age_unit_id
+left join measurement_type as general_lifespan_experiment_measurement_type on general_lifespan_experiment_measurement_type.id = general_lifespan_experiment.measurement_type
+left join statistical_significance as ssmin on ssmin.id = general_lifespan_experiment.lifespan_min_change_stat_sign_id
+left join statistical_significance as ssmean on ssmean.id = general_lifespan_experiment.lifespan_mean_change_stat_sign_id
+left join statistical_significance as ssmedian on ssmedian.id = general_lifespan_experiment.lifespan_median_change_stat_sign_id
+left join statistical_significance as ssmax on ssmax.id = general_lifespan_experiment.lifespan_max_change_stat_sign_id
+@FILTERING@
+order by @ORDERING@ gene.id, general_lifespan_experiment.id
+@PAGING@
+"""
+
+class IncreaseLifespanSearchOutput(PaginatedOutput):
+    items:List[IncreaseLifespanSearched]
