@@ -299,7 +299,7 @@ class AgeRelatedChangeOfGene(BaseModel):
         'organismLine':'age_related_change_organism_line.name_@LANG@',
         'ageFrom':'age_related_change.age_from',
         'ageTo':'age_related_change.age_to',
-        'ageUnit':'age_related_change.age_unit',
+        'ageUnit':'age_related_change_time_unit.name_@LANG@',
         'valueForMale':'age_related_change.change_value_male',
         'valueForFemale':'age_related_change.change_value_female',
         'valueForAll':'age_related_change.change_value_common',
@@ -314,7 +314,9 @@ join age_related_change on age_related_change.gene_id=gene.id
 join age_related_change_type as age_related_change_age_related_change_type on age_related_change_age_related_change_type.id=age_related_change.age_related_change_type_id
 left join sample on sample.id = age_related_change.sample_id
 left join model_organism as age_related_change_model_organism on age_related_change_model_organism.id = age_related_change.model_organism_id
-left join organism_line as age_related_change_organism_line on age_related_change_organism_line.id = age_related_change.organism_line_id """
+left join organism_line as age_related_change_organism_line on age_related_change_organism_line.id = age_related_change.organism_line_id
+left join time_unit age_related_change_time_unit on age_related_change_time_unit.id = age_related_change.age_unit_id
+"""
 
 class InterventionImproveVitalProcess(BaseModel):
     id:str
