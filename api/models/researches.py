@@ -439,10 +439,16 @@ class Researches(BaseModel):
 
 class IncreaseLifespanSearchInput(PaginationInput, LanguageInput, SortInput):
     byGeneId:int|None
+    sortBy: Literal['lifespanMinChangePercent','lifespanMeanChangePercent',
+            'lifespanMedianChangePercent','lifespanMaxChangePercent']|None = None
     _filters = {
         'byGeneId':[lambda value: 'gene.id=%s',lambda value:[value]],
     }
     _sorts = {
+        'lifespanMinChangePercent': 'general_lifespan_experiment.lifespan_min_change',
+        'lifespanMeanChangePercent': 'general_lifespan_experiment.lifespan_mean_change',
+        'lifespanMedianChangePercent': 'general_lifespan_experiment.lifespan_median_change',
+        'lifespanMaxChangePercent': 'general_lifespan_experiment.lifespan_max_change',
     }
 
 class IncreaseLifespanSearched(IncreaseLifespan):

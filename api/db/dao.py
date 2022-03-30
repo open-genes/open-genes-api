@@ -85,8 +85,7 @@ class BaseDAO:
             meta['pageSize']=int(meta['pageSize']) if meta['pageSize'] is not None else 10
             query=query.replace('@PAGING@','limit '+str(meta['pageSize'])+' offset '+str(meta['pageSize']*(meta['page']-1)));
 
-        query=query+"\norder by 1"
-
+        # query=query+"\norder by 1"
         return query,params,meta
 
     def read_query(self,query,params,tables,consume=None,process=None):
