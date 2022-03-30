@@ -173,7 +173,7 @@ def gene_common_fixer(r):
         a['measurementType']={'1en':'mRNA','2en':'protein','1ru':'мРНК','2ru':'белок'}.get(a['measurementType'])
     for g in r['researches']['geneAssociatedWithLongevityEffects']:
         g['dataType']={'1en':'genomic','2en':'transcriptomic','3en':'proteomic','1ru':'геномные','2ru':'транскриптомные','3ru':'протеомные'}.get(g['dataType'])
-        g['sex']={'9en':'female','1en':'male','2en':'both','0ru':'женский','1ru':'мужской','2ru':'оба пола'}.get(g['sex'])
+        g['sex']={'0en':'female','1en':'male','2en':'both','0ru':'женский','1ru':'мужской','2ru':'оба пола'}.get(g['sex'])
     for g in r['researches']['increaseLifespan']:
         for i in g['interventions']['experiment']+g['interventions']['controlAndExperiment']:
             i['tissueSpecific']=i['tissueSpecific']==1
