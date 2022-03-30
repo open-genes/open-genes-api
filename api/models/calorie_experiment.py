@@ -7,7 +7,7 @@ class CalorieRestrictionExperiment(BaseModel):
     id: int|None
     lexpressionChangeLogFc: float
     pValue: str
-    # crResult: str
+    crResult: str
     measurementMethod: str
     measurementType: str
     restrictionPercent: int
@@ -29,7 +29,7 @@ class CalorieRestrictionExperiment(BaseModel):
         'lexpressionChangeLogFc': "expression_change_log_fc",
         'id': "calorie_restriction_experiment.id",
         'pValue': "p_val",
-        # 'crResult': "COALESCE(calorie_restriction_experiment.name_@LANG@,calorie_restriction_experiment.name_en)",
+        'crResult': "COALESCE(calorie_restriction_experiment.name_@LANG@,calorie_restriction_experiment.name_en)",
         'measurementMethod': "measurement_method.name_@LANG@",
         'measurementType': "measurement_type.name_@LANG@",
         'restrictionPercent': "restriction_percent",
