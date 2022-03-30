@@ -161,6 +161,29 @@ class BaseDAO:
 from models.gene import GeneSearched,GeneSearchOutput,GeneSingle
 import json
 
+def gene_common_fixer(r):
+    if not r['origin']['id']:r['origin']=None
+    if not r['familyOrigin']['id']: r['familyOrigin']=None
+    r['aliases']=[a for a in r['aliases'].split(' ') if a]
+
+    if not r['researches']: return r
+    for a in r['researches']['ageRelatedChangesOfGene']:
+        for f in ['valueForAll','valueForFemale','valueForMale']: a[f]=str(a[f])+'%' if a[f] else a[f]
+        a['measurementType']={'1en':'mRNA','2en':'protein','1ru':'мРНК','2ru':'белок'}.get(a['measurementType'])
+    for g in r['researches']['geneAssociatedWithLongevityEffects']:
+        g['dataType']={'1en':'genomic','2en':'transcriptomic','3en':'proteomic','1ru':'геномные','2ru':'транскриптомные','3ru':'протеомные'}.get(g['dataType'])
+        g['sex']={'9en':'female','1en':'male','2en':'both','0ru':'женский','1ru':'мужской','2ru':'оба пола'}.get(g['sex'])
+    for g in r['researches']['increaseLifespan']:
+        for i in g['interventions']['experiment']+g['interventions']['controlAndExperiment']:
+            i['tissueSpecific']=i['tissueSpecific']==1
+            i['tissueSpecificPromoter']=i['tissueSpecificPromoter']==1
+            if not i['tissueSpecific']: i['tissueSpecificPromoter']=None
+        for f in ['lMinChangeStatSignificance', 'lMeanChangeStatSignificance', 'lMedianChangeStatSignificance', 'lMaxChangeStatSignificance']:
+            g[f]={'yes':True,'да':True,'no':False,'нет':False}.get(g[f])
+
+    return r
+
+
 class GeneDAO(BaseDAO):
     """Gene Table fetcher."""
     def search(self,input):
@@ -171,29 +194,7 @@ class GeneDAO(BaseDAO):
         tables=self.prepare_tables(GeneSearched)
         query,params,meta=self.prepare_query(tables,input)
 
-        def fixer(r):
-            if not r['origin']['id']:r['origin']=None
-            if not r['familyOrigin']['id']: r['familyOrigin']=None
-            r['aliases']=[a for a in r['aliases'].split(' ') if a]
-
-            if not r['researches']: return r
-            for a in r['researches']['ageRelatedChangesOfGene']:
-                for f in ['valueForAll','valueForFemale','valueForMale']: a[f]=str(a[f])+'%' if a[f] else a[f]
-                a['measurementType']={'1en':'mRNA','2en':'protein','1ru':'мРНК','2ru':'белок'}.get(a['measurementType'])
-            for g in r['researches']['geneAssociatedWithLongevityEffects']:
-                g['dataType']={'1en':'genomic','2en':'transcriptomic','3en':'proteomic','1ru':'геномные','2ru':'транскриптомные','3ru':'протеомные'}.get(g['dataType'])
-                g['sex']={'9en':'female','1en':'male','2en':'both','0ru':'женский','1ru':'мужской','2ru':'оба пола'}.get(g['sex'])
-            for g in r['researches']['increaseLifespan']:
-                for i in g['interventions']['experiment']+g['interventions']['controlAndExperiment']:
-                    i['tissueSpecific']=i['tissueSpecific']==1
-                    i['tissueSpecificPromoter']=i['tissueSpecificPromoter']==1
-                    if not i['tissueSpecific']: i['tissueSpecificPromoter']=None
-                for f in ['lMinChangeStatSignificance', 'lMeanChangeStatSignificance', 'lMedianChangeStatSignificance', 'lMaxChangeStatSignificance']:
-                    g[f]={'yes':True,'да':True,'no':False,'нет':False}.get(g[f])
-
-            return r
-
-        re=self.read_query(query,params,tables,process=fixer)
+        re=self.read_query(query,params,tables,process=gene_common_fixer)
 
         meta.update(re.pop(0))
 
@@ -212,9 +213,8 @@ class GeneDAO(BaseDAO):
 
         def fixer(r):
             nonlocal hpa_fields
-            if not r['origin']['id']:r['origin']=None
-            if not r['familyOrigin']['id']: r['familyOrigin']=None
-            r['aliases']=[a for a in r['aliases'].split(' ') if a]
+            r=gene_common_fixer(r);
+
             r['source']=[s for s in r['source'].split('||') if s]
             terms={}
             for t in r['terms'].split('||'):
@@ -229,21 +229,6 @@ class GeneDAO(BaseDAO):
             for f in list(hpa.keys()):
                 if f not in hpa_fields: del hpa[f]
             r['humanProteinAtlas']=hpa
-
-            if not r['researches']: return r
-            for a in r['researches']['ageRelatedChangesOfGene']:
-                for f in ['valueForAll','valueForFemale','valueForMale']: a[f]=str(a[f])+'%' if a[f] else a[f]
-                a['measurementType']={'1en':'mRNA','2en':'protein','1ru':'мРНК','2ru':'белок'}.get(a['measurementType'])
-            for g in r['researches']['geneAssociatedWithLongevityEffects']:
-                g['dataType']={'1en':'genomic','2en':'transcriptomic','3en':'proteomic','1ru':'геномные','2ru':'транскриптомные','3ru':'протеомные'}.get(g['dataType'])
-                g['sex']={'9en':'female','1en':'male','2en':'both','0ru':'женский','1ru':'мужской','2ru':'оба пола'}.get(g['sex'])
-            for g in r['researches']['increaseLifespan']:
-                for i in g['interventions']['experiment']+g['interventions']['controlAndExperiment']:
-                    i['tissueSpecific']=i['tissueSpecific']==1
-                    i['tissueSpecificPromoter']=i['tissueSpecificPromoter']==1
-                    if not i['tissueSpecific']: i['tissueSpecificPromoter']=None
-                for f in ['lMinChangeStatSignificance', 'lMeanChangeStatSignificance', 'lMedianChangeStatSignificance', 'lMaxChangeStatSignificance']:
-                    g[f]={'yes':True,'да':True,'no':False,'нет':False}.get(g[f])
 
             return r
 
