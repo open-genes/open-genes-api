@@ -94,7 +94,6 @@ async def get_gene_by_expression_change(expression_change: str, lang: Language =
     response_model=GeneSingle
 )
 async def gene_search(id_or_symbol:int|str,input:GeneSingleInput=Depends(GeneSingleInput))->GeneSingle:
-    #raise HTTPException( status_code=404, detail='Not yet',)
     if isinstance(id_or_symbol,int): input.byGeneId=id_or_symbol;
     if isinstance(id_or_symbol,str): input.bySymbol=id_or_symbol;
     re=GeneDAO().single(input)
