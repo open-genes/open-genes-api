@@ -208,7 +208,7 @@ class GeneSearchInput(PaginationInput, LanguageInput, SortInput):
     }
 
 
-class GeneCalorieExperiment(BaseModel):
+class CalorieExperiment(BaseModel):
     id: int
     name: str | None
     symbol:str|None
@@ -226,12 +226,21 @@ class GeneCalorieExperiment(BaseModel):
         'ensembl':"gene.ensembl",
     }
 
+
     _from="""
 FROM gene
-LEFT JOIN taxon ON gene.taxon_id = taxon.id
-LEFT JOIN calorie_restriction_experiment ON calorie_restriction_experiment.gene_id = gene.id
+RIGHT JOIN calorie_restriction_experiment ON calorie_restriction_experiment.gene_id = gene.id
 @JOINS@
 @FILTERING@
 order by @ORDERING@ gene.id
 @PAGING@
 """
+
+
+class CalorieExperimentOutput(PaginatedOutput):
+    items: List[CalorieExperiment]
+
+
+class CalorieExperimentInput(PaginationInput, LanguageInput):
+    _filters = {}
+    _sorts = {}

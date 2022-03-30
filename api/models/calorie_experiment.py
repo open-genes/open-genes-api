@@ -4,9 +4,10 @@ from pydantic import BaseModel
 
 
 class CalorieRestrictionExperiment(BaseModel):
+    id: int|None
     lexpressionChangeLogFc: float
     pValue: str
-    crResult: str
+    # crResult: str
     measurementMethod: str
     measurementType: str
     restrictionPercent: int
@@ -20,14 +21,15 @@ class CalorieRestrictionExperiment(BaseModel):
     tissue: str
     experimentGroupQuantity: str
     doi: str
-    expressionChangePercent: float
+    expressionChangePercent: str
     isoform: str|None
 
     _name = 'calorie_restriction_experiment'
     _select = {
+        'lexpressionChangeLogFc': "expression_change_log_fc",
         'id': "calorie_restriction_experiment.id",
         'pValue': "p_val",
-        'crResult': "COALESCE(calorie_restriction_experiment.name_@LANG@,calorie_restriction_experiment.name_en)",
+        # 'crResult': "COALESCE(calorie_restriction_experiment.name_@LANG@,calorie_restriction_experiment.name_en)",
         'measurementMethod': "measurement_method.name_@LANG@",
         'measurementType': "measurement_type.name_@LANG@",
         'restrictionPercent': "restriction_percent",
@@ -46,8 +48,8 @@ class CalorieRestrictionExperiment(BaseModel):
     }
     _from = """
     FROM gene
-    JOIN calorie_restriction_experiment on gene.id = calorie_restriction_experiment.gene_id
-    JOIN time_unit_age on calorie_restriction_experiment.age_time_unit_id = time_unit_age.id
+    LEFT JOIN calorie_restriction_experiment on gene.id = calorie_restriction_experiment.gene_id
+    JOIN time_unit time_unit_age on calorie_restriction_experiment.age_time_unit_id = time_unit_age.id
     JOIN time_unit on calorie_restriction_experiment.restriction_time_unit_id = time_unit.id
     JOIN measurement_method on calorie_restriction_experiment.measurement_method_id = measurement_method.id
     JOIN measurement_type measurement_type on calorie_restriction_experiment.measurement_type_id = measurement_type.id
@@ -58,3 +60,4 @@ class CalorieRestrictionExperiment(BaseModel):
     LEFT JOIN isoform on calorie_restriction_experiment.isoform_id = isoform.id
     GROUP BY gene.id
     """
+

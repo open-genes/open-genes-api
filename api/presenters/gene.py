@@ -7,7 +7,7 @@ from presenters.protein_class import ProteinClass
 from presenters.functional_cluster import FunctionalCluster
 from presenters.human_protein_atlas import HumanProteinAtlas
 from presenters.origin import Origin
-from presenters.calorie_restriction_experiments import CalorieRestrictionExperiment
+# from presenters.calorie_restriction_experiments import CalorieRestrictionExperiment
 from presenters.researches import Researches, IncreaseLifespan
 from presenters.timestamp import Timestamp
 from pydantic import Field
@@ -90,7 +90,7 @@ class GeneWithDiet:
     isHidden: int = Field()
     uniprot: str = Field(title="UniProt id")
     ensembl: Optional[str] = Field(title="Ensembl id")
-    calorieRestrictionExperiments: List[CalorieRestrictionExperiment] = Field()
+    # calorieRestrictionExperiments: List[CalorieRestrictionExperiment] = Field()
 
 
 @dataclass
