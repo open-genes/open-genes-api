@@ -1,6 +1,6 @@
 from typing import List
 from fastapi import APIRouter, Depends
-from db.calorie_experiment_dao import CalorieExperimentDAO
+from db.dao import CalorieExperimentDAO
 from models.gene import CalorieExperimentInput, CalorieExperimentOutput
 
 router = APIRouter()
