@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from models import *
+from models.calorie_experiment import CalorieRestrictionExperiment
 
 class Phylum(BaseModel):
     id:int
@@ -314,3 +315,40 @@ LEFT JOIN taxon ON gene.taxon_id = taxon.id
 @FILTERING@
 """
 
+
+class CalorieExperiment(BaseModel):
+    id: int
+    name: str | None
+    symbol:str|None
+    ncbiId:int|None
+    uniprot:str|None
+    ensembl:str|None
+    calorieRestrictionExperiments: List[CalorieRestrictionExperiment]
+    _name='gene'
+    _select= {
+        'id':'gene.id',
+        'symbol':"gene.symbol",
+        'name':"gene.name",
+        'ncbiId':"gene.ncbi_id",
+        'uniprot':"gene.uniprot",
+        'ensembl':"gene.ensembl",
+    }
+
+
+    _from="""
+FROM gene
+RIGHT JOIN calorie_restriction_experiment ON calorie_restriction_experiment.gene_id = gene.id
+@JOINS@
+@FILTERING@
+order by @ORDERING@ gene.id
+@PAGING@
+"""
+
+
+class CalorieExperimentOutput(PaginatedOutput):
+    items: List[CalorieExperiment]
+
+
+class CalorieExperimentInput(PaginationInput, LanguageInput):
+    _filters = {}
+    _sorts = {}
