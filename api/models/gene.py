@@ -283,6 +283,7 @@ class GeneSingle(GeneCommon):
     terms:dict
     ortholog:List[Ortholog]
     humanProteinAtlas:dict
+    source:List[str]
     _select = GeneCommon._select | {
         'commentEvolution':'gene.commentEvolution@LANG2@',
         'proteinDescriptionUniProt':'gene.uniprot_summary_@LANG@',
@@ -295,6 +296,7 @@ class GeneSingle(GeneCommon):
         'accPromoter': "gene.accPromoter",
         'accOrf': 'accOrf',
         'accCds': 'accCds',
+        'source': 'group_concat(distinct source.name separator "||")',
         'terms':"""
 (select group_concat(distinct concat(`gene_ontology`.`ontology_identifier`,'|',`gene_ontology`.`name_@LANG@`,'|',`gene_ontology`.`category`) separator  '||')
 from gene_to_ontology
@@ -305,6 +307,8 @@ where gene_to_ontology.gene_id=gene.id)
     }
     _from="""
 FROM gene
+join gene_to_source on gene_to_source.gene_id=gene.id
+join source on source.id=gene_to_source.source_id
 LEFT JOIN taxon ON gene.taxon_id = taxon.id
 @JOINS@
 @FILTERING@
