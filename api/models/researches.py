@@ -460,6 +460,7 @@ class IncreaseLifespanSearched(IncreaseLifespan):
 from general_lifespan_experiment
 join lifespan_experiment on lifespan_experiment.general_lifespan_experiment_id=general_lifespan_experiment.id
 join gene on gene.id = lifespan_experiment.gene_id
+join model_organism as general_lifespan_experiment_model_organism on general_lifespan_experiment_model_organism.id = general_lifespan_experiment.model_organism_id
 left join intervention_result_for_longevity on intervention_result_for_longevity.id = general_lifespan_experiment.intervention_result_id
 left join model_organism as lifespan_experiment_model_organism on lifespan_experiment_model_organism.id = lifespan_experiment.model_organism_id
 left join organism_line as lifespan_experiment_organism_line on lifespan_experiment_organism_line.id = general_lifespan_experiment.organism_line_id

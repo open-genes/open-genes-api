@@ -161,11 +161,21 @@ class BaseDAO:
 from models.gene import GeneSearched,GeneSearchOutput,GeneSingle
 import json
 
+def increase_lifespan_common_fixer(r):
+    for i in r['interventions']['experiment']+r['interventions']['controlAndExperiment']:
+        i['tissueSpecific']=i['tissueSpecific']==1
+        i['tissueSpecificPromoter']=i['tissueSpecificPromoter']==1
+        if not i['tissueSpecific']: i['tissueSpecificPromoter']=None
+    for f in ['lMinChangeStatSignificance', 'lMeanChangeStatSignificance', 'lMedianChangeStatSignificance', 'lMaxChangeStatSignificance']:
+        r[f]={'yes':True,'да':True,'no':False,'нет':False}.get(r[f])
+    return r
+
 def gene_common_fixer(r):
     if not r['origin']['id']:r['origin']=None
     if not r['familyOrigin']['id']: r['familyOrigin']=None
     r['aliases']=[a for a in r['aliases'].split(' ') if a]
 
+    if sum([len(i) for i in r['researches'].values()])==0: r['researches']=None
     if not r['researches']: return r
     for a in r['researches']['ageRelatedChangesOfGene']:
         for f in ['valueForAll','valueForFemale','valueForMale']: a[f]=str(a[f])+'%' if a[f] else a[f]
@@ -173,13 +183,8 @@ def gene_common_fixer(r):
     for g in r['researches']['geneAssociatedWithLongevityEffects']:
         g['dataType']={'1en':'genomic','2en':'transcriptomic','3en':'proteomic','1ru':'геномные','2ru':'транскриптомные','3ru':'протеомные'}.get(g['dataType'])
         g['sex']={'0en':'female','1en':'male','2en':'both','0ru':'женский','1ru':'мужской','2ru':'оба пола'}.get(g['sex'])
-    for g in r['researches']['increaseLifespan']:
-        for i in g['interventions']['experiment']+g['interventions']['controlAndExperiment']:
-            i['tissueSpecific']=i['tissueSpecific']==1
-            i['tissueSpecificPromoter']=i['tissueSpecificPromoter']==1
-            if not i['tissueSpecific']: i['tissueSpecificPromoter']=None
-        for f in ['lMinChangeStatSignificance', 'lMeanChangeStatSignificance', 'lMedianChangeStatSignificance', 'lMaxChangeStatSignificance']:
-            g[f]={'yes':True,'да':True,'no':False,'нет':False}.get(g[f])
+    for i in r['researches']['increaseLifespan']:
+        i=increase_lifespan_common_fixer(i)
 
     return r
 
@@ -370,7 +375,7 @@ class ResearchesDAO(BaseDAO):
 
         def fixer(r):
             r['geneAliases']=[a for a in r['geneAliases'].split(' ') if a]
-            return r
+            return increase_lifespan_common_fixer(r)
 
         re=self.read_query(query,params,tables,process=fixer)
 
