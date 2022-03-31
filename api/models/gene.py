@@ -81,8 +81,8 @@ class GeneCommon(BaseModel):
         },
         _from="""
 from gene join gene_to_disease on gene_to_disease.gene_id=gene.id
-join open_genes.disease on disease.id=gene_to_disease.disease_id and not exists (select 1 from open_genes.disease d where disease.icd_code_visible=d.icd_code_visible and disease.id>d.id)
-join open_genes.disease disease_category on disease_category.icd_code=disease.icd_code_visible
+join disease on disease.id=gene_to_disease.disease_id and not exists (select 1 from disease d where disease.icd_code_visible=d.icd_code_visible and disease.id>d.id)
+join disease disease_category on disease_category.icd_code=disease.icd_code_visible
 """
     )]
 
