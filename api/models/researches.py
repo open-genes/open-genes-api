@@ -474,9 +474,9 @@ left join statistical_significance as ssmean on ssmean.id = general_lifespan_exp
 left join statistical_significance as ssmedian on ssmedian.id = general_lifespan_experiment.lifespan_median_change_stat_sign_id
 left join statistical_significance as ssmax on ssmax.id = general_lifespan_experiment.lifespan_max_change_stat_sign_id
 @FILTERING@
-order by @ORDERING@ gene.id, general_lifespan_experiment.id
 @PAGING@
 """
+    _order_by="gene.id, general_lifespan_experiment.id"
 
 class IncreaseLifespanSearchOutput(PaginatedOutput):
     items:List[IncreaseLifespanSearched]

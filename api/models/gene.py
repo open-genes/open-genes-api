@@ -164,9 +164,9 @@ FROM gene
 LEFT JOIN taxon ON gene.taxon_id = taxon.id
 @JOINS@
 @FILTERING@
-order by @ORDERING@ gene.id
 @PAGING@
 """
+    _order_by="gene.id"
     _select = GeneCommon._select | {
         'total_count':'(select count(*) from gene where isHidden<>1)',
     }
@@ -340,9 +340,9 @@ FROM gene
 RIGHT JOIN calorie_restriction_experiment ON calorie_restriction_experiment.gene_id = gene.id
 @JOINS@
 @FILTERING@
-order by @ORDERING@ gene.id
 @PAGING@
 """
+    _order_by="gene.id"
 
 
 class CalorieExperimentOutput(PaginatedOutput):

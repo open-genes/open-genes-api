@@ -51,7 +51,7 @@ class BaseDAO:
     def prepare_query(self,tables,input):
         primary_table=list(tables.keys())[0]
         for table in [tables[t] for t in tables if '@JOINS@' not in tables[t]['_from']]: table['_from']=table['_from'].strip()+"\n@JOINS@\n"
-        query="with "+",\n".join([t+' as ( select concat('+((tables[t]['_parent']+'.ordering, ') if tables[t]['_parent'] else '')+"lpad(row_number() over(),5,'0')) as ordering"+(', count(*) over() as row_count' if t==primary_table else '')+', '+', '.join([tables[t][f]+' as "'+f+'"' for f in tables[t].keys() if not f.startswith('_')]+[tables[t]['_model']._select[s]+' as "'+s+'"' for s in tables[t]['_model']._select if s not in tables[t]])+'\n'+tables[t]['_from'].lstrip().replace('@JOINS@',tables[t].get('_join',''))+')' for t in tables])
+        query="with "+",\n".join([t+' as ( select concat('+((tables[t]['_parent']+'.ordering, ') if tables[t]['_parent'] else '')+"lpad(row_number() over(order by "+('@ORDERING@' if t==primary_table else '')+' '+(tables[t]['_model']._order_by if hasattr(tables[t]['_model'],'_order_by') else 'null')+"),5,'0')) as ordering"+(', count(*) over() as row_count' if t==primary_table else '')+', '+', '.join([tables[t][f]+' as "'+f+'"' for f in tables[t].keys() if not f.startswith('_')]+[tables[t]['_model']._select[s]+' as "'+s+'"' for s in tables[t]['_model']._select if s not in tables[t]])+'\n'+tables[t]['_from'].lstrip().replace('@JOINS@',tables[t].get('_join',''))+')' for t in tables])
         query=query+"\n"+"\nunion ".join(['select '+t+'.ordering, '+(t+'.row_count' if t==primary_table else 'null')+" as row_count, '"+str(tables[t]['_name'])+"' as table_name,"+', '.join([', '.join([t+'.'+f+' as '+t+'_'+f for f in [f for f in tables[t] if not f.startswith('_')]+[s for s  in tables[t]['_model']._select if s not in tables[t]]]) for t in tables])+' '+' '.join([('from'if t2==primary_table else ('right join' if t2==t else 'left join'))+' '+t2+('' if t2==primary_table else ' on false') for t2 in tables]) for t in tables])
 
         inputclass=type(input)
@@ -85,7 +85,7 @@ class BaseDAO:
             meta['pageSize']=int(meta['pageSize']) if meta['pageSize'] is not None else 10
             query=query.replace('@PAGING@','limit '+str(meta['pageSize'])+' offset '+str(meta['pageSize']*(meta['page']-1)));
 
-        # query=query+"\norder by 1"
+        query=query+"\norder by 1"
         return query,params,meta
 
     def read_query(self,query,params,tables,consume=None,process=None):
