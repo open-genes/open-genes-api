@@ -284,7 +284,7 @@ class GeneSingle(GeneCommon):
     terms:dict
     ortholog:List[Ortholog]
     humanProteinAtlas:dict
-    source:List[str]
+    source:List[str]|None
     _select = GeneCommon._select | {
         'commentEvolution':'gene.commentEvolution@LANG2@',
         'proteinDescriptionUniProt':'gene.uniprot_summary_@LANG@',
@@ -308,8 +308,8 @@ where gene_to_ontology.gene_id=gene.id)
     }
     _from="""
 FROM gene
-join gene_to_source on gene_to_source.gene_id=gene.id
-join source on source.id=gene_to_source.source_id
+left join gene_to_source on gene_to_source.gene_id=gene.id
+left join source on source.id=gene_to_source.source_id
 LEFT JOIN taxon ON gene.taxon_id = taxon.id
 @JOINS@
 @FILTERING@

@@ -220,7 +220,7 @@ class GeneDAO(BaseDAO):
             nonlocal hpa_fields
             r=gene_common_fixer(r);
 
-            r['source']=[s for s in r['source'].split('||') if s]
+            r['source']=[s for s in r['source'].split('||') if s] if r['source'] is not None else None
             terms={}
             for t in r['terms'].split('||'):
                 t=t.split('|')
