@@ -1,6 +1,8 @@
 from pydantic import BaseModel
 from models import *
 from models.calorie_experiment import CalorieRestrictionExperiment
+from models.researches import *
+from models.location import *
 
 class Phylum(BaseModel):
     id:int
@@ -35,7 +37,6 @@ class FunctionalCluster(BaseModel):
     id:int
     name:str
 
-from models.researches import *
 
 class GeneCommon(BaseModel):
     id: int
@@ -142,6 +143,8 @@ join functional_cluster on functional_cluster.id=gene_to_functional_cluster.func
     )]
 
     researches:None|Researches
+
+    location:None|Location
 
     _name='gene'
     _select= {
