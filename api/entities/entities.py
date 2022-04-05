@@ -115,3 +115,20 @@ class CalorieRestrictionExperiment(BaseModel):
     expression_change_log_fc: Optional[str] = None
     expression_change_percent: Optional[str] = None
     doi: Optional[str] = None
+
+class GeneTranscript(BaseModel):
+    gene_id: Optional[int] = None
+    acc_version: Optional[str] = None
+    name: Optional[str] = None
+    length: Optional[int] = None
+    genomic_range_acc_version: Optional[str] = None
+    genomic_range_begin: Optional[int] = None
+    genomic_range_end: Optional[int] = None
+    genomic_range_orientation: Optional[int] = None
+
+
+class GeneTranscriptExon(BaseModel):
+    transcript_id: Optional[int] = None
+    begin: Optional[int] = None
+    end: Optional[int] = None
+    ord: Optional[int] = None

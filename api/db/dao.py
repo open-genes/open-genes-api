@@ -364,6 +364,13 @@ class GeneDAO(BaseDAO):
 
         return self.get(ncbi_id=gene_dict['ncbi_id'])
 
+    def get_list(self, request):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute('SET SESSION group_concat_max_len = 100000;')
+        cur.execute(request)
+        return cur.fetchall()
+
+
 from models.gene import IncreaseLifespanSearched,IncreaseLifespanSearchOutput
 
 class ResearchesDAO(BaseDAO):
@@ -701,3 +708,106 @@ class CalorieExperimentDAO(BaseDAO):
                 "pagination": {"page": meta['page'], "pageSize": meta['pageSize'],
                "pagesTotal": meta['row_count'] // meta['pageSize'] + (
                    meta['row_count'] % meta['pageSize'] != 0)}}, 'items': re}
+
+class WorkerStateDAO(BaseDAO):
+    """Worker state Table fetcher."""
+
+    def __init__(self, name: str, default_state: str):
+        super(WorkerStateDAO, self).__init__()
+        self.name = name
+        self.start_state = default_state
+
+    def get(self) -> str:
+        cur = self.cnx.cursor(dictionary=True,buffered=True)
+        cur.execute(f"SELECT state FROM worker_state WHERE name = '{self.name}'")
+        wstate = cur.fetchone()
+        cur.close()
+        if wstate is None:
+            self.set(self.start_state)
+            return self.start_state
+        else:
+            return wstate['state']
+
+    def set(self, st: str):
+        cur = self.cnx.cursor(dictionary=True,buffered=True)
+        cur.execute(f"INSERT INTO worker_state(name,state) VALUES ('{self.name}','{st}') ON DUPLICATE KEY UPDATE state='{st}';")
+        self.cnx.commit()
+        cur.close()
+
+
+class GeneGroupDAO(BaseDAO):
+    """GeneGroup Table fetcher."""
+    cash = {}
+
+    def get_id(self, name: str) -> int:
+        ggid = self.cash.get(name)
+        if ggid is None:
+            cur = self.cnx.cursor(dictionary=True,buffered=True)
+            cur.execute(f"SELECT id FROM gene_group WHERE name = '{name}';")
+            ggid = cur.fetchone()
+            if ggid is None:
+                cur.execute(f"INSERT INTO gene_group(name) VALUES ('{name}');")
+                self.cnx.commit()
+                ggid = cur.lastrowid
+            else:
+                ggid = ggid['id']
+            self.cash[name] = ggid
+            cur.close()
+        return ggid
+
+
+class LocuGroupDAO(BaseDAO):
+    """GeneLocusGroup Table fetcher."""
+    cash = {}
+
+    def get_id(self, name: str) -> int:
+        lgid = self.cash.get(name)
+        if lgid is None:
+            cur = self.cnx.cursor(dictionary=True,buffered=True)
+            cur.execute(f"SELECT id FROM gene_locus_group WHERE name = '{name}';")
+            lgid = cur.fetchone()
+
+            if lgid is None:
+                cur.execute(f"INSERT INTO gene_locus_group(name) VALUES ('{name}');")
+                self.cnx.commit()
+                lgid = cur.lastrowid
+            else:
+                lgid = lgid['id']
+
+            self.cash[name] = lgid
+            cur.close()
+        return lgid
+
+
+class GeneTranscriptDAO(BaseDAO):
+    """Gene Transcript Table fetcher."""
+
+    def add(self, tr: entities.GeneTranscript) -> int:
+        source_dict = tr.dict(exclude_none=True)
+
+        query = f"INSERT INTO gene_transcript ({', '.join(source_dict.keys())}) "
+        subs = ', '.join([f'%({k})s' for k in source_dict.keys()])
+        query += f"VALUES ({subs});"
+
+        cur = self.cnx.cursor(dictionary=True,buffered=True)
+        cur.execute(query, source_dict)
+        self.cnx.commit()
+        cur.close()
+        return cur.lastrowid
+
+class GeneTranscriptExonDAO(BaseDAO):
+    """Gene Transcript Exon Table fetcher."""
+
+    def add(self, ex: entities.GeneTranscriptExon) -> int:
+        source_dict = ex.dict(exclude_none=True)
+
+        query = f"INSERT INTO transcript_exon ({', '.join(source_dict.keys())}) "
+        subs = ', '.join([f'%({k})s' for k in source_dict.keys()])
+        query += f"VALUES ({subs});"
+
+        cur = self.cnx.cursor(dictionary=True,buffered=True)
+        cur.execute(query, source_dict)
+        self.cnx.commit()
+        cur.close()
+        return cur.lastrowid
+

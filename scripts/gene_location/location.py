@@ -3,9 +3,9 @@ import json
 from ncbi.datasets.openapi import ApiClient as DatasetsApiClient
 from ncbi.datasets.openapi import ApiException as DatasetsApiException
 from ncbi.datasets.openapi.api.gene_api import GeneApi as DatasetsGeneApi
-from api.db import dao
+from db import dao
 import requests
-from api.entities import entities
+from entities import entities
 
 
 class GeneLocationFetcherNCBI():
