@@ -52,6 +52,10 @@ class GeneSuggestionOutput:
     notFound: List[str]
 
 @dataclass
+class GeneSymbolsOutput:
+    items: List[str]
+
+@dataclass
 class GeneForMethylation:
     id: int
     name: str = Field(title="Gene name")

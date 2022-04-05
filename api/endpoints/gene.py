@@ -8,7 +8,7 @@ from fastapi import Depends
 from config import Language, SortVariant
 from db.dao import GeneDAO, GeneSuggestionDAO
 from db.request_handler import RequestHandler
-from presenters.gene import GeneShort, Gene, GeneForMethylation, GeneWithResearches, GeneSuggestionOutput
+from presenters.gene import GeneShort, Gene, GeneForMethylation, GeneWithResearches, GeneSuggestionOutput, GeneSymbolsOutput
 
 router = APIRouter()
 
@@ -43,6 +43,15 @@ async def get_gene_suggestions(input: str = None, byGeneId: str = None, byGeneSy
     else:
         return GeneSuggestionDAO().search(input)
 
+@router.get(
+    '/gene/symbols',
+    response_model=GeneSymbolsOutput,
+)
+async def get_gene_symbols():
+    req = GeneDAO().get_symbols()
+    ls = json.loads(req[0]) if req else []
+    re = {'items':ls}
+    return re
 
 @router.get(
     '/gene/by-latest',

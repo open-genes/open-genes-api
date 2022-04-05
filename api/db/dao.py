@@ -370,6 +370,11 @@ class GeneDAO(BaseDAO):
         cur.execute(request)
         return cur.fetchall()
 
+    def get_symbols(self):
+        cur = self.cnx.cursor()
+        cur.execute('SELECT JSON_ARRAYAGG(g.symbol) FROM gene g WHERE g.isHidden != 1;')
+        return cur.fetchone()
+
 
 from models.gene import IncreaseLifespanSearched,IncreaseLifespanSearchOutput
 
