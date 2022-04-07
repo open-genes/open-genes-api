@@ -39,6 +39,7 @@ class GeneralLifespanExperiment(BaseModel):
 
 class LifespanExperiment(BaseModel):
     id: int
+    gene:int|None
     interventionMethod:str|None
     interventionWay:str|None
     tissueSpecific:bool|None
@@ -58,6 +59,7 @@ class LifespanExperiment(BaseModel):
     experimentMainEffect:str|None
     _select= {
         'id':'lifespan_experiment.id',
+        'gene':'lifespan_experiment.gene_id',
         'interventionMethod':'gene_intervention_method.name_@LANG@',
         'interventionWay':'gene_intervention_way.name_@LANG@',
         "tissueSpecific": "lifespan_experiment.tissue_specificity",
