@@ -178,8 +178,7 @@ def gene_common_fixer(r):
     if sum([len(i) for i in r['researches'].values()])==0: r['researches']=None
     if not r['researches']: return r
     for a in r['researches']['ageRelatedChangesOfGene']:
-        for f in ['valueForAll','valueForFemale','valueForMale']: a[f]=str(a[f])+'%' if a[f] else a[f]
-        a['measurementType']={'1en':'mRNA','2en':'protein','1ru':'мРНК','2ru':'белок'}.get(a['measurementType'])
+        a['value'] = str(a['value']) + '%' if a['value'] else a['value']
     for g in r['researches']['geneAssociatedWithLongevityEffects']:
         g['dataType']={'1en':'genomic','2en':'transcriptomic','3en':'proteomic','1ru':'геномные','2ru':'транскриптомные','3ru':'протеомные'}.get(g['dataType'])
         g['sex']={'0en':'female','1en':'male','2en':'both','0ru':'женский','1ru':'мужской','2ru':'оба пола'}.get(g['sex'])

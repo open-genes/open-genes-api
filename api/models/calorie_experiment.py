@@ -31,7 +31,7 @@ class CalorieRestrictionExperiment(BaseModel):
         'pValue': "p_val",
         'crResult': "COALESCE(calorie_restriction_experiment.name_@LANG@,calorie_restriction_experiment.name_en)",
         'measurementMethod': "measurement_method.name_@LANG@",
-        'measurementType': "measurement_type.name_@LANG@",
+        'expressionEvaluation': "expression_evaluation.name_@LANG@",
         'restrictionPercent': "restriction_percent",
         'duration': "restriction_time",
         'durationUnit': "time_unit.name_@LANG@",
@@ -52,7 +52,7 @@ class CalorieRestrictionExperiment(BaseModel):
     JOIN time_unit time_unit_age on calorie_restriction_experiment.age_time_unit_id = time_unit_age.id
     JOIN time_unit on calorie_restriction_experiment.restriction_time_unit_id = time_unit.id
     JOIN measurement_method on calorie_restriction_experiment.measurement_method_id = measurement_method.id
-    JOIN measurement_type measurement_type on calorie_restriction_experiment.measurement_type_id = measurement_type.id
+    JOIN expression_evaluation on calorie_restriction_experiment.expression_evaluation_by_id = expression_evaluation.id
     JOIN organism_line on calorie_restriction_experiment.strain_id = organism_line.id
     JOIN organism_sex on calorie_restriction_experiment.organism_sex_id = organism_sex.id
     JOIN model_organism on calorie_restriction_experiment.model_organism_id = model_organism.id

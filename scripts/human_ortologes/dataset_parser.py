@@ -108,7 +108,7 @@ def parser():
             p_val=row['pValue'],
             result=row['crResult'],
             measurement_method_id=measurement_method_id,
-            measurement_type_id=calorie_dao.get_measurement_type(name=row['measurementType'].lower().replace('_', ' '))['id'],
+            expression_evaluation_by_id=calorie_dao.get_measurement_type(name=row['measurementType'].lower().replace('_', ' '))['id'],
             restriction_percent=row['restrictionPercent'],
             restriction_time=row['restrictionTime'].split('_')[0],
             restriction_time_unit_id=calorie_dao.get_treatment_time(row['restrictionTime'].split('_')[1])[
