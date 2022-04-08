@@ -482,3 +482,30 @@ left join statistical_significance as ssmax on ssmax.id = general_lifespan_exper
 
 class IncreaseLifespanSearchOutput(PaginatedOutput):
     items:List[IncreaseLifespanSearched]
+
+class AgeRelatedChangeOfGeneResearched(AgeRelatedChangeOfGene):
+    geneId:int
+    geneNcbiId:int|None
+    geneName:str|None
+    geneSymbol:str|None
+    geneAliases:List[str]
+    _select=AgeRelatedChangeOfGene._select|{
+        'geneId':'gene.id',
+        'geneSymbol':'gene.symbol',
+        'geneNcbiId':'gene.ncbi_id',
+        'geneName':'gene.name',
+        'geneAliases':'gene.aliases',
+    }
+    _name='ageRelatedChangeOfGene'
+    _from="""
+from age_related_change
+left join gene on age_related_change.gene_id=gene.id
+join age_related_change_type as age_related_change_age_related_change_type on age_related_change_age_related_change_type.id=age_related_change.age_related_change_type_id
+left join sample on sample.id = age_related_change.sample_id
+left join model_organism as age_related_change_model_organism on age_related_change_model_organism.id = age_related_change.model_organism_id
+left join organism_line as age_related_change_organism_line on age_related_change_organism_line.id = age_related_change.organism_line_id
+left join time_unit age_related_change_time_unit on age_related_change_time_unit.id = age_related_change.age_unit_id
+"""
+
+class AgeRelatedChangeOfGeneResearchOutput(PaginatedOutput):
+    items:List[AgeRelatedChangeOfGeneResearched]

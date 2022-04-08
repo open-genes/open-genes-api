@@ -188,6 +188,11 @@ def gene_common_fixer(r):
 
     return r
 
+def age_related_changes_fixer(r):
+    # r['aliases']=[a for a in r['aliases'].split(' ') if a]
+    for f in ['valueForAll','valueForFemale','valueForMale']: r[f]=str(r[f])+'%' if r[f] else r[f]
+    r['measurementType']={'1en':'mRNA','2en':'protein','1ru':'мРНК','2ru':'белок'}.get(r['measurementType'])
+    return r
 
 class GeneDAO(BaseDAO):
     """Gene Table fetcher."""
@@ -376,7 +381,7 @@ class GeneDAO(BaseDAO):
         return cur.fetchone()
 
 
-from models.gene import IncreaseLifespanSearched,IncreaseLifespanSearchOutput
+from models.gene import IncreaseLifespanSearched,IncreaseLifespanSearchOutput,AgeRelatedChangeOfGeneResearched
 
 class ResearchesDAO(BaseDAO):
     def increase_lifespan_search(self,input):
@@ -388,6 +393,22 @@ class ResearchesDAO(BaseDAO):
         def fixer(r):
             r['geneAliases']=[a for a in r['geneAliases'].split(' ') if a]
             return increase_lifespan_common_fixer(r)
+
+        re=self.read_query(query,params,tables,process=fixer)
+
+        meta.update(re.pop(0))
+
+        return {'options':{'objTotal':meta['row_count'],'total':meta.get('total_count'),"pagination":{"page":meta['page'],"pageSize":meta['pageSize'],"pagesTotal":meta['row_count']//meta['pageSize'] + (meta['row_count']%meta['pageSize']!=0)}},'items':re}
+
+    def age_related_changes(self,input):
+        AgeRelatedChangeOfGeneResearched.__fields__['geneAliases'].outer_type_=str
+
+        tables=self.prepare_tables(AgeRelatedChangeOfGeneResearched)
+        query,params,meta=self.prepare_query(tables,input)
+
+        def fixer(r):
+            r['geneAliases']=[a for a in r['geneAliases'].split(' ') if a]
+            return age_related_changes_fixer(r)
 
         re=self.read_query(query,params,tables,process=fixer)
 

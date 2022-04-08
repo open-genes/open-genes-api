@@ -8,7 +8,7 @@ from fastapi.openapi.utils import get_openapi
 from pydantic import BaseModel
 
 from endpoints import gene, disease, calorie_experiment, aging_mechanism, functional_cluster, criteria, protein_class, \
-    phylum
+    phylum, research
 from config import CONFIG, VERSION
 
 
@@ -44,6 +44,10 @@ def assembling_endpoints(app: FastAPI):
     app.include_router(
         criteria.router,
         tags=["criteria"],
+    )
+    app.include_router(
+        research.router,
+        tags=["research"],
     )
 
 
