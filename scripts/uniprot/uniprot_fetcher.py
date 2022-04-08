@@ -26,7 +26,7 @@ logging.basicConfig(
 
 
 counter = 0
-for gene_object in dao.GeneDAO().get_list(request="SELECT ncbi_id, symbol, uniprot, uniprot_summary_ru FROM `gene` "
+for gene_object in dao.GeneDAO().fetch_all(query="SELECT ncbi_id, symbol, uniprot, uniprot_summary_ru FROM `gene` "
                                                   "WHERE uniprot IS NULL OR uniprot='' OR uniprot_summary_ru IS NULL"):
     try:
         response_raw = requests.get(
