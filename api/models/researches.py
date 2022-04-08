@@ -357,7 +357,7 @@ class InterventionToGeneImprovesVitalProcess(BaseModel):
         'modelOrganism':'gene_intervention_to_vital_process_model_organism.name_@LANG@',
         'organismLine':'gene_intervention_to_vital_process_organism_line.name_@LANG@',
         'age':"concat(gene_intervention_to_vital_process.age,' ',gene_intervention_to_vital_process_time_unit.name_@LANG@)",
-        'genotype':'gene_intervention_to_vital_process.genotype',
+        'genotype':'genotype.name_@LANG@',
         'sex':'gene_intervention_to_vital_process_organism_sex.name_@LANG@',
         'doi':'gene_intervention_to_vital_process.reference',
         'pmid':'gene_intervention_to_vital_process.pmid',
@@ -374,6 +374,7 @@ left join organism_sex as gene_intervention_to_vital_process_organism_sex on gen
 left join model_organism as gene_intervention_to_vital_process_model_organism on gene_intervention_to_vital_process_model_organism.id = gene_intervention_to_vital_process.model_organism_id
 left join organism_line as gene_intervention_to_vital_process_organism_line on gene_intervention_to_vital_process_organism_line.id = gene_intervention_to_vital_process.organism_line_id
 left join time_unit gene_intervention_to_vital_process_time_unit on gene_intervention_to_vital_process_time_unit.id=gene_intervention_to_vital_process.age_unit
+left join genotype on genotype.id=gene_intervention_to_vital_process.genotype
 """
 
 class RegulatedGene(BaseModel):
