@@ -289,8 +289,8 @@ class AgeRelatedChangeOfGene(BaseModel):
     expressionEvaluationBy:None|str
     measurementType:None|str
     statisticalMethod:None|str
-    nOfControls:None|float
-    nOfExperiment:None|float
+    controlCohortSize:None|float
+    experimentCohortSize:None|float
     sex:None|str
     comment:str
     _select= {
@@ -309,8 +309,8 @@ class AgeRelatedChangeOfGene(BaseModel):
         'maxAgeOfControls':'age_related_change.max_age_of_controls',
         'minAgeOfExperiment':'age_related_change.min_age_of_experiment',
         'maxAgeOfExperiment':'age_related_change.max_age_of_experiment',
-        'nOfControls':'age_related_change.n_of_controls',
-        'nOfExperiment':'age_related_change.n_of_experiment',
+        'controlCohortSize':'age_related_change.n_of_controls',
+        'experimentCohortSize':'age_related_change.n_of_experiment',
         'pValue':'age_related_change.p_value',
         'expressionEvaluationBy':'expression_evaluation.name_@LANG@',
         'measurementType':'measurement_type.name_@LANG@',
