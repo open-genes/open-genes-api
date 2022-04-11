@@ -51,7 +51,7 @@ class BaseDAO:
     def prepare_query(self,tables,input):
         primary_table=list(tables.keys())[0]
         for table in [tables[t] for t in tables if '@JOINS@' not in tables[t]['_from']]: table['_from']=table['_from'].strip()+"\n@JOINS@\n"
-        query="with "+",\n".join([t+' as ( select concat('+((tables[t]['_parent']+'.ordering, ') if tables[t]['_parent'] else '')+"lpad(row_number() over(),5,'0')) as ordering"+(', count(*) over() as row_count' if t==primary_table else '')+', '+', '.join([tables[t][f]+' as "'+f+'"' for f in tables[t].keys() if not f.startswith('_')]+[tables[t]['_model']._select[s]+' as "'+s+'"' for s in tables[t]['_model']._select if s not in tables[t]])+'\n'+tables[t]['_from'].lstrip().replace('@JOINS@',tables[t].get('_join',''))+')' for t in tables])
+        query="with "+",\n".join([t+' as ( select concat('+((tables[t]['_parent']+'.ordering, ') if tables[t]['_parent'] else '')+"lpad(row_number() over(order by "+('@ORDERING@' if t==primary_table else '')+' '+(tables[t]['_model']._order_by if hasattr(tables[t]['_model'],'_order_by') else 'null')+"),5,'0')) as ordering"+(', count(*) over() as row_count' if t==primary_table else '')+', '+', '.join([tables[t][f]+' as "'+f+'"' for f in tables[t].keys() if not f.startswith('_')]+[tables[t]['_model']._select[s]+' as "'+s+'"' for s in tables[t]['_model']._select if s not in tables[t]])+'\n'+tables[t]['_from'].lstrip().replace('@JOINS@',tables[t].get('_join',''))+')' for t in tables])
         query=query+"\n"+"\nunion ".join(['select '+t+'.ordering, '+(t+'.row_count' if t==primary_table else 'null')+" as row_count, '"+str(tables[t]['_name'])+"' as table_name,"+', '.join([', '.join([t+'.'+f+' as '+t+'_'+f for f in [f for f in tables[t] if not f.startswith('_')]+[s for s  in tables[t]['_model']._select if s not in tables[t]]]) for t in tables])+' '+' '.join([('from'if t2==primary_table else ('right join' if t2==t else 'left join'))+' '+t2+('' if t2==primary_table else ' on false') for t2 in tables]) for t in tables])
 
         inputclass=type(input)
@@ -86,7 +86,6 @@ class BaseDAO:
             query=query.replace('@PAGING@','limit '+str(meta['pageSize'])+' offset '+str(meta['pageSize']*(meta['page']-1)));
 
         query=query+"\norder by 1"
-
         return query,params,meta
 
     def read_query(self,query,params,tables,consume=None,process=None):
@@ -162,6 +161,38 @@ class BaseDAO:
 from models.gene import GeneSearched,GeneSearchOutput,GeneSingle
 import json
 
+def increase_lifespan_common_fixer(r):
+    for i in r['interventions']['experiment']+r['interventions']['controlAndExperiment']:
+        i['tissueSpecific']=i['tissueSpecific']==1
+        i['tissueSpecificPromoter']=i['tissueSpecificPromoter']==1
+        if not i['tissueSpecific']: i['tissueSpecificPromoter']=None
+    for f in ['lMinChangeStatSignificance', 'lMeanChangeStatSignificance', 'lMedianChangeStatSignificance', 'lMaxChangeStatSignificance']:
+        r[f]={'yes':True,'да':True,'no':False,'нет':False}.get(r[f])
+    return r
+
+def gene_common_fixer(r):
+    if not r['origin']['id']:r['origin']=None
+    if not r['familyOrigin']['id']: r['familyOrigin']=None
+    r['aliases']=[a for a in r['aliases'].split(' ') if a]
+
+    if sum([len(i) for i in r['researches'].values()])==0: r['researches']=None
+    if not r['researches']: return r
+    for a in r['researches']['ageRelatedChangesOfGene']:
+        a['value'] = str(a['value']) + '%' if a['value'] else a['value']
+    for g in r['researches']['geneAssociatedWithLongevityEffects']:
+        g['dataType']={'1en':'genomic','2en':'transcriptomic','3en':'proteomic','1ru':'геномные','2ru':'транскриптомные','3ru':'протеомные'}.get(g['dataType'])
+        g['sex']={'0en':'female','1en':'male','2en':'both','0ru':'женский','1ru':'мужской','2ru':'оба пола'}.get(g['sex'])
+    for i in r['researches']['increaseLifespan']:
+        i=increase_lifespan_common_fixer(i)
+
+    return r
+
+def age_related_changes_fixer(r):
+    # r['aliases']=[a for a in r['aliases'].split(' ') if a]
+    for f in ['valueForAll','valueForFemale','valueForMale']: r[f]=str(r[f])+'%' if r[f] else r[f]
+    r['measurementType']={'1en':'mRNA','2en':'protein','1ru':'мРНК','2ru':'белок'}.get(r['measurementType'])
+    return r
+
 class GeneDAO(BaseDAO):
     """Gene Table fetcher."""
     def search(self,input):
@@ -172,13 +203,7 @@ class GeneDAO(BaseDAO):
         tables=self.prepare_tables(GeneSearched)
         query,params,meta=self.prepare_query(tables,input)
 
-        def fixer(r):
-            if not r['origin']['id']:r['origin']=None
-            if not r['familyOrigin']['id']: r['familyOrigin']=None
-            r['aliases']=[a for a in r['aliases'].split(' ') if a]
-            return r
-
-        re=self.read_query(query,params,tables,process=fixer)
+        re=self.read_query(query,params,tables,process=gene_common_fixer)
 
         meta.update(re.pop(0))
 
@@ -188,6 +213,7 @@ class GeneDAO(BaseDAO):
         GeneSingle.__fields__['researches'].type_._supress= not input.researches=='1'
         # mangle aliases type to string, to manually split it into list in fixer
         GeneSingle.__fields__['aliases'].outer_type_=str
+        GeneSingle.__fields__['source'].outer_type_=str
 
         tables=self.prepare_tables(GeneSingle)
         query,params,meta=self.prepare_query(tables,input)
@@ -196,9 +222,9 @@ class GeneDAO(BaseDAO):
 
         def fixer(r):
             nonlocal hpa_fields
-            if not r['origin']['id']:r['origin']=None
-            if not r['familyOrigin']['id']: r['familyOrigin']=None
-            r['aliases']=[a for a in r['aliases'].split(' ') if a]
+            r=gene_common_fixer(r);
+
+            r['source']=[s for s in r['source'].split('||') if s] if r['source'] is not None else None
             terms={}
             for t in r['terms'].split('||'):
                 t=t.split('|')
@@ -342,13 +368,57 @@ class GeneDAO(BaseDAO):
 
         return self.get(ncbi_id=gene_dict['ncbi_id'])
 
-from models.gene import IncreaseLifespanSearched,IncreaseLifespanSearchOutput
+    def get_list(self, request):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute('SET SESSION group_concat_max_len = 100000;')
+        cur.execute(request)
+        return cur.fetchall()
+
+    def get_symbols(self):
+        cur = self.cnx.cursor()
+        cur.execute('SELECT JSON_ARRAYAGG(g.symbol) FROM gene g WHERE g.isHidden != 1;')
+        return cur.fetchone()
+
+
+from models.gene import IncreaseLifespanSearched,AgeRelatedChangeOfGeneResearched,GeneActivityChangeImpactResearched
 
 class ResearchesDAO(BaseDAO):
     def increase_lifespan_search(self,input):
         IncreaseLifespanSearched.__fields__['geneAliases'].outer_type_=str
 
         tables=self.prepare_tables(IncreaseLifespanSearched)
+        query,params,meta=self.prepare_query(tables,input)
+
+        def fixer(r):
+            r['geneAliases']=[a for a in r['geneAliases'].split(' ') if a]
+            return increase_lifespan_common_fixer(r)
+
+        re=self.read_query(query,params,tables,process=fixer)
+
+        meta.update(re.pop(0))
+
+        return {'options':{'objTotal':meta['row_count'],'total':meta.get('total_count'),"pagination":{"page":meta['page'],"pageSize":meta['pageSize'],"pagesTotal":meta['row_count']//meta['pageSize'] + (meta['row_count']%meta['pageSize']!=0)}},'items':re}
+
+    def age_related_changes(self,input):
+        AgeRelatedChangeOfGeneResearched.__fields__['geneAliases'].outer_type_=str
+
+        tables=self.prepare_tables(AgeRelatedChangeOfGeneResearched)
+        query,params,meta=self.prepare_query(tables,input)
+
+        def fixer(r):
+            r['geneAliases']=[a for a in r['geneAliases'].split(' ') if a]
+            return age_related_changes_fixer(r)
+
+        re=self.read_query(query,params,tables,process=fixer)
+
+        meta.update(re.pop(0))
+
+        return {'options':{'objTotal':meta['row_count'],'total':meta.get('total_count'),"pagination":{"page":meta['page'],"pageSize":meta['pageSize'],"pagesTotal":meta['row_count']//meta['pageSize'] + (meta['row_count']%meta['pageSize']!=0)}},'items':re}
+
+    def gene_activity_change_impact(self,input):
+        GeneActivityChangeImpactResearched.__fields__['geneAliases'].outer_type_=str
+
+        tables=self.prepare_tables(GeneActivityChangeImpactResearched)
         query,params,meta=self.prepare_query(tables,input)
 
         def fixer(r):
@@ -629,158 +699,6 @@ class GeneSuggestionDAO(BaseDAO):
         return re
 
 
-class CalorieExperimentDAO(BaseDAO):
-    """Calorie experiment Table fetcher."""
-
-    def get_list(self, request):
-        cur = self.cnx.cursor(dictionary=True)
-        cur.execute('SET SESSION group_concat_max_len = 100000;')
-        cur.execute(request)
-        return cur.fetchall()
-
-    def add_experiment(self, experiment: entities.CalorieRestrictionExperiment):
-        experiment_dict = experiment.dict(exclude_none=True)
-
-        query = f"INSERT INTO calorie_restriction_experiment ({', '.join(experiment_dict.keys())}) "
-        subs = ', '.join([f'%({k})s' for k in experiment_dict.keys()])
-        query += f"VALUES ({subs});"
-
-        cur = self.cnx.cursor(dictionary=True)
-        cur.execute(query, experiment_dict)
-        self.cnx.commit()
-
-        cur.execute(
-            "SELECT * FROM calorie_restriction_experiment WHERE ID=%(id)s;",
-            {'id': cur.lastrowid},
-        )
-        result = cur.fetchone()
-
-        return result
-
-    def get_measurement_method(self, name):
-        cur = self.cnx.cursor(dictionary=True)
-        cur.execute(
-            "SELECT id FROM measurement_method WHERE name_en='{}';".format(name)
-        )
-        return cur.fetchone()
-
-    def get_measurement_type(self, name):
-        cur = self.cnx.cursor(dictionary=True)
-        cur.execute(
-            "SELECT id FROM measurement_type WHERE name_en='{}';".format(name)
-        )
-        return cur.fetchone()
-
-    def get_model_organism(self, name):
-        cur = self.cnx.cursor(dictionary=True)
-        cur.execute(
-            "SELECT id FROM model_organism WHERE name_en='{}';".format(name)
-        )
-        return cur.fetchone()
-
-    def get_organism_sex(self, name):
-        cur = self.cnx.cursor(dictionary=True)
-        cur.execute(
-            "SELECT id FROM organism_sex WHERE name_en='{}';".format(name)
-        )
-        return cur.fetchone()
-
-    def get_organism_line(self, name):
-        cur = self.cnx.cursor(dictionary=True)
-        cur.execute(
-            "SELECT id FROM organism_line WHERE name_en='{}';".format(name)
-        )
-        return cur.fetchone()
-
-    def get_sample(self, name):
-        cur = self.cnx.cursor(dictionary=True)
-        cur.execute(
-            "SELECT id FROM sample WHERE name_en='{}';".format(name)
-        )
-        return cur.fetchone()
-
-    def get_isoform(self, name):
-        cur = self.cnx.cursor(dictionary=True)
-        cur.execute(
-            "SELECT id FROM isoform WHERE name_en='{}';".format(name)
-        )
-        return cur.fetchone()
-
-    def get_treatment_time(self, name):
-        cur = self.cnx.cursor(dictionary=True)
-        cur.execute(
-            "SELECT id FROM treatment_time_unit WHERE name_en='{}';".format(name)
-        )
-        return cur.fetchone()
-
-    def add_treatment_time(self, name):
-        cur = self.cnx.cursor(dictionary=True)
-        cur.execute(
-            "INSERT INTO treatment_time_unit(name_en) VALUES ('{}');".format(name)
-        )
-        self.cnx.commit()
-
-        cur.execute(
-            "SELECT * FROM treatment_time_unit WHERE ID=%(id)s;",
-            {'id': cur.lastrowid},
-        )
-        result = cur.fetchone()
-
-        return cur.fetchone()
-
-    def add_measurement_type(self, name):
-        cur = self.cnx.cursor(dictionary=True)
-        cur.execute(
-            "INSERT INTO measurement_type(name_en) VALUES ('{}');".format(name)
-        )
-        self.cnx.commit()
-
-        cur.execute(
-            "SELECT * FROM measurement_type WHERE ID=%(id)s;",
-            {'id': cur.lastrowid},
-        )
-        result = cur.fetchone()
-
-        return cur.fetchone()
-
-    def add_sample(self, name):
-        cur = self.cnx.cursor(dictionary=True)
-        cur.execute(
-            "INSERT INTO sample(name_en) VALUES ('{}');".format(name)
-        )
-        self.cnx.commit()
-
-        cur.execute(
-            "SELECT * FROM sample WHERE ID=%(id)s;",
-            {'id': cur.lastrowid},
-        )
-        result = cur.fetchone()
-
-        return cur.fetchone()
-
-    def add_isoform(self, name):
-        cur = self.cnx.cursor(dictionary=True)
-        cur.execute(
-            "INSERT INTO isoform(name_en) VALUES ('{}');".format(name)
-        )
-        self.cnx.commit()
-
-        cur.execute(
-            "SELECT * FROM isoform WHERE ID=%(id)s;",
-            {'id': cur.lastrowid},
-        )
-        result = cur.fetchone()
-
-        return cur.fetchone()
-
-    def get_isoform(self, name):
-        cur = self.cnx.cursor(dictionary=True)
-        cur.execute(
-            "SELECT id FROM isoform WHERE name_en='{}';".format(name)
-        )
-        return cur.fetchone()
-
-
 class ProteinClassDAO(BaseDAO):
     def get_all(self, lang):
         cur = self.cnx.cursor(dictionary=True)
@@ -811,3 +729,126 @@ class PhylumDAO(BaseDAO):
             FROM phylum'''
         )
         return cur.fetchall()
+
+from models.gene import CalorieExperiment
+
+
+class CalorieExperimentDAO(BaseDAO):
+    """Calorie experiment Table fetcher."""
+
+    def calorie_experiment_search(self, input):
+
+        tables = self.prepare_tables(CalorieExperiment)
+        query, params, meta = self.prepare_query(tables, input)
+
+        re = self.read_query(query, params, tables)
+
+        meta.update(re.pop(0))
+
+        return {'options': {'objTotal': meta['row_count'], 'total': meta.get('total_count'),
+                "pagination": {"page": meta['page'], "pageSize": meta['pageSize'],
+               "pagesTotal": meta['row_count'] // meta['pageSize'] + (
+                   meta['row_count'] % meta['pageSize'] != 0)}}, 'items': re}
+
+class WorkerStateDAO(BaseDAO):
+    """Worker state Table fetcher."""
+
+    def __init__(self, name: str, default_state: str):
+        super(WorkerStateDAO, self).__init__()
+        self.name = name
+        self.start_state = default_state
+
+    def get(self) -> str:
+        cur = self.cnx.cursor(dictionary=True,buffered=True)
+        cur.execute(f"SELECT state FROM worker_state WHERE name = '{self.name}'")
+        wstate = cur.fetchone()
+        cur.close()
+        if wstate is None:
+            self.set(self.start_state)
+            return self.start_state
+        else:
+            return wstate['state']
+
+    def set(self, st: str):
+        cur = self.cnx.cursor(dictionary=True,buffered=True)
+        cur.execute(f"INSERT INTO worker_state(name,state) VALUES ('{self.name}','{st}') ON DUPLICATE KEY UPDATE state='{st}';")
+        self.cnx.commit()
+        cur.close()
+
+
+class GeneGroupDAO(BaseDAO):
+    """GeneGroup Table fetcher."""
+    cash = {}
+
+    def get_id(self, name: str) -> int:
+        ggid = self.cash.get(name)
+        if ggid is None:
+            cur = self.cnx.cursor(dictionary=True,buffered=True)
+            cur.execute(f"SELECT id FROM gene_group WHERE name = '{name}';")
+            ggid = cur.fetchone()
+            if ggid is None:
+                cur.execute(f"INSERT INTO gene_group(name) VALUES ('{name}');")
+                self.cnx.commit()
+                ggid = cur.lastrowid
+            else:
+                ggid = ggid['id']
+            self.cash[name] = ggid
+            cur.close()
+        return ggid
+
+
+class LocuGroupDAO(BaseDAO):
+    """GeneLocusGroup Table fetcher."""
+    cash = {}
+
+    def get_id(self, name: str) -> int:
+        lgid = self.cash.get(name)
+        if lgid is None:
+            cur = self.cnx.cursor(dictionary=True,buffered=True)
+            cur.execute(f"SELECT id FROM gene_locus_group WHERE name = '{name}';")
+            lgid = cur.fetchone()
+
+            if lgid is None:
+                cur.execute(f"INSERT INTO gene_locus_group(name) VALUES ('{name}');")
+                self.cnx.commit()
+                lgid = cur.lastrowid
+            else:
+                lgid = lgid['id']
+
+            self.cash[name] = lgid
+            cur.close()
+        return lgid
+
+
+class GeneTranscriptDAO(BaseDAO):
+    """Gene Transcript Table fetcher."""
+
+    def add(self, tr: entities.GeneTranscript) -> int:
+        source_dict = tr.dict(exclude_none=True)
+
+        query = f"INSERT INTO gene_transcript ({', '.join(source_dict.keys())}) "
+        subs = ', '.join([f'%({k})s' for k in source_dict.keys()])
+        query += f"VALUES ({subs});"
+
+        cur = self.cnx.cursor(dictionary=True,buffered=True)
+        cur.execute(query, source_dict)
+        self.cnx.commit()
+        cur.close()
+        return cur.lastrowid
+
+class GeneTranscriptExonDAO(BaseDAO):
+    """Gene Transcript Exon Table fetcher."""
+
+    def add(self, ex: entities.GeneTranscriptExon) -> int:
+        source_dict = ex.dict(exclude_none=True)
+
+        query = f"INSERT INTO transcript_exon ({', '.join(source_dict.keys())}) "
+        subs = ', '.join([f'%({k})s' for k in source_dict.keys()])
+        query += f"VALUES ({subs});"
+
+        cur = self.cnx.cursor(dictionary=True,buffered=True)
+        cur.execute(query, source_dict)
+        self.cnx.commit()
+        cur.close()
+        return cur.lastrowid
+

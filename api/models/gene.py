@@ -1,5 +1,8 @@
 from pydantic import BaseModel
 from models import *
+from models.calorie_experiment import CalorieRestrictionExperiment
+from models.researches import *
+from models.location import *
 
 class Phylum(BaseModel):
     id:int
@@ -34,7 +37,6 @@ class FunctionalCluster(BaseModel):
     id:int
     name:str
 
-from models.researches import *
 
 class GeneCommon(BaseModel):
     id: int
@@ -80,8 +82,8 @@ class GeneCommon(BaseModel):
         },
         _from="""
 from gene join gene_to_disease on gene_to_disease.gene_id=gene.id
-join open_genes.disease on disease.id=gene_to_disease.disease_id and not exists (select 1 from open_genes.disease d where disease.icd_code_visible=d.icd_code_visible and disease.id>d.id)
-join open_genes.disease disease_category on disease_category.icd_code=disease.icd_code_visible
+join disease on disease.id=gene_to_disease.disease_id and not exists (select 1 from disease d where disease.icd_code_visible=d.icd_code_visible and disease.id>d.id)
+join disease disease_category on disease_category.icd_code=disease.icd_code_visible
 """
     )]
 
@@ -142,6 +144,8 @@ join functional_cluster on functional_cluster.id=gene_to_functional_cluster.func
 
     researches:None|Researches
 
+    location:None|Location
+
     _name='gene'
     _select= {
         'id':'gene.id',
@@ -163,9 +167,9 @@ FROM gene
 LEFT JOIN taxon ON gene.taxon_id = taxon.id
 @JOINS@
 @FILTERING@
-order by @ORDERING@ gene.id
 @PAGING@
 """
+    _order_by="gene.id"
     _select = GeneCommon._select | {
         'total_count':'(select count(*) from gene where isHidden<>1)',
     }
@@ -283,6 +287,7 @@ class GeneSingle(GeneCommon):
     terms:dict
     ortholog:List[Ortholog]
     humanProteinAtlas:dict
+    source:List[str]|None
     _select = GeneCommon._select | {
         'commentEvolution':'gene.commentEvolution@LANG2@',
         'proteinDescriptionUniProt':'gene.uniprot_summary_@LANG@',
@@ -295,6 +300,7 @@ class GeneSingle(GeneCommon):
         'accPromoter': "gene.accPromoter",
         'accOrf': 'accOrf',
         'accCds': 'accCds',
+        'source': 'group_concat(distinct source.name separator "||")',
         'terms':"""
 (select group_concat(distinct concat(`gene_ontology`.`ontology_identifier`,'|',`gene_ontology`.`name_@LANG@`,'|',`gene_ontology`.`category`) separator  '||')
 from gene_to_ontology
@@ -305,8 +311,47 @@ where gene_to_ontology.gene_id=gene.id)
     }
     _from="""
 FROM gene
+left join gene_to_source on gene_to_source.gene_id=gene.id
+left join source on source.id=gene_to_source.source_id
 LEFT JOIN taxon ON gene.taxon_id = taxon.id
 @JOINS@
 @FILTERING@
 """
 
+
+class CalorieExperiment(BaseModel):
+    id: int
+    name: str | None
+    symbol:str|None
+    ncbiId:int|None
+    uniprot:str|None
+    ensembl:str|None
+    calorieRestrictionExperiments: List[CalorieRestrictionExperiment]
+    _name='gene'
+    _select= {
+        'id':'gene.id',
+        'symbol':"gene.symbol",
+        'name':"gene.name",
+        'ncbiId':"gene.ncbi_id",
+        'uniprot':"gene.uniprot",
+        'ensembl':"gene.ensembl",
+    }
+
+
+    _from="""
+FROM gene
+RIGHT JOIN calorie_restriction_experiment ON calorie_restriction_experiment.gene_id = gene.id
+@JOINS@
+@FILTERING@
+@PAGING@
+"""
+    _order_by="gene.id"
+
+
+class CalorieExperimentOutput(PaginatedOutput):
+    items: List[CalorieExperiment]
+
+
+class CalorieExperimentInput(PaginationInput, LanguageInput):
+    _filters = {}
+    _sorts = {}

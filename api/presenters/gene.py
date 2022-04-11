@@ -7,7 +7,6 @@ from presenters.protein_class import ProteinClass
 from presenters.functional_cluster import FunctionalCluster
 from presenters.human_protein_atlas import HumanProteinAtlas
 from presenters.origin import Origin
-from presenters.calorie_restriction_experiments import CalorieRestrictionExperiment
 from presenters.researches import Researches, IncreaseLifespan
 from presenters.timestamp import Timestamp
 from pydantic import Field
@@ -53,6 +52,10 @@ class GeneSuggestionOutput:
     notFound: List[str]
 
 @dataclass
+class GeneSymbolsOutput:
+    items: List[str]
+
+@dataclass
 class GeneForMethylation:
     id: int
     name: str = Field(title="Gene name")
@@ -79,18 +82,6 @@ class GeneWithResearches:
         description="Whether gene methylation changes with age (according to Horvath's epigenetic clock)"
     )
     researches: IncreaseLifespan = Field(title="Researches", description="Effect of modulation of gene activity on a lifespan")
-
-
-@dataclass
-class GeneWithDiet:
-    id: int
-    name: str = Field(title="Gene name")
-    symbol: str = Field(title="Gene symbol (HGNC)")
-    ncbiId: Optional[str] = Field(title="Entrez Gene id")
-    isHidden: int = Field()
-    uniprot: str = Field(title="UniProt id")
-    ensembl: Optional[str] = Field(title="Ensembl id")
-    calorieRestrictionExperiments: List[CalorieRestrictionExperiment] = Field()
 
 
 @dataclass

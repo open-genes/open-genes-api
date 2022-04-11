@@ -8,7 +8,7 @@ from fastapi import Depends
 from config import Language, SortVariant
 from db.dao import GeneDAO, GeneSuggestionDAO
 from db.request_handler import RequestHandler
-from presenters.gene import GeneShort, Gene, GeneForMethylation, GeneWithResearches, GeneSuggestionOutput
+from presenters.gene import GeneShort, Gene, GeneForMethylation, GeneWithResearches, GeneSuggestionOutput, GeneSymbolsOutput
 
 router = APIRouter()
 
@@ -43,6 +43,15 @@ async def get_gene_suggestions(input: str = None, byGeneId: str = None, byGeneSy
     else:
         return GeneSuggestionDAO().search(input)
 
+@router.get(
+    '/gene/symbols',
+    response_model=GeneSymbolsOutput,
+)
+async def get_gene_symbols():
+    req = GeneDAO().get_symbols()
+    ls = json.loads(req[0]) if req else []
+    re = {'items':ls}
+    return re
 
 @router.get(
     '/gene/by-latest',
@@ -94,7 +103,6 @@ async def get_gene_by_expression_change(expression_change: str, lang: Language =
     response_model=GeneSingle
 )
 async def gene_search(id_or_symbol:int|str,input:GeneSingleInput=Depends(GeneSingleInput))->GeneSingle:
-    raise HTTPException( status_code=404, detail='Not yet',)
     if isinstance(id_or_symbol,int): input.byGeneId=id_or_symbol;
     if isinstance(id_or_symbol,str): input.bySymbol=id_or_symbol;
     re=GeneDAO().single(input)
@@ -150,12 +158,4 @@ async def get_gene_by_id(ncbi_id: int, lang: Language = Language.en):
     return 'dummy'
 
 
-from db.dao import ResearchesDAO
-from models.researches import IncreaseLifespanSearchInput, IncreaseLifespanSearchOutput
-@router.get(
-    '/lifespan-change',
-    response_model=IncreaseLifespanSearchOutput
-)
-async def increase_lifespan_search(input:IncreaseLifespanSearchInput=Depends(IncreaseLifespanSearchInput))->List:
-    return ResearchesDAO().increase_lifespan_search(input)
 
