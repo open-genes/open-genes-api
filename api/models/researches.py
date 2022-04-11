@@ -298,7 +298,7 @@ class AgeRelatedChangeOfGene(BaseModel):
         'sample':'sample.name_@LANG@',
         'modelOrganism':'age_related_change_model_organism.name_@LANG@',
         'organismLine':'age_related_change_organism_line.name_@LANG@',
-        'ageUnit':"concat(age_related_change_time_unit.name_@LANG@)",
+        'ageUnit':"age_related_change_time_unit.name_@LANG@",
         'value':'age_related_change.change_value',
         'doi':'age_related_change.reference',
         'pmid':'age_related_change.pmid',
