@@ -38,7 +38,7 @@ FROM gene
     JOIN time_unit tu on cre.age_time_unit_id = tu.id
     JOIN time_unit tu2 on cre.restriction_time_unit_id = tu2.id
     JOIN measurement_method mm on cre.measurement_method_id = mm.id
-    JOIN measurement_type mt on cre.measurement_type_id = mt.id
+    JOIN expression_evaluation ee on cre.expression_evaluation_by_id = ee.id
     JOIN organism_line ol on cre.strain_id = ol.id
     JOIN organism_sex os on cre.organism_sex_id = os.id
     JOIN model_organism mo on cre.model_organism_id = mo.id

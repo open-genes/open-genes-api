@@ -100,7 +100,7 @@ class CalorieRestrictionExperiment(BaseModel):
     p_val: Optional[str] = None
     result: Optional[str] = None
     measurement_method_id: Optional[int] = None
-    measurement_type_id: Optional[int] = None
+    expression_evaluation_by_id: Optional[int] = None
     restriction_percent: Optional[float] = None
     restriction_time: Optional[int] = None
     restriction_time_unit_id: Optional[int] = None

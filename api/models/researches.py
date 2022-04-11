@@ -179,7 +179,7 @@ class IncreaseLifespan(GeneralLifespanExperiment):
         'expressionChangeTissue': 'general_lifespan_experiment_sample.name_@LANG@',
         'lifespanTimeUnit': 'general_lifespan_experiment_time_unit.name_@LANG@',
         'interventionResultForLifespan': 'intervention_result_for_longevity.name_@LANG@',
-        'expressionMeasurementType': 'general_lifespan_experiment_measurement_type.name_@LANG@',
+        'expressionMeasurementType': 'general_lifespan_experiment_expression_evaluation.name_@LANG@',
         'controlCohortSize': 'general_lifespan_experiment.control_number',
         'experimentCohortSize': 'general_lifespan_experiment.experiment_number',
         'expressionChangePercent': 'general_lifespan_experiment.expression_change',
@@ -215,7 +215,7 @@ left join organism_sex as lifespan_experiment_organism_sex on lifespan_experimen
 left join diet as lifespan_experiment_diet on lifespan_experiment_diet.id = general_lifespan_experiment.diet_id
 left join sample as general_lifespan_experiment_sample on general_lifespan_experiment_sample.id = general_lifespan_experiment.changed_expression_tissue_id
 left join time_unit general_lifespan_experiment_time_unit on general_lifespan_experiment_time_unit.id = general_lifespan_experiment.lifespan_change_time_unit_id
-left join measurement_type as general_lifespan_experiment_measurement_type on general_lifespan_experiment_measurement_type.id = general_lifespan_experiment.measurement_type
+left join expression_evaluation as general_lifespan_experiment_expression_evaluation on general_lifespan_experiment_expression_evaluation.id = general_lifespan_experiment.expression_evaluation_by_id
 left join statistical_significance as ssmin on ssmin.id = general_lifespan_experiment.lifespan_min_change_stat_sign_id
 left join statistical_significance as ssmean on ssmean.id = general_lifespan_experiment.lifespan_mean_change_stat_sign_id
 left join statistical_significance as ssmedian on ssmedian.id = general_lifespan_experiment.lifespan_median_change_stat_sign_id
@@ -276,29 +276,48 @@ class AgeRelatedChangeOfGene(BaseModel):
     sample:None|str
     modelOrganism:str
     organismLine:str|None
-    ageFrom:None|str
-    ageTo:None|str
-    valueForMale:None|str
-    valueForFemale:None|str
-    valueForAll:None|str
+    value:None|str
+    pValue:None|float
     measurementType:None|str
     doi:None|str
     pmid:None|str
+    meanAgeOfControls:None|float
+    meanAgeOfExperiment:None|float
+    minAgeOfControls:None|float
+    maxAgeOfControls:None|float
+    minAgeOfExperiment:None|float
+    maxAgeOfExperiment:None|float
+    ageUnit:None|str
+    expressionEvaluationBy:None|str
+    measurementType:None|str
+    statisticalMethod:None|str
+    controlCohortSize:None|float
+    experimentCohortSize:None|float
+    sex:None|str
     comment:str
     _select= {
         'changeType':'age_related_change_age_related_change_type.name_@LANG@',
         'sample':'sample.name_@LANG@',
         'modelOrganism':'age_related_change_model_organism.name_@LANG@',
         'organismLine':'age_related_change_organism_line.name_@LANG@',
-        'ageFrom':"concat(age_related_change.age_from,' ',age_related_change_time_unit.name_@LANG@)",
-        'ageTo':"concat(age_related_change.age_to,' ',age_related_change_time_unit.name_@LANG@)",
-        'valueForMale':'age_related_change.change_value_male',
-        'valueForFemale':'age_related_change.change_value_female',
-        'valueForAll':'age_related_change.change_value_common',
-        'measurementType':"concat(age_related_change.measurement_type,'@LANG@')",
+        'ageUnit':"age_related_change_time_unit.name_@LANG@",
+        'value':'age_related_change.change_value',
         'doi':'age_related_change.reference',
         'pmid':'age_related_change.pmid',
         'comment':'age_related_change.comment_@LANG@',
+        'meanAgeOfControls':'age_related_change.mean_age_of_controls',
+        'meanAgeOfExperiment':'age_related_change.mean_age_of_experiment',
+        'minAgeOfControls':'age_related_change.min_age_of_controls',
+        'maxAgeOfControls':'age_related_change.max_age_of_controls',
+        'minAgeOfExperiment':'age_related_change.min_age_of_experiment',
+        'maxAgeOfExperiment':'age_related_change.max_age_of_experiment',
+        'controlCohortSize':'age_related_change.n_of_controls',
+        'experimentCohortSize':'age_related_change.n_of_experiment',
+        'pValue':'age_related_change.p_value',
+        'expressionEvaluationBy':'expression_evaluation.name_@LANG@',
+        'measurementType':'measurement_type.name_@LANG@',
+        'statisticalMethod':'statistical_method.name_@LANG@',
+        'sex':'organism_sex.name_@LANG@',
     }
     _from="""
 from gene
@@ -307,7 +326,11 @@ join age_related_change_type as age_related_change_age_related_change_type on ag
 left join sample on sample.id = age_related_change.sample_id
 left join model_organism as age_related_change_model_organism on age_related_change_model_organism.id = age_related_change.model_organism_id
 left join organism_line as age_related_change_organism_line on age_related_change_organism_line.id = age_related_change.organism_line_id
-left join time_unit age_related_change_time_unit on age_related_change_time_unit.id = age_related_change.age_unit_id
+left join time_unit age_related_change_time_unit on age_related_change_time_unit.id = age_related_change.age_unit
+left join expression_evaluation on age_related_change.expression_evaluation_by_id = expression_evaluation.id
+left join measurement_type on age_related_change.measurement_type_id = measurement_type.id
+left join statistical_method on age_related_change.statistical_method_id = statistical_method.id
+left join organism_sex on age_related_change.sex = organism_sex.id
 """
 
 class InterventionImproveVitalProcess(BaseModel):
@@ -473,7 +496,7 @@ left join organism_sex as lifespan_experiment_organism_sex on lifespan_experimen
 left join diet as lifespan_experiment_diet on lifespan_experiment_diet.id = general_lifespan_experiment.diet_id
 left join sample as general_lifespan_experiment_sample on general_lifespan_experiment_sample.id = general_lifespan_experiment.changed_expression_tissue_id
 left join time_unit general_lifespan_experiment_time_unit on general_lifespan_experiment_time_unit.id = general_lifespan_experiment.age_unit_id
-left join measurement_type as general_lifespan_experiment_measurement_type on general_lifespan_experiment_measurement_type.id = general_lifespan_experiment.measurement_type
+left join expression_evaluation as general_lifespan_experiment_expression_evaluation general_lifespan_experiment_expression_evaluation.id = general_lifespan_experiment.expression_evaluation_by_id
 left join statistical_significance as ssmin on ssmin.id = general_lifespan_experiment.lifespan_min_change_stat_sign_id
 left join statistical_significance as ssmean on ssmean.id = general_lifespan_experiment.lifespan_mean_change_stat_sign_id
 left join statistical_significance as ssmedian on ssmedian.id = general_lifespan_experiment.lifespan_median_change_stat_sign_id
