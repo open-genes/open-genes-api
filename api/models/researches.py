@@ -328,6 +328,8 @@ class InterventionDeteriorateVitalProcess(BaseModel):
     }
     _from=""" from interventionToGeneImprovesVitalProcesses where resultCode=2 /* DETERIOR */ """
 
+
+
 class InterventionToGeneImprovesVitalProcess(BaseModel):
     id:str
     geneIntervention:str
@@ -507,3 +509,34 @@ left join time_unit age_related_change_time_unit on age_related_change_time_unit
 
 class AgeRelatedChangeOfGeneResearchOutput(PaginatedOutput):
     items:List[AgeRelatedChangeOfGeneResearched]
+
+#
+class GeneActivityChangeImpactResearched(InterventionToGeneImprovesVitalProcess):
+    geneId:int
+    geneNcbiId:int|None
+    geneName:str|None
+    geneSymbol:str|None
+    geneAliases:List[str]
+    _select=InterventionToGeneImprovesVitalProcess._select|{
+        'geneId':'gene.id',
+        'geneSymbol':'gene.symbol',
+        'geneNcbiId':'gene.ncbi_id',
+        'geneName':'gene.name',
+        'geneAliases':'gene.aliases',
+    }
+    _name='interventionToGeneImprovesVitalProcesses'
+    _from="""
+from gene_intervention_to_vital_process
+left join gene on gene_intervention_to_vital_process.gene_id=gene.id
+join gene_intervention_result_to_vital_process on gene_intervention_to_vital_process.id = gene_intervention_result_to_vital_process.gene_intervention_to_vital_process_id
+join vital_process on vital_process.id = gene_intervention_result_to_vital_process.vital_process_id
+join intervention_result_for_vital_process on intervention_result_for_vital_process.id = gene_intervention_result_to_vital_process.intervention_result_for_vital_process_id
+join gene_intervention_method on gene_intervention_method.id = gene_intervention_to_vital_process.gene_intervention_method_id
+left join organism_sex as gene_intervention_to_vital_process_organism_sex on gene_intervention_to_vital_process_organism_sex.id = gene_intervention_to_vital_process.sex_of_organism
+left join model_organism as gene_intervention_to_vital_process_model_organism on gene_intervention_to_vital_process_model_organism.id = gene_intervention_to_vital_process.model_organism_id
+left join organism_line as gene_intervention_to_vital_process_organism_line on gene_intervention_to_vital_process_organism_line.id = gene_intervention_to_vital_process.organism_line_id
+left join time_unit gene_intervention_to_vital_process_time_unit on gene_intervention_to_vital_process_time_unit.id=gene_intervention_to_vital_process.age_unit
+"""
+
+class GeneActivityChangeImpactResearchedOutput(PaginatedOutput):
+    items:List[GeneActivityChangeImpactResearched]
