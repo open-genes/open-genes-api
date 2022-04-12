@@ -39,7 +39,7 @@ class BaseDAO:
                     t[n]=p._select.get(k,k) if hasattr(p,'_select') else k
                     continue
                 if hasattr(m,'_from'):
-                    t={'_model':m,'_name':m._name if hasattr(m,'_name') else k,'_parent':t.get('_name'),'_from':m._from,'_join':''}
+                    t={'_model':m,'_name':m._name if hasattr(m,'_name') else (k if k else 'dummy'),'_parent':t.get('_name'),'_from':m._from,'_join':''}
                     tables[t['_name']]=t
                     n=''
                 if hasattr(m,'_join'):
@@ -57,7 +57,7 @@ class BaseDAO:
         inputclass=type(input)
         inputdict=input.dict()
         filtering={}
-        for f in [f for f in input.__fields__ if f in inputclass._filters and inputdict.get(f)]:
+        for f in [f for f in input.__fields__ if f in (inputclass._filters if hasattr(inputclass,'_filters') else {}) and inputdict.get(f)]:
             v=inputdict.get(f)
             filter=inputclass._filters[f]
             filtering[filter[0](v)]=filter[1](v)
@@ -70,7 +70,7 @@ class BaseDAO:
             filtering=''
         query=query.replace("@FILTERING@",filtering)
 
-        ordering=inputclass._sorts.get(inputdict.get('sortBy'),'')
+        ordering=(inputclass._sorts if hasattr(inputclass,'_sorts') else {}).get(inputdict.get('sortBy'),'')
         if ordering: ordering=ordering+' '+inputdict.get('sortOrder','')+', '
         query=query.replace("@ORDERING@",ordering)
 
