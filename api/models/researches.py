@@ -414,6 +414,8 @@ class RegulatedGene(BaseModel):
         'ncbiId':'regulated_gene.ncbi_id',
     }
 
+
+
 class ProteinRegulatesOtherGene(BaseModel):
     proteinActivity:str
     regulationType:str
@@ -567,3 +569,31 @@ left join genotype on genotype.id=gene_intervention_to_vital_process.genotype
 
 class GeneActivityChangeImpactResearchedOutput(PaginatedOutput):
     items:List[GeneActivityChangeImpactResearched]
+
+#
+class GeneRegulationResearched(ProteinRegulatesOtherGene):
+    geneId:int
+    geneNcbiId:int|None
+    geneName:str|None
+    geneSymbol:str|None
+    geneAliases:List[str]
+    _select=ProteinRegulatesOtherGene._select|{
+        'geneId':'gene.id',
+        'geneSymbol':'gene.symbol',
+        'geneNcbiId':'gene.ncbi_id',
+        'geneName':'gene.name',
+        'geneAliases':'gene.aliases',
+    }
+    _name='proteinRegulatesOtherGene'
+    _from="""
+from protein_to_gene
+left join gene on protein_to_gene.gene_id=gene.id
+join open_genes.gene as regulated_gene on regulated_gene.id = protein_to_gene.regulated_gene_id
+join protein_activity on protein_activity.id = protein_to_gene.protein_activity_id
+join gene_regulation_type on gene_regulation_type.id = protein_to_gene.regulation_type_id
+"""
+
+class GeneRegulationResearchedOutput(PaginatedOutput):
+    items:List[GeneRegulationResearched]
+
+#

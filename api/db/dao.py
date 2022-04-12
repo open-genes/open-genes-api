@@ -380,7 +380,7 @@ class GeneDAO(BaseDAO):
         return cur.fetchone()
 
 
-from models.gene import IncreaseLifespanSearched,AgeRelatedChangeOfGeneResearched,GeneActivityChangeImpactResearched
+from models.gene import IncreaseLifespanSearched,AgeRelatedChangeOfGeneResearched,GeneActivityChangeImpactResearched,GeneRegulationResearched
 
 class ResearchesDAO(BaseDAO):
     def increase_lifespan_search(self,input):
@@ -419,6 +419,22 @@ class ResearchesDAO(BaseDAO):
         GeneActivityChangeImpactResearched.__fields__['geneAliases'].outer_type_=str
 
         tables=self.prepare_tables(GeneActivityChangeImpactResearched)
+        query,params,meta=self.prepare_query(tables,input)
+
+        def fixer(r):
+            r['geneAliases']=[a for a in r['geneAliases'].split(' ') if a]
+            return r
+
+        re=self.read_query(query,params,tables,process=fixer)
+
+        meta.update(re.pop(0))
+
+        return {'options':{'objTotal':meta['row_count'],'total':meta.get('total_count'),"pagination":{"page":meta['page'],"pageSize":meta['pageSize'],"pagesTotal":meta['row_count']//meta['pageSize'] + (meta['row_count']%meta['pageSize']!=0)}},'items':re}
+
+    def gene_regulation(self,input):
+        GeneRegulationResearched.__fields__['geneAliases'].outer_type_=str
+
+        tables=self.prepare_tables(GeneRegulationResearched)
         query,params,meta=self.prepare_query(tables,input)
 
         def fixer(r):

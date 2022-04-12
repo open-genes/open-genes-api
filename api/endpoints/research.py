@@ -5,7 +5,8 @@ from fastapi import Depends
 from models.gene import GeneSearchInput
 
 from db.dao import ResearchesDAO
-from models.researches import IncreaseLifespanSearchInput, IncreaseLifespanSearchOutput, AgeRelatedChangeOfGeneResearchOutput, GeneActivityChangeImpactResearchedOutput
+from models.researches import IncreaseLifespanSearchInput, IncreaseLifespanSearchOutput, \
+    AgeRelatedChangeOfGeneResearchOutput, GeneActivityChangeImpactResearchedOutput, GeneRegulationResearchedOutput
 
 router = APIRouter()
 
@@ -32,3 +33,10 @@ async def age_related_changes_search(input: GeneSearchInput = Depends(GeneSearch
 )
 async def gene_activity_change_impact(input: GeneSearchInput = Depends(GeneSearchInput)) -> List:
     return ResearchesDAO().gene_activity_change_impact(input)
+
+@router.get(
+    '/research/gene-regulation',
+    response_model=GeneRegulationResearchedOutput
+)
+async def gene_regulation(input: GeneSearchInput = Depends(GeneSearchInput)) -> List:
+    return ResearchesDAO().gene_regulation(input)
