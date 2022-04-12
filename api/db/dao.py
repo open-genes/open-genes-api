@@ -868,3 +868,14 @@ class GeneTranscriptExonDAO(BaseDAO):
         cur.close()
         return cur.lastrowid
 
+from models.various import ModelOrganism
+class ModelOrganismDAO(BaseDAO):
+
+    def list(self,input):
+        tables = self.prepare_tables(ModelOrganism)
+        query, params, meta = self.prepare_query(tables, input)
+
+        re = self.read_query(query, params, tables)
+
+        meta.update(re.pop(0))
+        return re
