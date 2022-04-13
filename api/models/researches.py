@@ -326,7 +326,7 @@ join age_related_change_type as age_related_change_age_related_change_type on ag
 left join sample on sample.id = age_related_change.sample_id
 left join model_organism as age_related_change_model_organism on age_related_change_model_organism.id = age_related_change.model_organism_id
 left join organism_line as age_related_change_organism_line on age_related_change_organism_line.id = age_related_change.organism_line_id
-left join time_unit age_related_change_time_unit on age_related_change_time_unit.id = age_related_change.age_unit
+left join time_unit age_related_change_time_unit on age_related_change_time_unit.id = age_related_change.age_unit_id
 left join expression_evaluation on age_related_change.expression_evaluation_by_id = expression_evaluation.id
 left join measurement_type on age_related_change.measurement_type_id = measurement_type.id
 left join statistical_method on age_related_change.statistical_method_id = statistical_method.id
