@@ -21,6 +21,7 @@ class BaseDAO:
         )
 
     def fetch_all(self,query,params=[],consume=None):
+        print(query)
         cur = self.cnx.cursor(dictionary=True)
         cur.execute(query,params)
         if not consume: return cur.fetchall()
@@ -188,8 +189,7 @@ def gene_common_fixer(r):
     return r
 
 def age_related_changes_fixer(r):
-    # r['aliases']=[a for a in r['aliases'].split(' ') if a]
-    for f in ['valueForAll','valueForFemale','valueForMale']: r[f]=str(r[f])+'%' if r[f] else r[f]
+    r['value'] = str(r['value']) + '%' if r['value'] else r['value']
     r['measurementType']={'1en':'mRNA','2en':'protein','1ru':'мРНК','2ru':'белок'}.get(r['measurementType'])
     return r
 

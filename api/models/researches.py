@@ -492,13 +492,12 @@ join lifespan_experiment on lifespan_experiment.general_lifespan_experiment_id=g
 join gene on gene.id = lifespan_experiment.gene_id
 join model_organism as general_lifespan_experiment_model_organism on general_lifespan_experiment_model_organism.id = general_lifespan_experiment.model_organism_id
 left join intervention_result_for_longevity on intervention_result_for_longevity.id = general_lifespan_experiment.intervention_result_id
-left join model_organism as lifespan_experiment_model_organism on lifespan_experiment_model_organism.id = lifespan_experiment.model_organism_id
 left join organism_line as lifespan_experiment_organism_line on lifespan_experiment_organism_line.id = general_lifespan_experiment.organism_line_id
 left join organism_sex as lifespan_experiment_organism_sex on lifespan_experiment_organism_sex.id = general_lifespan_experiment.organism_sex_id
 left join diet as lifespan_experiment_diet on lifespan_experiment_diet.id = general_lifespan_experiment.diet_id
 left join sample as general_lifespan_experiment_sample on general_lifespan_experiment_sample.id = general_lifespan_experiment.changed_expression_tissue_id
-left join time_unit general_lifespan_experiment_time_unit on general_lifespan_experiment_time_unit.id = general_lifespan_experiment.age_unit_id
-left join expression_evaluation as general_lifespan_experiment_expression_evaluation general_lifespan_experiment_expression_evaluation.id = general_lifespan_experiment.expression_evaluation_by_id
+left join time_unit general_lifespan_experiment_time_unit on general_lifespan_experiment_time_unit.id = general_lifespan_experiment.lifespan_change_time_unit_id
+left join expression_evaluation as general_lifespan_experiment_expression_evaluation on general_lifespan_experiment_expression_evaluation.id = general_lifespan_experiment.expression_evaluation_by_id
 left join statistical_significance as ssmin on ssmin.id = general_lifespan_experiment.lifespan_min_change_stat_sign_id
 left join statistical_significance as ssmean on ssmean.id = general_lifespan_experiment.lifespan_mean_change_stat_sign_id
 left join statistical_significance as ssmedian on ssmedian.id = general_lifespan_experiment.lifespan_median_change_stat_sign_id
@@ -533,6 +532,10 @@ left join sample on sample.id = age_related_change.sample_id
 left join model_organism as age_related_change_model_organism on age_related_change_model_organism.id = age_related_change.model_organism_id
 left join organism_line as age_related_change_organism_line on age_related_change_organism_line.id = age_related_change.organism_line_id
 left join time_unit age_related_change_time_unit on age_related_change_time_unit.id = age_related_change.age_unit_id
+left join expression_evaluation on age_related_change.expression_evaluation_by_id = expression_evaluation.id
+left join measurement_type on age_related_change.measurement_type_id = measurement_type.id
+left join statistical_method on age_related_change.statistical_method_id = statistical_method.id
+left join organism_sex on age_related_change.sex = organism_sex.id
 """
 
 class AgeRelatedChangeOfGeneResearchOutput(PaginatedOutput):
