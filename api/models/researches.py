@@ -241,6 +241,7 @@ join gene_to_progeria on gene_to_progeria.gene_id=gene.id
 join progeria_syndrome on progeria_syndrome.id=gene_to_progeria.progeria_syndrome_id
 """
 
+
 class GeneAssociatedWithLongevityEffect(BaseModel):
     longevityEffect:str
     allelicPolymorphism:None|str
@@ -440,6 +441,7 @@ join protein_activity on protein_activity.id = protein_to_gene.protein_activity_
 join gene_regulation_type on gene_regulation_type.id = protein_to_gene.regulation_type_id
 """
 
+
 class AdditionalEvidence(BaseModel):
     doi:None|str
     pmid:None|str
@@ -624,5 +626,55 @@ join progeria_syndrome on progeria_syndrome.id=gene_to_progeria.progeria_syndrom
 
 class AssociationWithAcceleratedAgingResearchedOutput(PaginatedOutput):
     items:List[AssociationWithAcceleratedAgingResearched]
+
+#
+class AssociationsWithLifespanResearched(GeneAssociatedWithLongevityEffect):
+    geneId:int
+    geneNcbiId:int|None
+    geneName:str|None
+    geneSymbol:str|None
+    geneAliases:List[str]
+    _select=GeneAssociatedWithLongevityEffect._select|{
+        'geneId':'gene.id',
+        'geneSymbol':'gene.symbol',
+        'geneNcbiId':'gene.ncbi_id',
+        'geneName':'gene.name',
+        'geneAliases':'gene.aliases',
+    }
+    _name='geneAssociatedWithLongevityEffect'
+    _from="""
+from gene_to_longevity_effect
+join gene on gene_to_longevity_effect.gene_id=gene.id
+join longevity_effect on longevity_effect.id = gene_to_longevity_effect.longevity_effect_id
+left join polymorphism on polymorphism.id = gene_to_longevity_effect.polymorphism_id
+left join age_related_change_type as longevity_effect_age_related_change_type on longevity_effect_age_related_change_type.id = gene_to_longevity_effect.age_related_change_type_id
+left join model_organism as longevity_effect_model_organism on longevity_effect_model_organism.id=gene_to_longevity_effect.model_organism_id
+"""
+
+class AssociationsWithLifespanResearchedOutput(PaginatedOutput):
+    items:List[AssociationsWithLifespanResearched]
+
+#
+class OtherEvidenceResearched(AdditionalEvidence):
+    geneId:int
+    geneNcbiId:int|None
+    geneName:str|None
+    geneSymbol:str|None
+    geneAliases:List[str]
+    _select=AdditionalEvidence._select|{
+        'geneId':'gene.id',
+        'geneSymbol':'gene.symbol',
+        'geneNcbiId':'gene.ncbi_id',
+        'geneName':'gene.name',
+        'geneAliases':'gene.aliases',
+    }
+    _name='additionalEvidence'
+    _from="""
+from gene_to_additional_evidence
+join gene on gene_to_additional_evidence.gene_id=gene.id 
+ """
+
+class OtherEvidenceResearchedOutput(PaginatedOutput):
+    items:List[OtherEvidenceResearched]
 
 #
