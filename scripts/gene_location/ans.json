@@ -1,1747 +1,695 @@
 {
-  "id": 2,
-  "origin": {
-    "id": 1,
-    "phylum": "Chordata",
-    "age": "580",
-    "order": 8
-  },
-  "familyOrigin": {
-    "id": 1,
-    "phylum": "Chordata",
-    "age": "580",
-    "order": 8
-  },
-  "homologueTaxon": "Boreoeutheria",
-  "symbol": "GHRH",
-  "aliases": [
-    "GHRF",
-    "GRF",
-    "INN"
-  ],
-  "name": "growth hormone releasing hormone",
-  "diseases": [],
-  "diseaseCategories": [],
-  "ncbiId": "2691",
-  "uniprot": "SLIB_HUMAN",
-  "commentEvolution": "Релизинг-гормон гормона роста (GHRH) вместе с полипептидом, активирующим аденилатциклазу гипофиза (PACAP), принадлежит к суперсемейству регуляторных нейропептидов. Они обладают значительным сходством последовательностей, поэтому принято считать, что они возникли в результате геномной дупликации экзона у общего предка. Оба они появились на очень раннем этапе эволюции, еще до появления позвоночных. В частности, у хордовых животных присутствуют два гена GnRH/PACAP. Организация гена GHRH/PACAP1 асцидий имеет много общего с организацией гена-предшественника GHRH млекопитающих. В отличие от других нейрогормонов, последовательности которых обычно сохранялись консервативными в процессе эволюции, первичная структура GHRH сильно варьирует среди филумов [10.1677/jme.0.0250157].",
-  "commentFunction": "GRF высвобождается гипоталамусом и действует на аденогипофиз, стимулируя секрецию гормона роста. ",
-  "proteinDescriptionUniProt": "GRF высвобождается гипоталамусом и действует на аденогипофиз, стимулируя секрецию гормона роста. ",
-  "descriptionNCBI": "Этот ген кодирует член семейства белков глюкагона. Кодируемый препропротеин продуцируется в гипоталамусе и расщепляется с образованием зрелого фактора, известного как соматолиберин, который действует, стимулируя высвобождение гормона роста из гипофиза. Варианты рецепторов соматолиберина были обнаружены в нескольких типах опухолей, и антагонисты этих рецепторов могут подавлять рост опухолей. Дефекты этого гена являются причиной карликовости, а гиперсекреция кодируемого белка - причиной гигантизма. Альтернативный сплайсинг приводит к множеству вариантов транскрипта, по крайней мере один из которых кодирует препропротеин, который подвергается протеолитическому процессингу. [предоставлено RefSeq, январь 2016 г.].",
-  "descriptionOG": "",
-  "proteinDescriptionOpenGenes": "",
-  "commentCause": {
-    "10": "Ген регулирует связанные со старением гены",
-    "13": "Модуляция активности гена защищает от возрастного ухудшения",
-    "14": "Другие доказательства",
-    "17": "Модуляция активности гена усиливает возрастное ухудшение",
-    "6": "Модуляция активности гена увеличивает продолжительность жизни млекопитающих",
-    "8": "Возрастные изменения экспрессии гена/активности белка у млекопитающих",
-    "9": "Возрастные изменения экспрессии гена/активности белка у человека"
-  },
-  "functionalClusters": [
+  'gene_id': '5328',
+  'symbol': 'PLAU',
+  'description': 'plasminogen activator, urokinase',
+  'tax_id': '9606',
+  'taxname': 'Homo sapiens',
+  'type': 'PROTEIN_CODING',
+  'orientation': 'plus',
+  'genomic_ranges': [
     {
-      "id": 22,
-      "name": "метаболизм жиров"
-    },
-    {
-      "id": 26,
-      "name": "воспаление"
-    },
-    {
-      "id": 35,
-      "name": "кости"
-    },
-    {
-      "id": 4,
-      "name": "ответ на стресс"
-    },
-    {
-      "id": 52,
-      "name": "состав тела"
-    },
-    {
-      "id": 58,
-      "name": "когнитивные функции"
-    },
-    {
-      "id": 8,
-      "name": "метаболизм глюкозы"
-    }
-  ],
-  "researches": {
-    "increaseLifespan": [
-      {
-        "modelOrganism": "mice",
-        "organismLine": "C57BL/6 x 129/Sv",
-        "sex": "mixed",
-        "temperatureFrom": "20",
-        "temperatureTo": "23",
-        "diet": "Purina  Lab  Diet  5001, ad libitum",
-        "expressionChangeTissue": "",
-        "lifespanTimeUnit": "days",
-        "interventionResultForLifespan": "increases lifespan",
-        "expressionMeasurementType": "",
-        "controlCohortSize": "108",
-        "experimentCohortSize": "97",
-        "expressionChangePercent": "",
-        "lifespanMinControl": "256",
-        "lifespanMeanControl": "",
-        "lifespanMedianControl": "636",
-        "lifespanMaxControl": "888",
-        "lifespanMinExperiment": "581",
-        "lifespanMeanExperiment": "",
-        "lifespanMedianExperiment": "931",
-        "lifespanMaxExperiment": "1163",
-        "lifespanMinChangePercent": "127",
-        "lifespanMeanChangePercent": "",
-        "lifespanMedianChangePercent": "46",
-        "lifespanMaxChangePercent": "31",
-        "lMinChangeStatSignificance": "not measured",
-        "lMeanChangeStatSignificance": "",
-        "lMedianChangeStatSignificance": "yes",
-        "lMaxChangeStatSignificance": "not measured",
-        "doi": "10.7554/eLife.01098",
-        "pmid": "",
-        "comment": "GHRH knockout mice were smaller and had more adipose tissue than control. GHRH knockout mice exhibited major shifts in the expression of genes related to xenobiotic detoxification, stress resistance, and insulin signaling.",
-        "populationDensity": "",
-        "interventions": {
-          "controlAndExperiment": [],
-          "experiment": [
-            {
-              "interventionMethod": "gene knockout",
-              "interventionWay": "transgenic animals obtaining",
-              "tissueSpecific": "0",
-              "tissueSpecificPromoter": "",
-              "treatmentStart": "0",
-              "treatmentEnd": null,
-              "inductionByDrugWithdrawal": "0",
-              "treatmentDescription": null,
-              "startTimeUnit": "days",
-              "endTimeUnit": null,
-              "genotype": "-/-",
-              "drugDeliveryWay": null,
-              "drug": null,
-              "startStageOfDevelopment": null,
-              "endStageOfDevelopment": null,
-              "treatmentPeriod": null,
-              "tissues": []
-            }
-          ]
-        },
-        "interventionImproves": [
-          {
-            "id": "1",
-            "name": "glucose metabolism"
-          },
-          {
-            "id": "9",
-            "name": "stress responce"
-          },
-          {
-            "id": "57",
-            "name": "liver"
-          },
-          {
-            "id": "62",
-            "name": "INS/IGFR pathway"
-          }
-        ],
-        "interventionDeteriorates": [
-          {
-            "id": "39",
-            "name": "body composition"
-          }
-        ]
-      },
-      {
-        "modelOrganism": "mice",
-        "organismLine": "C57BL/6 x 129/Sv",
-        "sex": "female",
-        "temperatureFrom": "20",
-        "temperatureTo": "23",
-        "diet": "Purina  Lab  Diet  5001, ad libitum",
-        "expressionChangeTissue": "",
-        "lifespanTimeUnit": "",
-        "interventionResultForLifespan": "increases lifespan",
-        "expressionMeasurementType": "",
-        "controlCohortSize": "52",
-        "experimentCohortSize": "58",
-        "expressionChangePercent": "",
-        "lifespanMinControl": "375",
-        "lifespanMeanControl": "",
-        "lifespanMedianControl": "666",
-        "lifespanMaxControl": "895",
-        "lifespanMinExperiment": "566",
-        "lifespanMeanExperiment": "",
-        "lifespanMedianExperiment": "956",
-        "lifespanMaxExperiment": "1198",
-        "lifespanMinChangePercent": "51",
-        "lifespanMeanChangePercent": "",
-        "lifespanMedianChangePercent": "43",
-        "lifespanMaxChangePercent": "33",
-        "lMinChangeStatSignificance": "not measured",
-        "lMeanChangeStatSignificance": "",
-        "lMedianChangeStatSignificance": "yes",
-        "lMaxChangeStatSignificance": "yes",
-        "doi": "10.7554/eLife.01098",
-        "pmid": "",
-        "comment": "GHRH knockout mice were smaller and had more adipose tissue than control. GHRH knockout mice exhibited major shifts in the expression of genes related to xenobiotic detoxification, stress resistance, and insulin signaling.",
-        "populationDensity": "",
-        "interventions": {
-          "controlAndExperiment": [],
-          "experiment": [
-            {
-              "interventionMethod": "gene knockout",
-              "interventionWay": null,
-              "tissueSpecific": "0",
-              "tissueSpecificPromoter": "",
-              "treatmentStart": null,
-              "treatmentEnd": null,
-              "inductionByDrugWithdrawal": "0",
-              "treatmentDescription": null,
-              "startTimeUnit": null,
-              "endTimeUnit": null,
-              "genotype": "-/-",
-              "drugDeliveryWay": null,
-              "drug": null,
-              "startStageOfDevelopment": null,
-              "endStageOfDevelopment": null,
-              "treatmentPeriod": null,
-              "tissues": []
-            }
-          ]
-        },
-        "interventionImproves": [
-          {
-            "id": "1",
-            "name": "glucose metabolism"
-          },
-          {
-            "id": "9",
-            "name": "stress responce"
-          },
-          {
-            "id": "57",
-            "name": "liver"
-          },
-          {
-            "id": "62",
-            "name": "INS/IGFR pathway"
-          }
-        ],
-        "interventionDeteriorates": [
-          {
-            "id": "39",
-            "name": "body composition"
-          }
-        ]
-      },
-      {
-        "modelOrganism": "mice",
-        "organismLine": "C57BL/6 x 129/Sv",
-        "sex": "male",
-        "temperatureFrom": "20",
-        "temperatureTo": "23",
-        "diet": "Purina  Lab  Diet  5001, ad libitum",
-        "expressionChangeTissue": "",
-        "lifespanTimeUnit": "",
-        "interventionResultForLifespan": "increases lifespan",
-        "expressionMeasurementType": "",
-        "controlCohortSize": "56",
-        "experimentCohortSize": "39",
-        "expressionChangePercent": "",
-        "lifespanMinControl": "250",
-        "lifespanMeanControl": "",
-        "lifespanMedianControl": "614",
-        "lifespanMaxControl": "875",
-        "lifespanMinExperiment": "599",
-        "lifespanMeanExperiment": "",
-        "lifespanMedianExperiment": "928",
-        "lifespanMaxExperiment": "1092",
-        "lifespanMinChangePercent": "140",
-        "lifespanMeanChangePercent": "",
-        "lifespanMedianChangePercent": "51",
-        "lifespanMaxChangePercent": "18",
-        "lMinChangeStatSignificance": "not measured",
-        "lMeanChangeStatSignificance": "",
-        "lMedianChangeStatSignificance": "yes",
-        "lMaxChangeStatSignificance": "yes",
-        "doi": "10.7554/eLife.01098",
-        "pmid": "",
-        "comment": "GHRH knockout mice were smaller and had more adipose tissue than control. GHRH knockout mice exhibited major shifts in the expression of genes related to xenobiotic detoxification, stress resistance, and insulin signaling.",
-        "populationDensity": "",
-        "interventions": {
-          "controlAndExperiment": [],
-          "experiment": [
-            {
-              "interventionMethod": "gene knockout",
-              "interventionWay": null,
-              "tissueSpecific": "0",
-              "tissueSpecificPromoter": "",
-              "treatmentStart": null,
-              "treatmentEnd": null,
-              "inductionByDrugWithdrawal": "0",
-              "treatmentDescription": null,
-              "startTimeUnit": null,
-              "endTimeUnit": null,
-              "genotype": "-/-",
-              "drugDeliveryWay": null,
-              "drug": null,
-              "startStageOfDevelopment": null,
-              "endStageOfDevelopment": null,
-              "treatmentPeriod": null,
-              "tissues": []
-            }
-          ]
-        },
-        "interventionImproves": [
-          {
-            "id": "1",
-            "name": "glucose metabolism"
-          },
-          {
-            "id": "9",
-            "name": "stress responce"
-          },
-          {
-            "id": "57",
-            "name": "liver"
-          },
-          {
-            "id": "62",
-            "name": "INS/IGFR pathway"
-          }
-        ],
-        "interventionDeteriorates": [
-          {
-            "id": "39",
-            "name": "body composition"
-          }
-        ]
-      },
-      {
-        "modelOrganism": "nematode C. elegans",
-        "organismLine": "N2",
-        "sex": "not specified",
-        "temperatureFrom": "",
-        "temperatureTo": "",
-        "diet": "",
-        "expressionChangeTissue": "",
-        "lifespanTimeUnit": "",
-        "interventionResultForLifespan": "decreases lifespan",
-        "expressionMeasurementType": "",
-        "controlCohortSize": "187",
-        "experimentCohortSize": "211",
-        "expressionChangePercent": "",
-        "lifespanMinControl": "",
-        "lifespanMeanControl": "",
-        "lifespanMedianControl": "14",
-        "lifespanMaxControl": "13",
-        "lifespanMinExperiment": "",
-        "lifespanMeanExperiment": "",
-        "lifespanMedianExperiment": "12",
-        "lifespanMaxExperiment": "11",
-        "lifespanMinChangePercent": "",
-        "lifespanMeanChangePercent": "",
-        "lifespanMedianChangePercent": "",
-        "lifespanMaxChangePercent": "",
-        "lMinChangeStatSignificance": "",
-        "lMeanChangeStatSignificance": "",
-        "lMedianChangeStatSignificance": "",
-        "lMaxChangeStatSignificance": "",
-        "doi": "10.1038/s41598-020-72637-9",
-        "pmid": "",
-        "comment": "",
-        "populationDensity": "",
-        "interventions": {
-          "controlAndExperiment": [
-            {
-              "interventionMethod": "increased gene expression in transgenic animals",
-              "interventionWay": null,
-              "tissueSpecific": "0",
-              "tissueSpecificPromoter": "",
-              "treatmentStart": null,
-              "treatmentEnd": null,
-              "inductionByDrugWithdrawal": "0",
-              "treatmentDescription": null,
-              "startTimeUnit": null,
-              "endTimeUnit": null,
-              "genotype": null,
-              "drugDeliveryWay": null,
-              "drug": null,
-              "startStageOfDevelopment": null,
-              "endStageOfDevelopment": null,
-              "treatmentPeriod": null,
-              "tissues": [],
-              "gene": {
-                "id": "2",
-                "symbol": "GHRH",
-                "name": "growth hormone releasing hormone",
-                "ncbiId": "2691"
-              }
-            }
-          ],
-          "experiment": []
-        },
-        "interventionImproves": [],
-        "interventionDeteriorates": []
-      },
-      {
-        "modelOrganism": "mice",
-        "organismLine": "C57BL/6 x 129/Sv",
-        "sex": "mixed",
-        "temperatureFrom": "20",
-        "temperatureTo": "23",
-        "diet": "Purina Lab Diet 5001, from birth to 12 weeks ad. lib., then 40% from ad. lib.",
-        "expressionChangeTissue": "",
-        "lifespanTimeUnit": "",
-        "interventionResultForLifespan": "increases lifespan",
-        "expressionMeasurementType": "",
-        "controlCohortSize": "105",
-        "experimentCohortSize": "102",
-        "expressionChangePercent": "",
-        "lifespanMinControl": "360",
-        "lifespanMeanControl": "",
-        "lifespanMedianControl": "770",
-        "lifespanMaxControl": "1060",
-        "lifespanMinExperiment": "728",
-        "lifespanMeanExperiment": "",
-        "lifespanMedianExperiment": "1054",
-        "lifespanMaxExperiment": "1344",
-        "lifespanMinChangePercent": "102",
-        "lifespanMeanChangePercent": "",
-        "lifespanMedianChangePercent": "36.9",
-        "lifespanMaxChangePercent": "26.8",
-        "lMinChangeStatSignificance": "not measured",
-        "lMeanChangeStatSignificance": "",
-        "lMedianChangeStatSignificance": "not measured",
-        "lMaxChangeStatSignificance": "not measured",
-        "doi": "10.7554/eLife.01098",
-        "pmid": "",
-        "comment": "Calorie restriction diet enhanced the positive effect of GHRH knockout on the mice lifespan. ",
-        "populationDensity": "",
-        "interventions": {
-          "controlAndExperiment": [],
-          "experiment": [
-            {
-              "interventionMethod": "gene knockout",
-              "interventionWay": "transgenic animals obtaining",
-              "tissueSpecific": "0",
-              "tissueSpecificPromoter": "",
-              "treatmentStart": null,
-              "treatmentEnd": null,
-              "inductionByDrugWithdrawal": "0",
-              "treatmentDescription": null,
-              "startTimeUnit": null,
-              "endTimeUnit": null,
-              "genotype": "-/-",
-              "drugDeliveryWay": null,
-              "drug": null,
-              "startStageOfDevelopment": null,
-              "endStageOfDevelopment": null,
-              "treatmentPeriod": null,
-              "tissues": []
-            }
-          ]
-        },
-        "interventionImproves": [],
-        "interventionDeteriorates": []
-      },
-      {
-        "modelOrganism": "mice",
-        "organismLine": "C57BL/6 x 129/Sv",
-        "sex": "female",
-        "temperatureFrom": "20",
-        "temperatureTo": "23",
-        "diet": "Purina Lab Diet 5001, from birth to 12 weeks ad. lib., then 40% from ad. lib.",
-        "expressionChangeTissue": "",
-        "lifespanTimeUnit": "",
-        "interventionResultForLifespan": "increases lifespan",
-        "expressionMeasurementType": "",
-        "controlCohortSize": "52",
-        "experimentCohortSize": "60",
-        "expressionChangePercent": "",
-        "lifespanMinControl": "305",
-        "lifespanMeanControl": "",
-        "lifespanMedianControl": "764",
-        "lifespanMaxControl": "1147",
-        "lifespanMinExperiment": "721",
-        "lifespanMeanExperiment": "",
-        "lifespanMedianExperiment": "1139",
-        "lifespanMaxExperiment": "1402",
-        "lifespanMinChangePercent": "136.4",
-        "lifespanMeanChangePercent": "",
-        "lifespanMedianChangePercent": "49.1",
-        "lifespanMaxChangePercent": "22.2",
-        "lMinChangeStatSignificance": "not measured",
-        "lMeanChangeStatSignificance": "",
-        "lMedianChangeStatSignificance": "not measured",
-        "lMaxChangeStatSignificance": "not measured",
-        "doi": "10.7554/eLife.01098",
-        "pmid": "",
-        "comment": "Calorie restriction diet enhanced the positive effect of GHRH knockout on the mice lifespan. ",
-        "populationDensity": "",
-        "interventions": {
-          "controlAndExperiment": [],
-          "experiment": [
-            {
-              "interventionMethod": "gene knockout",
-              "interventionWay": "transgenic animals obtaining",
-              "tissueSpecific": "0",
-              "tissueSpecificPromoter": "",
-              "treatmentStart": null,
-              "treatmentEnd": null,
-              "inductionByDrugWithdrawal": "0",
-              "treatmentDescription": null,
-              "startTimeUnit": null,
-              "endTimeUnit": null,
-              "genotype": "-/-",
-              "drugDeliveryWay": null,
-              "drug": null,
-              "startStageOfDevelopment": null,
-              "endStageOfDevelopment": null,
-              "treatmentPeriod": null,
-              "tissues": []
-            }
-          ]
-        },
-        "interventionImproves": [],
-        "interventionDeteriorates": []
-      },
-      {
-        "modelOrganism": "mice",
-        "organismLine": "C57BL/6 x 129/Sv",
-        "sex": "male",
-        "temperatureFrom": "20",
-        "temperatureTo": "23",
-        "diet": "Purina Lab Diet 5001, from birth to 12 weeks ad. lib., then 40% from ad. lib.",
-        "expressionChangeTissue": "",
-        "lifespanTimeUnit": "",
-        "interventionResultForLifespan": "increases lifespan",
-        "expressionMeasurementType": "",
-        "controlCohortSize": "53",
-        "experimentCohortSize": "42",
-        "expressionChangePercent": "",
-        "lifespanMinControl": "466",
-        "lifespanMeanControl": "",
-        "lifespanMedianControl": "782",
-        "lifespanMaxControl": "1021",
-        "lifespanMinExperiment": "708",
-        "lifespanMeanExperiment": "",
-        "lifespanMedianExperiment": "930",
-        "lifespanMaxExperiment": "1172",
-        "lifespanMinChangePercent": "51.9",
-        "lifespanMeanChangePercent": "",
-        "lifespanMedianChangePercent": "18.9",
-        "lifespanMaxChangePercent": "",
-        "lMinChangeStatSignificance": "not measured",
-        "lMeanChangeStatSignificance": "",
-        "lMedianChangeStatSignificance": "not measured",
-        "lMaxChangeStatSignificance": "not measured",
-        "doi": "10.7554/eLife.01098",
-        "pmid": "",
-        "comment": "Calorie restriction diet enhanced the positive effect of GHRH knockout on the mice lifespan. ",
-        "populationDensity": "",
-        "interventions": {
-          "controlAndExperiment": [],
-          "experiment": [
-            {
-              "interventionMethod": "gene knockout",
-              "interventionWay": "transgenic animals obtaining",
-              "tissueSpecific": "0",
-              "tissueSpecificPromoter": "",
-              "treatmentStart": null,
-              "treatmentEnd": null,
-              "inductionByDrugWithdrawal": "0",
-              "treatmentDescription": null,
-              "startTimeUnit": null,
-              "endTimeUnit": null,
-              "genotype": "-/-",
-              "drugDeliveryWay": null,
-              "drug": null,
-              "startStageOfDevelopment": null,
-              "endStageOfDevelopment": null,
-              "treatmentPeriod": null,
-              "tissues": []
-            }
-          ]
-        },
-        "interventionImproves": [],
-        "interventionDeteriorates": []
-      }
-    ],
-    "geneAssociatedWithProgeriaSyndromes": [],
-    "geneAssociatedWithLongevityEffects": [],
-    "ageRelatedChangesOfGene": [
-      {
-        "changeType": "decreased gene expression",
-        "sample": "brain",
-        "modelOrganism": "mice",
-        "organismLine": "C57BL/6J",
-        "ageFrom": "2 months",
-        "ageTo": "4 months",
-        "valueForMale": "20%",
-        "valueForFemale": "50%",
-        "valueForAll": "",
-        "measurementType": "3",
-        "doi": "10.1016/j.brainres.2004.08.012",
-        "pmid": "",
-        "comment": "The number of GHRH-immunoreactive (ir) neurons decreased with age. The number of GHRH-ir neurons was significantly higher in males than in females at the age of 2 months."
-      },
-      {
-        "changeType": "decreased gene expression",
-        "sample": "brain",
-        "modelOrganism": "mice",
-        "organismLine": "C57BL/6J",
-        "ageFrom": "4 months",
-        "ageTo": "12 months",
-        "valueForMale": "40%",
-        "valueForFemale": "40%",
-        "valueForAll": "",
-        "measurementType": "3",
-        "doi": "10.1016/j.brainres.2004.08.012",
-        "pmid": "",
-        "comment": "The number of GHRH-immunoreactive (ir)  neurons decreased with age. "
-      },
-      {
-        "changeType": "decreased gene expression",
-        "sample": "brain",
-        "modelOrganism": "mice",
-        "organismLine": "C57BL/6J",
-        "ageFrom": "4 months",
-        "ageTo": "24 months",
-        "valueForMale": "65%",
-        "valueForFemale": "75%",
-        "valueForAll": "",
-        "measurementType": "3",
-        "doi": "10.1016/j.brainres.2004.08.012",
-        "pmid": "",
-        "comment": "The number of GHRH-immunoreactive (ir)  neurons decreased with age. "
-      },
-      {
-        "changeType": "decreased gene expression",
-        "sample": "peripheral blood mononuclear cells",
-        "modelOrganism": "human",
-        "organismLine": "",
-        "ageFrom": "32 years",
-        "ageTo": "53 years",
-        "valueForMale": "",
-        "valueForFemale": "54%",
-        "valueForAll": "",
-        "measurementType": "mRNA",
-        "doi": "10.1210/jcem.86.7.7652",
-        "pmid": "",
-        "comment": "GHRH mRNA expression in peripheral blood mononuclear cells (PBMC) derived from postmenopausal women (n = 5) was lower than that from premenopausal women (n = 5). However, no differences in PBMC GHRH mRNA expression were found in young and old men. \r\nAlthough in older men there were fewer peripheral lymphocytes that express GHRH protein, these cells secreted significantly more GHRH in vitro than cells from postmenopausal women with no hormone replacement therapy (HRT), but similar levels as cells from women receiving HRT. PBMC from women receiving HRT secreted more GHRH in vitro than cells from women receiving no hormone replacement. \r\nMethod — RT-PCR. Semiquantitative analysis of mRNA expression was accomplished by scanning densitometry using ImageQuant software (Molecular Dynamics, Inc.) to calculate the ratio of GHRH/G3PDH. "
-      },
-      {
-        "changeType": "increased gene expression",
-        "sample": "peripheral blood mononuclear cells",
-        "modelOrganism": "human",
-        "organismLine": "",
-        "ageFrom": "26 years",
-        "ageTo": "71 years",
-        "valueForMale": "45%",
-        "valueForFemale": "",
-        "valueForAll": "",
-        "measurementType": "mRNA",
-        "doi": "10.1210/jcem.86.7.7652",
-        "pmid": "",
-        "comment": "No significant differences in PBMC GHRH mRNA expression were found in young (n = 4) and old (n = 4) men. \r\nMethod — RT-PCR. Semiquantitative analysis of mRNA expression was accomplished by scanning densitometry using ImageQuant software (Molecular Dynamics, Inc.) to calculate the ratio of GHRH/G3PDH. "
-      },
-      {
-        "changeType": "decreased gene expression",
-        "sample": "neurons",
-        "modelOrganism": "rats",
-        "organismLine": "Sprague Dawley",
-        "ageFrom": "3 months",
-        "ageTo": "24 months",
-        "valueForMale": "",
-        "valueForFemale": "",
-        "valueForAll": "",
-        "measurementType": "protein",
-        "doi": "10.1159/000124950",
-        "pmid": "",
-        "comment": "The synthesis and/or release of growth hormone releasing factor (GRF) in GRF-containing neurons are decreased, though GRF-containing neurons themselves remain alive and have the capacity to synthesize GRF."
-      }
-    ],
-    "interventionToGeneImprovesVitalProcesses": [
-      {
-        "id": "1124",
-        "geneIntervention": "gene knockout",
-        "result": "improvement",
-        "resultCode": "1",
-        "vitalProcess": "insulin sensitivity",
-        "vitalProcessId": "23",
-        "modelOrganism": "mice",
-        "organismLine": "",
-        "age": "0 days",
-        "genotype": "",
-        "sex": "male",
-        "doi": "10.18632/aging.103588",
-        "pmid": "",
-        "comment": " Enhanced systemic insulin sensitivity in long-lived GHRH-/- mice is associated with differential activation of insulin signaling cascades among various organs. Improved action of insulin in the insulin sensitive tissues is likely to mediate the prolonged longevity and healthy-aging effects of GH deficiency in mice.",
-        "interventionImproves": [
-          {
-            "id": "23",
-            "name": "insulin sensitivity"
-          }
-        ],
-        "interventionDeteriorates": []
-      },
-      {
-        "id": "1123",
-        "geneIntervention": "treatment with vector with additional gene copies",
-        "result": "improvement",
-        "resultCode": "1",
-        "vitalProcess": "bone",
-        "vitalProcessId": "35",
-        "modelOrganism": "mice",
-        "organismLine": "C57BL/6",
-        "age": "0 days",
-        "genotype": "",
-        "sex": "female",
-        "doi": "10.1016/j.ghir.2021.101429",
-        "pmid": "",
-        "comment": "80 and 120 μg/kg plasmid-mediated GHRH supplementation can improve osteoporosis and skin aging in aged mice. 80 and 120 μg/kg plasmid-mediated GHRH supplementation can improve osteoporosis and skin aging in aged mice.",
-        "interventionImproves": [
-          {
-            "id": "35",
-            "name": "bone"
-          }
-        ],
-        "interventionDeteriorates": []
-      },
-      {
-        "id": "1123",
-        "geneIntervention": "treatment with vector with additional gene copies",
-        "result": "improvement",
-        "resultCode": "1",
-        "vitalProcess": "skin",
-        "vitalProcessId": "34",
-        "modelOrganism": "mice",
-        "organismLine": "C57BL/6",
-        "age": "0 days",
-        "genotype": "",
-        "sex": "female",
-        "doi": "10.1016/j.ghir.2021.101429",
-        "pmid": "",
-        "comment": "80 and 120 μg/kg plasmid-mediated GHRH supplementation can improve osteoporosis and skin aging in aged mice. 80 and 120 μg/kg plasmid-mediated GHRH supplementation can improve osteoporosis and skin aging in aged mice.",
-        "interventionImproves": [
-          {
-            "id": "34",
-            "name": "skin"
-          }
-        ],
-        "interventionDeteriorates": []
-      },
-      {
-        "id": "1119",
-        "geneIntervention": "gene knockout",
-        "result": "improvement",
-        "resultCode": "1",
-        "vitalProcess": "lipid metabolism",
-        "vitalProcessId": "24",
-        "modelOrganism": "mice",
-        "organismLine": "C57BL/6J",
-        "age": "0 days",
-        "genotype": "",
-        "sex": "mixed",
-        "doi": "10.18632/aging.103242",
-        "pmid": "",
-        "comment": "Male and female GHRH -/- mice have significantly reduced body weight and enhanced insulin sensitivity when compared to wild type littermates. There were significant decreases in lean mass, bone mineral content and density, and a dramatic increase in fat mass of GHRH-/- mice when compared to wild type littermates. \r\n Respiratory exchange ratio was significantly lower in GHRH-/- mice during the light cycle, but not during the dark cycle, indicating a circadian related metabolic shift towards fat utilization in the growth hormone deficient mice. The novel CRISPR/Cas9 GHRH-/- mice are exhibiting the consistent and unique physiological and metabolic characteristics, which might mediate the longevity effects of growth hormone deficiency in mice.   Male and female GHRH -/- mice have significantly reduced body weight and enhanced insulin sensitivity when compared to wild type littermates.",
-        "interventionImproves": [
-          {
-            "id": "24",
-            "name": "lipid metabolism"
-          }
-        ],
-        "interventionDeteriorates": []
-      },
-      {
-        "id": "1119",
-        "geneIntervention": "gene knockout",
-        "result": "improvement",
-        "resultCode": "1",
-        "vitalProcess": "insulin sensitivity",
-        "vitalProcessId": "23",
-        "modelOrganism": "mice",
-        "organismLine": "C57BL/6J",
-        "age": "0 days",
-        "genotype": "",
-        "sex": "mixed",
-        "doi": "10.18632/aging.103242",
-        "pmid": "",
-        "comment": "Male and female GHRH -/- mice have significantly reduced body weight and enhanced insulin sensitivity when compared to wild type littermates. There were significant decreases in lean mass, bone mineral content and density, and a dramatic increase in fat mass of GHRH-/- mice when compared to wild type littermates. \r\n Respiratory exchange ratio was significantly lower in GHRH-/- mice during the light cycle, but not during the dark cycle, indicating a circadian related metabolic shift towards fat utilization in the growth hormone deficient mice. The novel CRISPR/Cas9 GHRH-/- mice are exhibiting the consistent and unique physiological and metabolic characteristics, which might mediate the longevity effects of growth hormone deficiency in mice.   Male and female GHRH -/- mice have significantly reduced body weight and enhanced insulin sensitivity when compared to wild type littermates.",
-        "interventionImproves": [
-          {
-            "id": "23",
-            "name": "insulin sensitivity"
-          }
-        ],
-        "interventionDeteriorates": []
-      },
-      {
-        "id": "1029",
-        "geneIntervention": "treatment with protein",
-        "result": "improvement",
-        "resultCode": "1",
-        "vitalProcess": "body composition",
-        "vitalProcessId": "39",
-        "modelOrganism": "human",
-        "organismLine": "",
-        "age": "60 years",
-        "genotype": "",
-        "sex": "male",
-        "doi": "10.1210/jc.2004-0430",
-        "pmid": "",
-        "comment": "4 mg (n = 11) recombinant human GHRH-1,44-amide s.c. twice daily for 3 months in a double-blind, parallel-cohort design to 22 healthy men (ages, 53-68 yr) increased total body water (tritium space; P = 0.024) and fat-free mass (dual-energy x-ray absorptiometry; P = 0.021), and reduced total abdominal adiposity (computed axial tomography scan; P = 0.042). Both supplementation schedules shortened the time required to walk 30 m and ascend four flights of stairs (P < 0.025 each). GHRH-1,44-amide also elevates GH and IGF-I concentrations and causes local skin reactions.",
-        "interventionImproves": [
-          {
-            "id": "39",
-            "name": "body composition"
-          }
-        ],
-        "interventionDeteriorates": []
-      },
-      {
-        "id": "1026",
-        "geneIntervention": "gene knockout",
-        "result": "improvement",
-        "resultCode": "1",
-        "vitalProcess": "inflammation",
-        "vitalProcessId": "28",
-        "modelOrganism": "mice",
-        "organismLine": "C57BL/6 x 129/Sv",
-        "age": "0 days",
-        "genotype": "-/-",
-        "sex": "mixed",
-        "doi": "10.7554/eLife.01098",
-        "pmid": "",
-        "comment": "GHRH knockout mice are remarkably long-lived, exhibiting major shifts in the expression of genes related to xenobiotic detoxification, stress resistance, and insulin signaling. These mutant mice also have increased adiponectin levels and alterations in glucose homeostasis consistent with the removal of the counter-insulin effects of growth hormone. GHRH-KO mice feature perturbations in a network of signaling pathways related to stress resistance, metabolic control and inflammation, and therefore provide a new model that can be used to explore links between GHRH repression, downregulation of the somatotropic axis, and extended longevity.  GHRH knockout mice are remarkably long-lived, exhibiting major shifts in the expression of genes related to xenobiotic detoxification, stress resistance, and insulin signaling. These mutant mice also have increased adiponectin levels and alterations in glucose homeostasis consistent with the removal of the counter-insulin effects of growth hormone.\r\nThe effects of caloric restriction (CR) and the GHRH mutation are additive, with lifespan of GHRH-KO mutants further increased by CR.  GHRH knockout mice are remarkably long-lived, exhibiting major shifts in the expression of genes related to xenobiotic detoxification, stress resistance, and insulin signaling. GHRH-KO mice feature perturbations in a network of signaling pathways related to stress resistance, metabolic control and inflammation, and therefore provide a new model that can be used to explore links between GHRH repression, downregulation of the somatotropic axis, and extended longevity. ",
-        "interventionImproves": [
-          {
-            "id": "28",
-            "name": "inflammation"
-          }
-        ],
-        "interventionDeteriorates": []
-      },
-      {
-        "id": "1026",
-        "geneIntervention": "gene knockout",
-        "result": "improvement",
-        "resultCode": "1",
-        "vitalProcess": "stress responce",
-        "vitalProcessId": "9",
-        "modelOrganism": "mice",
-        "organismLine": "C57BL/6 x 129/Sv",
-        "age": "0 days",
-        "genotype": "-/-",
-        "sex": "mixed",
-        "doi": "10.7554/eLife.01098",
-        "pmid": "",
-        "comment": "GHRH knockout mice are remarkably long-lived, exhibiting major shifts in the expression of genes related to xenobiotic detoxification, stress resistance, and insulin signaling. These mutant mice also have increased adiponectin levels and alterations in glucose homeostasis consistent with the removal of the counter-insulin effects of growth hormone. GHRH-KO mice feature perturbations in a network of signaling pathways related to stress resistance, metabolic control and inflammation, and therefore provide a new model that can be used to explore links between GHRH repression, downregulation of the somatotropic axis, and extended longevity.  GHRH knockout mice are remarkably long-lived, exhibiting major shifts in the expression of genes related to xenobiotic detoxification, stress resistance, and insulin signaling. These mutant mice also have increased adiponectin levels and alterations in glucose homeostasis consistent with the removal of the counter-insulin effects of growth hormone.\r\nThe effects of caloric restriction (CR) and the GHRH mutation are additive, with lifespan of GHRH-KO mutants further increased by CR.  GHRH knockout mice are remarkably long-lived, exhibiting major shifts in the expression of genes related to xenobiotic detoxification, stress resistance, and insulin signaling. GHRH-KO mice feature perturbations in a network of signaling pathways related to stress resistance, metabolic control and inflammation, and therefore provide a new model that can be used to explore links between GHRH repression, downregulation of the somatotropic axis, and extended longevity. ",
-        "interventionImproves": [
-          {
-            "id": "9",
-            "name": "stress responce"
-          }
-        ],
-        "interventionDeteriorates": []
-      },
-      {
-        "id": "1026",
-        "geneIntervention": "gene knockout",
-        "result": "improvement",
-        "resultCode": "1",
-        "vitalProcess": "glucose metabolism",
-        "vitalProcessId": "1",
-        "modelOrganism": "mice",
-        "organismLine": "C57BL/6 x 129/Sv",
-        "age": "0 days",
-        "genotype": "-/-",
-        "sex": "mixed",
-        "doi": "10.7554/eLife.01098",
-        "pmid": "",
-        "comment": "GHRH knockout mice are remarkably long-lived, exhibiting major shifts in the expression of genes related to xenobiotic detoxification, stress resistance, and insulin signaling. These mutant mice also have increased adiponectin levels and alterations in glucose homeostasis consistent with the removal of the counter-insulin effects of growth hormone. GHRH-KO mice feature perturbations in a network of signaling pathways related to stress resistance, metabolic control and inflammation, and therefore provide a new model that can be used to explore links between GHRH repression, downregulation of the somatotropic axis, and extended longevity.  GHRH knockout mice are remarkably long-lived, exhibiting major shifts in the expression of genes related to xenobiotic detoxification, stress resistance, and insulin signaling. These mutant mice also have increased adiponectin levels and alterations in glucose homeostasis consistent with the removal of the counter-insulin effects of growth hormone.\r\nThe effects of caloric restriction (CR) and the GHRH mutation are additive, with lifespan of GHRH-KO mutants further increased by CR.  GHRH knockout mice are remarkably long-lived, exhibiting major shifts in the expression of genes related to xenobiotic detoxification, stress resistance, and insulin signaling. GHRH-KO mice feature perturbations in a network of signaling pathways related to stress resistance, metabolic control and inflammation, and therefore provide a new model that can be used to explore links between GHRH repression, downregulation of the somatotropic axis, and extended longevity. ",
-        "interventionImproves": [
-          {
-            "id": "1",
-            "name": "glucose metabolism"
-          }
-        ],
-        "interventionDeteriorates": []
-      },
-      {
-        "id": "1121",
-        "geneIntervention": "gene knockout",
-        "result": "deterioration",
-        "resultCode": "2",
-        "vitalProcess": "cognitive function",
-        "vitalProcessId": "46",
-        "modelOrganism": "mice",
-        "organismLine": "",
-        "age": "0 days",
-        "genotype": "+/-, -/-",
-        "sex": "male",
-        "doi": "10.1530/EC-18-0165",
-        "pmid": "",
-        "comment": "Homozygous ablation of GHRH gene is associated with decreased performance in learning and memory tests, possibly linked to increased spontaneous locomotor activity. In addition, we observed An age-related decline was observed in cognitive functions in both genotypes (+/-, - / -).",
-        "interventionImproves": [],
-        "interventionDeteriorates": [
-          {
-            "id": "46",
-            "name": "cognitive function"
-          }
-        ]
-      }
-    ],
-    "proteinRegulatesOtherGenes": [
-      {
-        "proteinActivity": "upregulates, mechanism not established",
-        "regulationType": "protein level",
-        "doi": "10.1210/jc.2004-0430",
-        "pmid": "",
-        "comment": "In the elderly, systemic, short-term administration of GHRH enhances GH secretion and increases the formation of the GH-dependent peptide IGF-1.",
-        "regulatedGene": {
-          "id": "28",
-          "symbol": "IGF1",
-          "name": "insulin-like growth factor 1",
-          "ncbiId": "3479"
+      'accession_version': 'NC_000010.11',
+      'range': [
+        {
+          'begin': '73909182',
+          'end': '73917497',
+          'orientation': 'plus'
         }
+      ]
+    }
+  ],
+  'reference_standards': [
+    {
+      'gene_range': {
+        'accession_version': 'NG_011904.1',
+        'range': [
+          {
+            'begin': '5001',
+            'end': '11398',
+            'orientation': 'plus'
+          }
+        ]
       },
-      {
-        "proteinActivity": "upregulates, mechanism not established",
-        "regulationType": "mRNA level ",
-        "doi": "10.1073/pnas.91.2.782",
-        "pmid": "",
-        "comment": "Growth hormone-releasing factor increases somatostatin release and mRNA levels in the rat periventricular nucleus via nitric oxide by activation of guanylate cyclase.",
-        "regulatedGene": {
-          "id": "53",
-          "symbol": "SST",
-          "name": "somatostatin",
-          "ncbiId": "6750"
+      'type': 'REFSEQ_GENE'
+    }
+  ],
+  'transcripts': [
+    {
+      'accession_version': 'XM_011539866.2',
+      'name': 'transcript variant X1',
+      'length': 2372,
+      'genomic_range': {
+        'accession_version': 'NC_000010.11',
+        'range': [
+          {
+            'begin': '73909182',
+            'end': '73917497',
+            'orientation': 'plus'
+          }
+        ]
+      },
+      'exons': {
+        'accession_version': 'NC_000010.11',
+        'range': [
+          {
+            'begin': '73909182',
+            'end': '73909294',
+            'order': 1
+          },
+          {
+            'begin': '73911525',
+            'end': '73911612',
+            'order': 2
+          },
+          {
+            'begin': '73912041',
+            'end': '73912068',
+            'order': 3
+          },
+          {
+            'begin': '73912215',
+            'end': '73912322',
+            'order': 4
+          },
+          {
+            'begin': '73912924',
+            'end': '73913098',
+            'order': 5
+          },
+          {
+            'begin': '73913290',
+            'end': '73913381',
+            'order': 6
+          },
+          {
+            'begin': '73913539',
+            'end': '73913758',
+            'order': 7
+          },
+          {
+            'begin': '73913980',
+            'end': '73914128',
+            'order': 8
+          },
+          {
+            'begin': '73914776',
+            'end': '73914916',
+            'order': 9
+          },
+          {
+            'begin': '73915251',
+            'end': '73915399',
+            'order': 10
+          },
+          {
+            'begin': '73916389',
+            'end': '73917497',
+            'order': 11
+          }
+        ]
+      },
+      'cds': {
+        'accession_version': 'XM_011539866.2',
+        'range': [
+          {
+            'begin': '145',
+            'end': '1440'
+          }
+        ]
+      },
+      'genomic_locations': [
+        {
+          'genomic_accession_version': 'NC_000010.11',
+          'sequence_name': 'Chromosome 10 Reference GRCh38.p13 Primary Assembly',
+          'genomic_range': {
+            'begin': '73909182',
+            'end': '73917497',
+            'orientation': 'plus'
+          },
+          'exons': [
+            {
+              'begin': '73909182',
+              'end': '73909294',
+              'order': 1
+            },
+            {
+              'begin': '73911525',
+              'end': '73911612',
+              'order': 2
+            },
+            {
+              'begin': '73912041',
+              'end': '73912068',
+              'order': 3
+            },
+            {
+              'begin': '73912215',
+              'end': '73912322',
+              'order': 4
+            },
+            {
+              'begin': '73912924',
+              'end': '73913098',
+              'order': 5
+            },
+            {
+              'begin': '73913290',
+              'end': '73913381',
+              'order': 6
+            },
+            {
+              'begin': '73913539',
+              'end': '73913758',
+              'order': 7
+            },
+            {
+              'begin': '73913980',
+              'end': '73914128',
+              'order': 8
+            },
+            {
+              'begin': '73914776',
+              'end': '73914916',
+              'order': 9
+            },
+            {
+              'begin': '73915251',
+              'end': '73915399',
+              'order': 10
+            },
+            {
+              'begin': '73916389',
+              'end': '73917497',
+              'order': 11
+            }
+          ]
         }
-      }
-    ],
-    "additionalEvidences": [
-      {
-        "doi": "10.1126/sageke.2004.35.pe33",
-        "pmid": "",
-        "comment": "Hypophysectomy — removal of the pituitary gland — can delay many aspects of the aging process, and recent genetic studies have confirmed that reducing the secretion of pituitary hormones can increase the life span of laboratory organisms. Most strikingly, reducing activity of the insulin/insulin-like growth factor-1 signaling system substantially increases life span. Conversely, activity of the reproductive system or activation of stress responses can curtail life span. Because caloric restriction also reduces the activity of several neuroendocrine systems while increasing life span, it now appears that the aging process is driven, at least in part, by neuroendocrine activity rather than by its decline with age."
+      ],
+      'protein': {
+        'accession_version': 'XP_011538168.1',
+        'name': 'urokinase-type plasminogen activator',
+        'length': 431,
+        'isoform_name': 'isoform X1'
       },
-      {
-        "doi": "10.1210/jcem.84.10.6063",
-        "pmid": "",
-        "comment": "There is an age-dependent decrease in the endogenous hypothalamic GHRH output contributing to the age-associated GH decline."
+      'type': 'PROTEIN_CODING_MODEL'
+    },
+    {
+      'accession_version': 'NM_001145031.3',
+      'name': 'transcript variant 2',
+      'length': 2628,
+      'genomic_range': {
+        'accession_version': 'NC_000010.11',
+        'range': [
+          {
+            'begin': '73911132',
+            'end': '73917494',
+            'orientation': 'plus'
+          }
+        ]
       },
-      {
-        "doi": "10.3109/08923973.2010.510844",
-        "pmid": "",
-        "comment": "Somatotroph cells become less sensitive to GHRH with normal aging and repetitive administration of GHRH restores the attenuated response in healthy aged men. This could support the possible use of GHRH or its analogs instead of recombinant human GH in elderly patients with the advantage of preserving the endogenous pulses of GH with the secretion of the different isoforms of GH. However, concerns arise about the possible role of these molecules in tumorigenesis and tumor growth promotion."
-      }
-    ]
-  },
-  "expression": [
-    {
-      "name": "duodenum",
-      "exp_rpkm": "0.919258"
+      'exons': {
+        'accession_version': 'NC_000010.11',
+        'range': [
+          {
+            'begin': '73911132',
+            'end': '73911218',
+            'order': 1
+          },
+          {
+            'begin': '73911525',
+            'end': '73911925',
+            'order': 2
+          },
+          {
+            'begin': '73912215',
+            'end': '73912322',
+            'order': 3
+          },
+          {
+            'begin': '73912924',
+            'end': '73913098',
+            'order': 4
+          },
+          {
+            'begin': '73913290',
+            'end': '73913381',
+            'order': 5
+          },
+          {
+            'begin': '73913539',
+            'end': '73913758',
+            'order': 6
+          },
+          {
+            'begin': '73913980',
+            'end': '73914128',
+            'order': 7
+          },
+          {
+            'begin': '73914776',
+            'end': '73914916',
+            'order': 8
+          },
+          {
+            'begin': '73915251',
+            'end': '73915399',
+            'order': 9
+          },
+          {
+            'begin': '73916389',
+            'end': '73917494',
+            'order': 10
+          }
+        ]
+      },
+      'cds': {
+        'accession_version': 'NM_001145031.3',
+        'range': [
+          {
+            'begin': '455',
+            'end': '1699'
+          }
+        ]
+      },
+      'genomic_locations': [
+        {
+          'genomic_accession_version': 'NC_000010.11',
+          'sequence_name': 'Chromosome 10 Reference GRCh38.p13 Primary Assembly',
+          'genomic_range': {
+            'begin': '73911132',
+            'end': '73917494',
+            'orientation': 'plus'
+          },
+          'exons': [
+            {
+              'begin': '73911132',
+              'end': '73911218',
+              'order': 1
+            },
+            {
+              'begin': '73911525',
+              'end': '73911925',
+              'order': 2
+            },
+            {
+              'begin': '73912215',
+              'end': '73912322',
+              'order': 3
+            },
+            {
+              'begin': '73912924',
+              'end': '73913098',
+              'order': 4
+            },
+            {
+              'begin': '73913290',
+              'end': '73913381',
+              'order': 5
+            },
+            {
+              'begin': '73913539',
+              'end': '73913758',
+              'order': 6
+            },
+            {
+              'begin': '73913980',
+              'end': '73914128',
+              'order': 7
+            },
+            {
+              'begin': '73914776',
+              'end': '73914916',
+              'order': 8
+            },
+            {
+              'begin': '73915251',
+              'end': '73915399',
+              'order': 9
+            },
+            {
+              'begin': '73916389',
+              'end': '73917494',
+              'order': 10
+            }
+          ]
+        }
+      ],
+      'ensembl_transcript': 'ENST00000446342.5',
+      'protein': {
+        'accession_version': 'NP_001138503.2',
+        'name': 'urokinase-type plasminogen activator',
+        'length': 414,
+        'isoform_name': 'isoform 2',
+        'ensembl_protein': 'ENSP00000388474.1'
+      },
+      'type': 'PROTEIN_CODING'
     },
     {
-      "name": "heart",
-      "exp_rpkm": "0.512111"
+      'accession_version': 'NM_002658.6',
+      'name': 'transcript variant 1',
+      'length': 2343,
+      'genomic_range': {
+        'accession_version': 'NC_000010.11',
+        'range': [
+          {
+            'begin': '73911132',
+            'end': '73917494',
+            'orientation': 'plus'
+          }
+        ]
+      },
+      'exons': {
+        'accession_version': 'NC_000010.11',
+        'range': [
+          {
+            'begin': '73911132',
+            'end': '73911218',
+            'order': 1
+          },
+          {
+            'begin': '73911525',
+            'end': '73911612',
+            'order': 2
+          },
+          {
+            'begin': '73912041',
+            'end': '73912068',
+            'order': 3
+          },
+          {
+            'begin': '73912215',
+            'end': '73912322',
+            'order': 4
+          },
+          {
+            'begin': '73912924',
+            'end': '73913098',
+            'order': 5
+          },
+          {
+            'begin': '73913290',
+            'end': '73913381',
+            'order': 6
+          },
+          {
+            'begin': '73913539',
+            'end': '73913758',
+            'order': 7
+          },
+          {
+            'begin': '73913980',
+            'end': '73914128',
+            'order': 8
+          },
+          {
+            'begin': '73914776',
+            'end': '73914916',
+            'order': 9
+          },
+          {
+            'begin': '73915251',
+            'end': '73915399',
+            'order': 10
+          },
+          {
+            'begin': '73916389',
+            'end': '73917494',
+            'order': 11
+          }
+        ]
+      },
+      'cds': {
+        'accession_version': 'NM_002658.6',
+        'range': [
+          {
+            'begin': '119',
+            'end': '1414'
+          }
+        ]
+      },
+      'genomic_locations': [
+        {
+          'genomic_accession_version': 'NC_000010.11',
+          'sequence_name': 'Chromosome 10 Reference GRCh38.p13 Primary Assembly',
+          'genomic_range': {
+            'begin': '73911132',
+            'end': '73917494',
+            'orientation': 'plus'
+          },
+          'exons': [
+            {
+              'begin': '73911132',
+              'end': '73911218',
+              'order': 1
+            },
+            {
+              'begin': '73911525',
+              'end': '73911612',
+              'order': 2
+            },
+            {
+              'begin': '73912041',
+              'end': '73912068',
+              'order': 3
+            },
+            {
+              'begin': '73912215',
+              'end': '73912322',
+              'order': 4
+            },
+            {
+              'begin': '73912924',
+              'end': '73913098',
+              'order': 5
+            },
+            {
+              'begin': '73913290',
+              'end': '73913381',
+              'order': 6
+            },
+            {
+              'begin': '73913539',
+              'end': '73913758',
+              'order': 7
+            },
+            {
+              'begin': '73913980',
+              'end': '73914128',
+              'order': 8
+            },
+            {
+              'begin': '73914776',
+              'end': '73914916',
+              'order': 9
+            },
+            {
+              'begin': '73915251',
+              'end': '73915399',
+              'order': 10
+            },
+            {
+              'begin': '73916389',
+              'end': '73917494',
+              'order': 11
+            }
+          ]
+        }
+      ],
+      'ensembl_transcript': 'ENST00000372764.4',
+      'protein': {
+        'accession_version': 'NP_002649.2',
+        'name': 'urokinase-type plasminogen activator',
+        'length': 431,
+        'isoform_name': 'isoform 1 preproprotein',
+        'ensembl_protein': 'ENSP00000361850.3'
+      },
+      'type': 'PROTEIN_CODING'
     },
     {
-      "name": "small intestine",
-      "exp_rpkm": "0.40851"
-    },
-    {
-      "name": "stomach",
-      "exp_rpkm": "0.27474"
-    },
-    {
-      "name": "brain",
-      "exp_rpkm": "0.0735025"
-    },
-    {
-      "name": "adrenal",
-      "exp_rpkm": "0.0539611"
-    },
-    {
-      "name": "esophagus",
-      "exp_rpkm": "0.0199001"
-    },
-    {
-      "name": "testis",
-      "exp_rpkm": "0.0146671"
-    },
-    {
-      "name": "colon",
-      "exp_rpkm": "0.00674085"
+      'accession_version': 'NM_001319191.2',
+      'name': 'transcript variant 3',
+      'length': 2315,
+      'genomic_range': {
+        'accession_version': 'NC_000010.11',
+        'range': [
+          {
+            'begin': '73911132',
+            'end': '73917494',
+            'orientation': 'plus'
+          }
+        ]
+      },
+      'exons': {
+        'accession_version': 'NC_000010.11',
+        'range': [
+          {
+            'begin': '73911132',
+            'end': '73911218',
+            'order': 1
+          },
+          {
+            'begin': '73911525',
+            'end': '73911612',
+            'order': 2
+          },
+          {
+            'begin': '73912215',
+            'end': '73912322',
+            'order': 3
+          },
+          {
+            'begin': '73912924',
+            'end': '73913098',
+            'order': 4
+          },
+          {
+            'begin': '73913290',
+            'end': '73913381',
+            'order': 5
+          },
+          {
+            'begin': '73913539',
+            'end': '73913758',
+            'order': 6
+          },
+          {
+            'begin': '73913980',
+            'end': '73914128',
+            'order': 7
+          },
+          {
+            'begin': '73914776',
+            'end': '73914916',
+            'order': 8
+          },
+          {
+            'begin': '73915251',
+            'end': '73915399',
+            'order': 9
+          },
+          {
+            'begin': '73916389',
+            'end': '73917494',
+            'order': 10
+          }
+        ]
+      },
+      'cds': {
+        'accession_version': 'NM_001319191.2',
+        'range': [
+          {
+            'begin': '349',
+            'end': '1386'
+          }
+        ]
+      },
+      'genomic_locations': [
+        {
+          'genomic_accession_version': 'NC_000010.11',
+          'sequence_name': 'Chromosome 10 Reference GRCh38.p13 Primary Assembly',
+          'genomic_range': {
+            'begin': '73911132',
+            'end': '73917494',
+            'orientation': 'plus'
+          },
+          'exons': [
+            {
+              'begin': '73911132',
+              'end': '73911218',
+              'order': 1
+            },
+            {
+              'begin': '73911525',
+              'end': '73911612',
+              'order': 2
+            },
+            {
+              'begin': '73912215',
+              'end': '73912322',
+              'order': 3
+            },
+            {
+              'begin': '73912924',
+              'end': '73913098',
+              'order': 4
+            },
+            {
+              'begin': '73913290',
+              'end': '73913381',
+              'order': 5
+            },
+            {
+              'begin': '73913539',
+              'end': '73913758',
+              'order': 6
+            },
+            {
+              'begin': '73913980',
+              'end': '73914128',
+              'order': 7
+            },
+            {
+              'begin': '73914776',
+              'end': '73914916',
+              'order': 8
+            },
+            {
+              'begin': '73915251',
+              'end': '73915399',
+              'order': 9
+            },
+            {
+              'begin': '73916389',
+              'end': '73917494',
+              'order': 10
+            }
+          ]
+        }
+      ],
+      'protein': {
+        'accession_version': 'NP_001306120.2',
+        'name': 'urokinase-type plasminogen activator',
+        'length': 345,
+        'isoform_name': 'isoform 3'
+      },
+      'type': 'PROTEIN_CODING'
     }
   ],
-  "proteinClasses": [
-    {
-      "id": 80,
-      "name": "Предсказанные секретируемые белки"
-    }
+  'common_name': 'human',
+  'chromosomes': [
+    '10'
   ],
-  "expressionChange": 3,
-  "band": "20q11.2",
-  "locationStart": "37251086",
-  "locationEnd": "37256896",
-  "orientation": "-1",
-  "accPromoter": "HS_GHRH",
-  "accOrf": "NM_021081",
-  "accCds": "NP_066567",
-  "terms": {
-    "biological_process": [
-      {
-        "GO:0007186": "G protein-coupled receptor signaling pathway"
-      },
-      {
-        "GO:0007189": "adenylate cyclase-activating G protein-coupled receptor signaling pathway"
-      },
-      {
-        "GO:0007267": "cell-cell signaling"
-      },
-      {
-        "GO:0008284": "positive regulation of cell population proliferation"
-      },
-      {
-        "GO:0021984": "adenohypophysis development"
-      },
-      {
-        "GO:0030252": "growth hormone secretion"
-      },
-      {
-        "GO:0032094": "response to food"
-      },
-      {
-        "GO:0040018": "positive regulation of multicellular organism growth"
-      },
-      {
-        "GO:0043568": "positive regulation of insulin-like growth factor receptor signaling pathway"
-      },
-      {
-        "GO:0046005": "positive regulation of circadian sleep/wake cycle, REM sleep"
-      },
-      {
-        "GO:0060124": "positive regulation of growth hormone secretion"
-      },
-      {
-        "GO:0007186": "G protein-coupled receptor signaling pathway"
-      },
-      {
-        "GO:0007189": "adenylate cyclase-activating G protein-coupled receptor signaling pathway"
-      },
-      {
-        "GO:0007267": "cell-cell signaling"
-      },
-      {
-        "GO:0008284": "positive regulation of cell population proliferation"
-      },
-      {
-        "GO:0021984": "adenohypophysis development"
-      },
-      {
-        "GO:0030252": "growth hormone secretion"
-      },
-      {
-        "GO:0032094": "response to food"
-      },
-      {
-        "GO:0040018": "positive regulation of multicellular organism growth"
-      },
-      {
-        "GO:0043568": "positive regulation of insulin-like growth factor receptor signaling pathway"
-      },
-      {
-        "GO:0046005": "positive regulation of circadian sleep/wake cycle, REM sleep"
-      },
-      {
-        "GO:0060124": "positive regulation of growth hormone secretion"
-      },
-      {
-        "GO:0040018": "positive regulation of multicellular organism growth"
-      },
-      {
-        "GO:0002862": "negative regulation of inflammatory response to antigenic stimulus"
-      }
-    ],
-    "cellular_component": [
-      {
-        "GO:0005576": "extracellular region"
-      },
-      {
-        "GO:0005615": "extracellular space"
-      },
-      {
-        "GO:0043195": "terminal bouton"
-      },
-      {
-        "GO:0043204": "perikaryon"
-      },
-      {
-        "GO:0043005": "neuron projection"
-      },
-      {
-        "GO:0005576": "extracellular region"
-      },
-      {
-        "GO:0005615": "extracellular space"
-      },
-      {
-        "GO:0043195": "terminal bouton"
-      },
-      {
-        "GO:0043204": "perikaryon"
-      },
-      {
-        "GO:0043005": "neuron projection"
-      },
-      {
-        "GO:0005576": "extracellular region"
-      },
-      {
-        "GO:0005615": "extracellular space"
-      }
-    ],
-    "molecular_activity": [
-      {
-        "GO:0016608": "growth hormone-releasing hormone activity"
-      },
-      {
-        "GO:0031770": "growth hormone-releasing hormone receptor binding"
-      },
-      {
-        "GO:0005184": "neuropeptide hormone activity"
-      },
-      {
-        "GO:0051428": "peptide hormone receptor binding"
-      },
-      {
-        "GO:0016608": "growth hormone-releasing hormone activity"
-      },
-      {
-        "GO:0031770": "growth hormone-releasing hormone receptor binding"
-      },
-      {
-        "GO:0005184": "neuropeptide hormone activity"
-      },
-      {
-        "GO:0051428": "peptide hormone receptor binding"
-      }
-    ]
+  'nomenclature_authority': {
+    'authority': 'HGNC',
+    'identifier': 'HGNC:9052'
   },
-  "orthologs": {
-    "Mus musculus": "Ghrh",
-    "Rattus norvegicus": "Ghrh",
-    "Danio rerio": "ghrh",
-    "": ""
-  },
-  "ortholog": [
-    {
-      "id": "46",
-      "symbol": "GHRH",
-      "species": null,
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "47",
-      "symbol": "GHRH",
-      "species": "свиньи",
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "48",
-      "symbol": "GHRH",
-      "species": null,
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "49",
-      "symbol": "GHRH",
-      "species": null,
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "50",
-      "symbol": "GHRH",
-      "species": null,
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "51",
-      "symbol": "GHRH",
-      "species": null,
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "52",
-      "symbol": "GHRH",
-      "species": null,
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "53",
-      "symbol": "GHRH",
-      "species": null,
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "54",
-      "symbol": "GHRH",
-      "species": "кошка",
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "55",
-      "symbol": "GHRH",
-      "species": null,
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "56",
-      "symbol": "Ghrh",
-      "species": "голый землекоп",
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "57",
-      "symbol": "Ghrh",
-      "species": "хомяки",
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "58",
-      "symbol": "GHRH",
-      "species": "макака-крабоед",
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "59",
-      "symbol": "GHRH",
-      "species": "коза",
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "60",
-      "symbol": "GHRH",
-      "species": "буйвол",
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "61",
-      "symbol": "GHRH",
-      "species": null,
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "62",
-      "symbol": "GHRH",
-      "species": null,
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "63",
-      "symbol": "GHRH",
-      "species": "кролики",
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "64",
-      "symbol": "GHRH",
-      "species": null,
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "65",
-      "symbol": "GHRH",
-      "species": null,
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "66",
-      "symbol": "GHRH",
-      "species": null,
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "67",
-      "symbol": "GHRH",
-      "species": null,
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "68",
-      "symbol": "GHRH",
-      "species": null,
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "69",
-      "symbol": "GHRH",
-      "species": null,
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "70",
-      "symbol": "GHRH",
-      "species": null,
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "71",
-      "symbol": "GHRH",
-      "species": null,
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "72",
-      "symbol": "ghrh",
-      "species": "рыба Nothobranchius furzeri",
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "73",
-      "symbol": "GHRH",
-      "species": null,
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "74",
-      "symbol": "GHRH",
-      "species": null,
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "75",
-      "symbol": "Ghrh",
-      "species": "песчанка",
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "76",
-      "symbol": "GHRH",
-      "species": null,
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "77",
-      "symbol": "GHRH",
-      "species": "лошадь",
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "78",
-      "symbol": "GHRH",
-      "species": null,
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "79",
-      "symbol": "GHRH",
-      "species": null,
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "80",
-      "symbol": "GHRH",
-      "species": null,
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "81",
-      "symbol": "GHRH",
-      "species": null,
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "82",
-      "symbol": "GHRH",
-      "species": null,
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "83",
-      "symbol": "Ghrh",
-      "species": "мыши",
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "84",
-      "symbol": "GHRH",
-      "species": "культура тканей человека",
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "85",
-      "symbol": "GHRH",
-      "species": "корова",
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "86",
-      "symbol": "Ghrh",
-      "species": "крысы",
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "87",
-      "symbol": "GHRH",
-      "species": null,
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "88",
-      "symbol": "GHRH",
-      "species": "собака",
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "89",
-      "symbol": "GHRH",
-      "species": "макаки резус",
-      "externalBaseName": null,
-      "externalBaseId": null
-    },
-    {
-      "id": "90",
-      "symbol": "ghrh",
-      "species": "Данио-рерио",
-      "externalBaseName": null,
-      "externalBaseId": null
-    }
+  'swiss_prot_accessions': [
+    'P00749'
   ],
-  "timestamp": {
-    "changed": "1638371734",
-    "created": null
-  },
-  "humanProteinAtlas": {
-    "Gene": "GHRH",
-    "GeneSynonym": [
-      "GHRF"
-    ],
-    "Ensembl": "ENSG00000118702",
-    "GeneDescription": "Growth hormone releasing hormone",
-    "Uniprot": [
-      "P01286"
-    ],
-    "Chromosome": "20",
-    "Position": "37251082-37261835",
-    "ProteinClass": [
-      "Predicted secreted proteins"
-    ],
-    "BiologicalProcess": null,
-    "MolecularFunction": null,
-    "DiseaseInvolvement": null,
-    "Evidence": "Evidence at protein level",
-    "HPAEvidence": "Evidence at transcript level",
-    "UniProtEvidence": "Evidence at protein level",
-    "NeXtProtEvidence": "Evidence at protein level",
-    "MSEvidence": null,
-    "RNATissueSpecificity": "Tissue enriched",
-    "RNATissueDistribution": "Detected in some",
-    "RNATissueSpecificityScore": "5",
-    "RNATissueSpecificNX": {
-      "Brain": "37.3"
-    },
-    "RNACellLineSpecificity": "Group enriched",
-    "RNACellLineDistribution": "Detected in some",
-    "RNACellLineSpecificityScore": "7",
-    "RNACellLineSpecificNX": {
-      "NTERA2": "3.5",
-      "U26684": "12.4"
-    },
-    "RNACancerSpecificity": "Cancer enriched",
-    "RNACancerDistribution": "Detected in some",
-    "RNACancerSpecificityScore": "7",
-    "RNACancerSpecificFPKM": {
-      "UrothelialCancer": "8.5"
-    },
-    "RNABrainRegionalSpecificity": "Region enriched",
-    "RNABrainRegionalDistribution": "Detected in some",
-    "RNABrainRegionalSpecificityScore": "15",
-    "RNABrainRegionalSpecificNX": {
-      "Hypothalamus": "37.3"
-    },
-    "RNABloodCellSpecificity": "Cell type enhanced",
-    "RNABloodCellDistribution": "Detected in single",
-    "RNABloodCellSpecificityScore": null,
-    "RNABloodCellSpecificNX": {
-      "Eosinophil": "2.7"
-    },
-    "RNABloodLineageSpecificity": "Low lineage specificity",
-    "RNABloodLineageDistribution": "Detected in single",
-    "RNABloodLineageSpecificityScore": null,
-    "RNABloodLineageSpecificNX": null,
-    "RNAMouseBrainRegionalSpecificity": "Region enriched",
-    "RNAMouseBrainRegionalDistribution": "Detected in some",
-    "RNAMouseBrainRegionalSpecificityScore": "9",
-    "RNAMouseBrainRegionalSpecificPTPM": {
-      "Hypothalamus": "38.7"
-    },
-    "RNAPigBrainRegionalSpecificity": "Low region specificity",
-    "RNAPigBrainRegionalDistribution": "Detected in many",
-    "RNAPigBrainRegionalSpecificityScore": null,
-    "RNAPigBrainRegionalSpecificPTPM": null,
-    "Antibody": null,
-    "ReliabilityIH": null,
-    "ReliabilityMouseBrain": null,
-    "ReliabilityIF": null,
-    "SubcellularLocation": null,
-    "SecretomeLocation": "Secreted in other tissues",
-    "BloodConcentrationConcBloodIMPgL": null,
-    "BloodConcentrationConcBloodMSPgL": null,
-    "SubcellularMainLocation": null,
-    "SubcellularAdditionalLocation": null,
-    "AntibodyRRID": null,
-    "PathologyPrognosticsBreastCancer": {
-      "PrognosticType": "favourable",
-      "IsPrognostic": false,
-      "PVal": "4.78e-2"
-    },
-    "PathologyPrognosticsCervicalCancer": null,
-    "PathologyPrognosticsColorectalCancer": null,
-    "PathologyPrognosticsEndometrialCancer": null,
-    "PathologyPrognosticsGlioma": {
-      "PrognosticType": "favourable",
-      "IsPrognostic": false,
-      "PVal": "2.57e-2"
-    },
-    "PathologyPrognosticsHeadAndNeckCancer": null,
-    "PathologyPrognosticsLiverCancer": null,
-    "PathologyPrognosticsLungCancer": null,
-    "PathologyPrognosticsMelanoma": null,
-    "PathologyPrognosticsOvarianCancer": null,
-    "PathologyPrognosticsPancreaticCancer": null,
-    "PathologyPrognosticsProstateCancer": null,
-    "PathologyPrognosticsRenalCancer": null,
-    "PathologyPrognosticsStomachCancer": {
-      "PrognosticType": "favourable",
-      "IsPrognostic": false,
-      "PVal": "1.58e-1"
-    },
-    "PathologyPrognosticsTestisCancer": {
-      "PrognosticType": "unfavourable",
-      "IsPrognostic": false,
-      "PVal": "3.10e-1"
-    },
-    "PathologyPrognosticsThyroidCancer": null,
-    "PathologyPrognosticsUrothelialCancer": null,
-    "TissueRNAAdiposeTissueNX": "0.1",
-    "TissueRNAAdrenalGlandNX": "2.7",
-    "TissueRNAAmygdalaNX": "0.3",
-    "TissueRNAAppendixNX": "0.1",
-    "TissueRNABasalGangliaNX": "2.4",
-    "TissueRNABoneMarrowNX": "0.0",
-    "TissueRNABreastNX": "0.6",
-    "TissueRNACerebellumNX": "0.1",
-    "TissueRNACerebralCortexNX": "1.0",
-    "TissueRNACervixUterineNX": "0.1",
-    "TissueRNAColonNX": "4.0",
-    "TissueRNACorpusCallosumNX": "0.1",
-    "TissueRNADuctusDeferensNX": "0.1",
-    "TissueRNADuodenumNX": "8.1",
-    "TissueRNAEndometrium1NX": "0.1",
-    "TissueRNAEpididymisNX": "0.1",
-    "TissueRNAEsophagusNX": "0.7",
-    "TissueRNAFallopianTubeNX": "0.0",
-    "TissueRNAGallbladderNX": "0.1",
-    "TissueRNAHeartMuscleNX": "6.5",
-    "TissueRNAHippocampalFormationNX": "0.1",
-    "TissueRNAHypothalamusNX": "37.3",
-    "TissueRNAKidneyNX": "0.1",
-    "TissueRNALiverNX": "0.1",
-    "TissueRNALungNX": "0.1",
-    "TissueRNALymphNodeNX": "0.1",
-    "TissueRNAMidbrainNX": "0.1",
-    "TissueRNAOlfactoryRegionNX": "0.8",
-    "TissueRNAOvaryNX": "0.1",
-    "TissueRNAPancreasNX": "0.1",
-    "TissueRNAParathyroidGlandNX": "0.0",
-    "TissueRNAPituitaryGlandNX": "0.1",
-    "TissueRNAPlacentaNX": "0.1",
-    "TissueRNAPonsAndMedullaNX": "0.1",
-    "TissueRNAProstateNX": "0.1",
-    "TissueRNARectumNX": "0.1",
-    "TissueRNARetinaNX": "0.1",
-    "TissueRNASalivaryGlandNX": "0.1",
-    "TissueRNASeminalVesicleNX": "0.1",
-    "TissueRNASkeletalMuscleNX": "0.2",
-    "TissueRNASkin1NX": "0.0",
-    "TissueRNASmallIntestineNX": "7.7",
-    "TissueRNASmoothMuscleNX": "0.1",
-    "TissueRNASpinalCordNX": "0.1",
-    "TissueRNASpleenNX": "0.1",
-    "TissueRNAStomach1NX": "1.9",
-    "TissueRNATestisNX": "0.1",
-    "TissueRNAThalamusNX": "0.1",
-    "TissueRNAThymusNX": "7.5",
-    "TissueRNAThyroidGlandNX": "0.4",
-    "TissueRNATongueNX": "0.1",
-    "TissueRNATonsilNX": "0.1",
-    "TissueRNAUrinaryBladderNX": "0.1",
-    "TissueRNAVaginaNX": "0.1",
-    "TissueRNABCellsNX": "0.0",
-    "TissueRNADendriticCellsNX": "0.7",
-    "TissueRNAGranulocytesNX": "2.7",
-    "TissueRNAMonocytesNX": "0.6",
-    "TissueRNANKCellsNX": "0.0",
-    "TissueRNATCellsNX": "0.0",
-    "TissueRNATotalPBMCNX": "0.0",
-    "CellRNAA431NX": "0.0",
-    "CellRNAA549NX": "0.0",
-    "CellRNAAF22NX": "0.7",
-    "CellRNAAN3CANX": "0.0",
-    "CellRNAASCDiffNX": "0.0",
-    "CellRNAASCTERT1NX": "0.0",
-    "CellRNABEWONX": "0.7",
-    "CellRNABJNX": "0.0",
-    "CellRNABJHTERT+NX": "0.0",
-    "CellRNABJHTERT+SV40LargeT+NX": "0.0",
-    "CellRNABJHTERT+SV40LargeT+RasG12VNX": "0.0",
-    "CellRNACACO2NX": "0.9",
-    "CellRNACAPAN2NX": "0.0",
-    "CellRNADaudiNX": "0.0",
-    "CellRNAEFO21NX": "0.0",
-    "CellRNAFHDFTERT166NX": "0.0",
-    "CellRNAHaCaTNX": "0.0",
-    "CellRNAHAP1NX": "0.0",
-    "CellRNAHBEC3KTNX": "0.0",
-    "CellRNAHBFTERT88NX": "0.0",
-    "CellRNAHDLM2NX": "0.0",
-    "CellRNAHEK293NX": "0.0",
-    "CellRNAHELNX": "0.4",
-    "CellRNAHeLaNX": "0.0",
-    "CellRNAHepG2NX": "0.0",
-    "CellRNAHHSteCNX": "0.0",
-    "CellRNAHL60NX": "0.0",
-    "CellRNAHMC1NX": "0.2",
-    "CellRNAHSkMCNX": "0.0",
-    "CellRNAHTCEpiNX": "0.0",
-    "CellRNAHTECSVTERT24BNX": "0.0",
-    "CellRNAHTERTHME1NX": "0.0",
-    "CellRNAHUVECTERT2NX": "0.0",
-    "CellRNAK562NX": "0.0",
-    "CellRNAKarpas707NX": "0.3",
-    "CellRNALHCNM2NX": "0.0",
-    "CellRNAMCF7NX": "0.0",
-    "CellRNAMOLT4NX": "0.0",
-    "CellRNANB4NX": "0.0",
-    "CellRNANTERA2NX": "3.5",
-    "CellRNAPC3NX": "0.0",
-    "CellRNAREHNX": "0.1",
-    "CellRNARH30NX": "0.1",
-    "CellRNARPMI8226NX": "0.0",
-    "CellRNARPTECTERT1NX": "0.0",
-    "CellRNART4NX": "0.0",
-    "CellRNASCLC21HNX": "1.2",
-    "CellRNASHSY5YNX": "0.0",
-    "CellRNASiHaNX": "0.0",
-    "CellRNASKBR3NX": "0.2",
-    "CellRNASKMEL30NX": "0.0",
-    "CellRNAT47dNX": "0.0",
-    "CellRNATHP1NX": "0.0",
-    "CellRNATIMENX": "0.0",
-    "CellRNAU138MGNX": "0.0",
-    "CellRNAU2OSNX": "0.0",
-    "CellRNAU2197NX": "0.0",
-    "CellRNAU251MGNX": "0.1",
-    "CellRNAU26670NX": "0.0",
-    "CellRNAU26684NX": "12.4",
-    "CellRNAU698NX": "0.0",
-    "CellRNAU87MGNX": "0.0",
-    "CellRNAU937NX": "0.0",
-    "CellRNAWM115NX": "0.0",
-    "BloodRNABasophilNX": "0.0",
-    "BloodRNAClassicalMonocyteNX": "0.6",
-    "BloodRNAEosinophilNX": "2.7",
-    "BloodRNAGdTCellNX": "0.0",
-    "BloodRNAIntermediateMonocyteNX": "0.0",
-    "BloodRNAMAITTCellNX": "0.0",
-    "BloodRNAMemoryBCellNX": "0.0",
-    "BloodRNAMemoryCD4TCellNX": "0.0",
-    "BloodRNAMemoryCD8TCellNX": "0.0",
-    "BloodRNAMyeloidDCNX": "0.7",
-    "BloodRNANaiveBCellNX": "0.0",
-    "BloodRNANaiveCD4TCellNX": "0.0",
-    "BloodRNANaiveCD8TCellNX": "0.0",
-    "BloodRNANeutrophilNX": "0.0",
-    "BloodRNANKCellNX": "0.0",
-    "BloodRNANonClassicalMonocyteNX": "0.0",
-    "BloodRNAPlasmacytoidDCNX": "0.0",
-    "BloodRNATRegNX": "0.0",
-    "BloodRNATotalPBMCNX": "0.0",
-    "BrainRNAAmygdalaNX": "0.3",
-    "BrainRNABasalGangliaNX": "2.4",
-    "BrainRNACerebellumNX": "0.1",
-    "BrainRNACerebralCortexNX": "1.0",
-    "BrainRNAHippocampalFormationNX": "0.1",
-    "BrainRNAHypothalamusNX": "37.3",
-    "BrainRNAMidbrainNX": "0.1",
-    "BrainRNAOlfactoryRegionNX": "0.8",
-    "BrainRNAPonsAndMedullaNX": "0.1",
-    "BrainRNAThalamusNX": "0.1"
-  },
-  "ensembl": "ENSG00000118702",
-  "methylationCorrelation": "",
-  "agingMechanisms": [
-    {
-      "id": 16,
-      "name": "дисрегуляция молекулярного пути INS/IGF-1"
-    },
-    {
-      "id": 22,
-      "name": "нарушения межклеточного взаимодействия"
-    }
+  'ensembl_gene_ids': [
+    'ENSG00000122861'
   ],
-  "source": [
-    "GeneAge"
+  'omim_ids': [
+    '191840'
+  ],
+  'synonyms': [
+    'ATF',
+    'QPD',
+    'UPA',
+    'URK',
+    'u-PA',
+    'BDPLT5'
+  ],
+  'annotations': [
+    {
+      'release_name': 'NCBI Homo sapiens Updated Annotation Release 109.20211119',
+      'release_date': '2021-11-19',
+      'assemblies_in_scope': [
+        {
+          'accession': 'GCF_000001405.39',
+          'name': 'GRCh38.p13'
+        }
+      ]
+    }
   ]
 }

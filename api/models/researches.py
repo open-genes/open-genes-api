@@ -222,6 +222,8 @@ left join statistical_significance as ssmedian on ssmedian.id = general_lifespan
 left join statistical_significance as ssmax on ssmax.id = general_lifespan_experiment.lifespan_max_change_stat_sign_id
 """
 
+
+
 class GeneAssociatedWithProgeriaSyndrome(BaseModel):
     progeriaSyndrome:str
     doi:None|str
@@ -598,5 +600,29 @@ join gene_regulation_type on gene_regulation_type.id = protein_to_gene.regulatio
 
 class GeneRegulationResearchedOutput(PaginatedOutput):
     items:List[GeneRegulationResearched]
+
+#
+class AssociationWithAcceleratedAgingResearched(GeneAssociatedWithProgeriaSyndrome):
+    geneId:int
+    geneNcbiId:int|None
+    geneName:str|None
+    geneSymbol:str|None
+    geneAliases:List[str]
+    _select=GeneAssociatedWithProgeriaSyndrome._select|{
+        'geneId':'gene.id',
+        'geneSymbol':'gene.symbol',
+        'geneNcbiId':'gene.ncbi_id',
+        'geneName':'gene.name',
+        'geneAliases':'gene.aliases',
+    }
+    _name='geneAssociatedWithProgeriaSyndrome'
+    _from="""
+from gene_to_progeria
+join gene on gene_to_progeria.gene_id=gene.id
+join progeria_syndrome on progeria_syndrome.id=gene_to_progeria.progeria_syndrome_id
+"""
+
+class AssociationWithAcceleratedAgingResearchedOutput(PaginatedOutput):
+    items:List[AssociationWithAcceleratedAgingResearched]
 
 #

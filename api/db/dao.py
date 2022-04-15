@@ -21,7 +21,6 @@ class BaseDAO:
         )
 
     def fetch_all(self,query,params=[],consume=None):
-        print(query)
         cur = self.cnx.cursor(dictionary=True)
         cur.execute(query,params)
         if not consume: return cur.fetchall()
@@ -380,7 +379,7 @@ class GeneDAO(BaseDAO):
         return cur.fetchone()
 
 
-from models.gene import IncreaseLifespanSearched,AgeRelatedChangeOfGeneResearched,GeneActivityChangeImpactResearched,GeneRegulationResearched
+from models.gene import IncreaseLifespanSearched,AgeRelatedChangeOfGeneResearched,GeneActivityChangeImpactResearched,GeneRegulationResearched, AssociationWithAcceleratedAgingResearched
 
 class ResearchesDAO(BaseDAO):
     def increase_lifespan_search(self,input):
@@ -435,6 +434,22 @@ class ResearchesDAO(BaseDAO):
         GeneRegulationResearched.__fields__['geneAliases'].outer_type_=str
 
         tables=self.prepare_tables(GeneRegulationResearched)
+        query,params,meta=self.prepare_query(tables,input)
+
+        def fixer(r):
+            r['geneAliases']=[a for a in r['geneAliases'].split(' ') if a]
+            return r
+
+        re=self.read_query(query,params,tables,process=fixer)
+
+        meta.update(re.pop(0))
+
+        return {'options':{'objTotal':meta['row_count'],'total':meta.get('total_count'),"pagination":{"page":meta['page'],"pageSize":meta['pageSize'],"pagesTotal":meta['row_count']//meta['pageSize'] + (meta['row_count']%meta['pageSize']!=0)}},'items':re}
+
+    def association_with_accelerated_aging(self,input):
+        AssociationWithAcceleratedAgingResearched.__fields__['geneAliases'].outer_type_=str
+
+        tables=self.prepare_tables(AssociationWithAcceleratedAgingResearched)
         query,params,meta=self.prepare_query(tables,input)
 
         def fixer(r):

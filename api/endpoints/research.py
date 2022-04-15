@@ -6,7 +6,8 @@ from models.gene import GeneSearchInput
 
 from db.dao import ResearchesDAO
 from models.researches import IncreaseLifespanSearchInput, IncreaseLifespanSearchOutput, \
-    AgeRelatedChangeOfGeneResearchOutput, GeneActivityChangeImpactResearchedOutput, GeneRegulationResearchedOutput
+    AgeRelatedChangeOfGeneResearchOutput, GeneActivityChangeImpactResearchedOutput, GeneRegulationResearchedOutput,AssociationWithAcceleratedAgingResearchedOutput
+
 
 router = APIRouter()
 
@@ -40,3 +41,10 @@ async def gene_activity_change_impact(input: GeneSearchInput = Depends(GeneSearc
 )
 async def gene_regulation(input: GeneSearchInput = Depends(GeneSearchInput)) -> List:
     return ResearchesDAO().gene_regulation(input)
+
+@router.get(
+    '/research/association-with-accelerated-aging',
+    response_model=AssociationWithAcceleratedAgingResearchedOutput
+)
+async def association_with_accelerated_aging(input: GeneSearchInput = Depends(GeneSearchInput)) -> List:
+    return ResearchesDAO().association_with_accelerated_aging(input)
