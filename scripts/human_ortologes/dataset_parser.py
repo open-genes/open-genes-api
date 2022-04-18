@@ -39,24 +39,35 @@ def parser():
                 continue
             if len(gene.json()['hits']) > 0:
                 gene_answer = gene.json()['hits'][0]
-                gene = Gene(
-                    isHidden=1,
-                    symbol=gene_answer['symbol'],
-                    name=gene_answer['name'],
-                    created_at=time.time(),
-                    updated_at=time.time(),
-                )
-                if 'alias' in gene_answer:
-                    if type(gene_answer['alias']) == list:
-                        gene.aliases = ','.join(gene_answer['alias'])
-                    else:
-                        gene.aliases = gene_answer['alias']
-                if 'summary' in gene_answer:
-                    gene.ncbi_summary_en = gene_answer['summary']
-                if 'entrezgene' in gene_answer:
-                    gene.ncbi_id = gene_answer['entrezgene']
-                gene_symbol = gene.symbol
-                gene_id = dao.GeneDAO().add(gene=gene)['id']
+                gene_second_db = dao.GeneDAO().get_by_symbol(gene=gene_answer['symbol'])
+                if not gene_second_db:
+                    print(f"Not Found {gene_answer['symbol']}")
+                    gene = Gene(
+                        isHidden=1,
+                        symbol=gene_answer['symbol'],
+                        name=gene_answer['name'],
+                        created_at=time.time(),
+                        updated_at=time.time(),
+
+                    )
+                    if 'alias' in gene_answer:
+                        if type(gene_answer['alias']) == list:
+                            gene.aliases = ','.join(gene_answer['alias'])
+                        else:
+                            gene.aliases = gene_answer['alias']
+                    if 'summary' in gene_answer:
+                        gene.ncbi_summary_en = gene_answer['summary']
+                    if 'entrezgene' in gene_answer:
+                        gene.ncbi_id = gene_answer['entrezgene']
+                    gene_symbol = gene.symbol
+                    try:
+                        gene_id = dao.GeneDAO().add(gene=gene)['id']
+                    except Exception:
+                        continue
+                else:
+                    gene_db = gene_second_db
+                    gene_id = gene_db['id']
+                    gene_symbol = gene_db['symbol']
             else:
                 continue
         gene_to_source = GeneToSource(
@@ -96,10 +107,12 @@ def parser():
             tissue_id = result['id']
         if len(row['isoform']) > 0:
             try:
-                isoform_id = calorie_dao.get_isoform(name=row['isoform'])['id'],
-            except TypeError:
-                result = calorie_dao.add_isoform(name=row['isoform'])
-                isoform_id = result['id']
+                isoform_id = calorie_dao.get_isoform(name=row['isoform'])['id']
+            except Exception:
+                try:
+                    result = calorie_dao.add_isoform(name=row['isoform'])
+                except Exception:
+                    isoform_id = result['id']
         else:
             isoform_id = None
         calory_restriction_object = CalorieRestrictionExperiment(
