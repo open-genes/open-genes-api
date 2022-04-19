@@ -278,7 +278,7 @@ class AgeRelatedChangeOfGene(BaseModel):
     organismLine:str|None
     value:None|str
     pValue:None|float
-    measurementType:None|str
+    measurementMethod:None|str
     doi:None|str
     pmid:None|str
     meanAgeOfControls:None|float
@@ -289,7 +289,6 @@ class AgeRelatedChangeOfGene(BaseModel):
     maxAgeOfExperiment:None|float
     ageUnit:None|str
     expressionEvaluationBy:None|str
-    measurementType:None|str
     statisticalMethod:None|str
     controlCohortSize:None|float
     experimentCohortSize:None|float
@@ -315,7 +314,7 @@ class AgeRelatedChangeOfGene(BaseModel):
         'experimentCohortSize':'age_related_change.n_of_experiment',
         'pValue':'age_related_change.p_value',
         'expressionEvaluationBy':'expression_evaluation.name_@LANG@',
-        'measurementType':'measurement_type.name_@LANG@',
+        'measurementMethod':'measurement_method.name_@LANG@',
         'statisticalMethod':'statistical_method.name_@LANG@',
         'sex':'organism_sex.name_@LANG@',
     }
@@ -328,7 +327,7 @@ left join model_organism as age_related_change_model_organism on age_related_cha
 left join organism_line as age_related_change_organism_line on age_related_change_organism_line.id = age_related_change.organism_line_id
 left join time_unit age_related_change_time_unit on age_related_change_time_unit.id = age_related_change.age_unit_id
 left join expression_evaluation on age_related_change.expression_evaluation_by_id = expression_evaluation.id
-left join measurement_type on age_related_change.measurement_type_id = measurement_type.id
+left join measurement_method on age_related_change.measurement_method_id = measurement_method.id
 left join statistical_method on age_related_change.statistical_method_id = statistical_method.id
 left join organism_sex on age_related_change.sex = organism_sex.id
 """
@@ -533,7 +532,7 @@ left join model_organism as age_related_change_model_organism on age_related_cha
 left join organism_line as age_related_change_organism_line on age_related_change_organism_line.id = age_related_change.organism_line_id
 left join time_unit age_related_change_time_unit on age_related_change_time_unit.id = age_related_change.age_unit_id
 left join expression_evaluation on age_related_change.expression_evaluation_by_id = expression_evaluation.id
-left join measurement_type on age_related_change.measurement_type_id = measurement_type.id
+left join measurement_method on age_related_change.measurement_method_id = measurement_method.id
 left join statistical_method on age_related_change.statistical_method_id = statistical_method.id
 left join organism_sex on age_related_change.sex = organism_sex.id
 """

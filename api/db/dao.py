@@ -198,7 +198,7 @@ def gene_common_fixer(r):
 
 def age_related_changes_fixer(r):
     r['value'] = str(r['value']) + '%' if r['value'] else r['value']
-    r['measurementType']={'1en':'mRNA','2en':'protein','1ru':'мРНК','2ru':'белок'}.get(r['measurementType'])
+    r['measurementMethod']={'1en':'mRNA','2en':'protein','1ru':'мРНК','2ru':'белок'}.get(r['measurementMethod'])
     return r
 
 class GeneDAO(BaseDAO):

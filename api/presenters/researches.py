@@ -42,7 +42,7 @@ class AgeRelatedChangesOfGene:
     valueForMale: str = Field(title="Values in percentage increase or decrease of expression levels for males")
     valueForFemale: str = Field(title="Values in percentage increase or decrease of expression levels for females")
     valueForAll: str = Field(title="Values in percentage increase or decrease of expression levels for both groups")
-    measurementType: str = Field(title="A measurement unit for an age of model organisms")
+    measurementMethod: str = Field(title="A measurement unit for an age of model organisms")
     doi: str = Field(title="Publication id in DOI format")
     pmid: str = Field(title="Publication id in PMC/PMID format")
     comment: str = Field(title="Additional description")
