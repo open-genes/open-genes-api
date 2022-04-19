@@ -7,9 +7,9 @@ class CalorieRestrictionExperiment(BaseModel):
     id: int|None
     lexpressionChangeLogFc: float
     pValue: str
-    crResult: str
+    result: str
     measurementMethod: str
-    expressionEvaluation: str
+    expressionEvaluationBy: str
     restrictionPercent: int
     duration: int
     durationUnit: str
@@ -31,7 +31,7 @@ class CalorieRestrictionExperiment(BaseModel):
         'pValue': "p_val",
         'result': "COALESCE(calorie_restriction_experiment.result_@LANG@,calorie_restriction_experiment.result_en)",
         'measurementMethod': "measurement_method.name_@LANG@",
-        'expressionEvaluation': "expression_evaluation.name_@LANG@",
+        'expressionEvaluationBy': "expression_evaluation.name_@LANG@",
         'restrictionPercent': "restriction_percent",
         'duration': "restriction_time",
         'durationUnit': "time_unit.name_@LANG@",
