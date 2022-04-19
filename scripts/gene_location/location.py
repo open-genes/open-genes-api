@@ -69,7 +69,7 @@ class Worker:
             return
 
         print(ncbi_result)
-        genomic_ranges = n cbi_result['genomic_ranges']
+        genomic_ranges = ncbi_result['genomic_ranges']
         if len(genomic_ranges) > 0:
             first_genomic_range = genomic_ranges[0]
             range = first_genomic_range['range']
