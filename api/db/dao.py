@@ -30,23 +30,23 @@ class BaseDAO:
         return count
 
     def prepare_tables(self,model):
-            tables={}
-            queue=[('','',model,tables,None)]
-            while len(queue):
-                (n,k,m,t,p)=queue.pop(0)
-                if hasattr(m,'_supress') and m._supress: continue
-                if not issubclass(m,BaseModel):
-                    t[n]=p._select.get(k,k) if hasattr(p,'_select') else k
-                    continue
-                if hasattr(m,'_from'):
-                    t={'_model':m,'_name':m._name if hasattr(m,'_name') else (k if k else 'dummy'),'_parent':t.get('_name'),'_from':m._from,'_join':''}
-                    tables[t['_name']]=t
-                    n=''
-                if hasattr(m,'_join'):
-                    t['_join']=(t['_join']+"\n"+m._join).strip()
-                queue[0:0]=[((n+'_'+k).strip('_'),k,m.__fields__[k].type_,t,m) for  k in m.__fields__]
+        tables={}
+        queue=[('','',model,tables,None)]
+        while len(queue):
+            (n,k,m,t,p)=queue.pop(0)
+            if hasattr(m,'_supress') and m._supress: continue
+            if not issubclass(m,BaseModel):
+                t[n]=p._select.get(k,k) if hasattr(p,'_select') else k
+                continue
+            if hasattr(m,'_from'):
+                t={'_model':m,'_name':m._name if hasattr(m,'_name') else (k if k else 'dummy'),'_parent':t.get('_name'),'_from':m._from,'_join':''}
+                tables[t['_name']]=t
+                n=''
+            if hasattr(m,'_join'):
+                t['_join']=(t['_join']+"\n"+m._join).strip()
+            queue[0:0]=[((n+'_'+k).strip('_'),k,m.__fields__[k].type_,t,m) for  k in m.__fields__]
 
-            return tables
+        return tables
 
     def prepare_query(self,tables,input):
         primary_table=list(tables.keys())[0]
