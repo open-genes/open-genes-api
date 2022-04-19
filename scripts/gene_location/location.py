@@ -68,6 +68,7 @@ class Worker:
             print(f" GENE: {symbol} ERROR: {type(e)} {str(e)}")
             return
 
+        print(ncbi_result)
         genomic_ranges = ncbi_result['genomic_ranges']
         if len(genomic_ranges) > 0:
             first_genomic_range = genomic_ranges[0]
@@ -81,6 +82,16 @@ class Worker:
                 loc_orient_int = 1
                 if loc_orient == 'minus':
                     loc_orient_int = -1
+                # acc orf
+                loc_acc_orf = first_range.get('accOrf')
+                if not loc_acc_orf:
+                    loc_acc_orf = ''
+                # acc cds
+                loc_acc_cds = first_range.get('accCds')
+                if not loc_acc_cds:
+                    loc_acc_cds = ''
+            else:
+                return
 
             # transcripts
             gene_transcript_raw = ncbi_result.get('transcripts')
@@ -145,7 +156,7 @@ class Worker:
                         hugo_docs = hugo_resp.get('docs')
                         if hugo_docs is not None and len(hugo_docs) > 0:
                             hugo_docs = hugo_docs[0]
-                            print(hugo_docs)
+                            # print(hugo_docs)
                             #
                             hgnc_id = hugo_docs['hgnc_id']
 
@@ -167,18 +178,23 @@ class Worker:
                             # location
                             hugo_location = hugo_docs['location']
 
+                            # acc orf
+                            loc_acc_orf_ls = hugo_docs['refseq_accession']
+                            if loc_acc_orf_ls:
+                                loc_acc_orf = loc_acc_orf_ls[0]
+
                 except Exception as e:
                     print(f" GENE: {symbol} ERROR: {type(e)} {str(e)}")
 
                 # update gene
                 self.update_gene(gid, loc_start,
-                                 loc_end, loc_orient_int, hgnc_id, gene_group_id, gene_locus_group_id, hugo_location)
+                                 loc_end, loc_orient_int, hgnc_id, gene_group_id, gene_locus_group_id, hugo_location, loc_acc_orf, loc_acc_cds)
 
                 # set state
                 self.state_dao.set(str(gid))
 
     def update_gene(self, id: int, loc_start,
-                    loc_end, loc_orient, hgnc_id, gene_group_id, gene_locus_group_id, location):
+                    loc_end, loc_orient, hgnc_id, gene_group_id, gene_locus_group_id, location, loc_acc_orf, loc_acc_cds):
         chstr = ''
         for l in location:
             if l.isdigit():
@@ -200,7 +216,8 @@ class Worker:
         sql = f'''
         UPDATE gene 
         SET locationStart={loc_start},locationEnd={loc_end},orientation={loc_orient},hgnc_id='{hgnc_id}',
-        gene_group={gene_group_id},locus_group={gene_locus_group_id},band='{location}',chromosome={chromosome_num}
+        gene_group={gene_group_id},locus_group={gene_locus_group_id},band='{location}',chromosome={chromosome_num},
+        accOrf='{loc_acc_orf}'
         WHERE id = {id};'''
         cur.execute(sql)
         self.gene_dao.cnx.commit()

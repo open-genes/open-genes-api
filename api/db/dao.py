@@ -5,6 +5,7 @@ from entities import entities
 from pydantic import BaseModel
 
 from db.suggestion_handler import suggestion_request_builder
+from typing import get_origin, get_args
 
 # TODO(dmtgk): Add relationships integration.
 # TODO(dmtgk): Add versatility to BaseDAO and pydantic entity validation.
@@ -30,117 +31,119 @@ class BaseDAO:
         return count
 
     def prepare_tables(self,model):
-            tables={}
-            queue=[('','',model,tables,None)]
-            while len(queue):
-                (n,k,m,t,p)=queue.pop(0)
-                if hasattr(m,'_supress') and m._supress: continue
-                if not issubclass(m,BaseModel):
-                    t[n]=p._select.get(k,k) if hasattr(p,'_select') else k
-                    continue
-                if hasattr(m,'_from'):
-                    t={'_model':m,'_name':m._name if hasattr(m,'_name') else k,'_parent':t.get('_name'),'_from':m._from,'_join':''}
-                    tables[t['_name']]=t
-                    n=''
-                if hasattr(m,'_join'):
-                    t['_join']=(t['_join']+"\n"+m._join).strip()
-                queue[0:0]=[((n+'_'+k).strip('_'),k,m.__fields__[k].type_,t,m) for  k in m.__fields__]
+        tables={}
+        model=(get_args(model)[0] if get_origin(model) else model, model)
+        queue=[('','',model,tables,None)]
+        while len(queue):
+            (n,k,m,t,p)=queue.pop(0)
+            m_outer_type=m[1]
+            m=m[0]
+            if hasattr(m,'_supress') and m._supress: continue
+            if not issubclass(m,BaseModel):
+                t[n]=p._select.get(k,k) if hasattr(p,'_select') else k
+                continue
+            if hasattr(m,'_from'):
+                t={'_model':m,'_outer_type':m_outer_type,'_root_model':model,'_name':m._name if hasattr(m,'_name') else (k if k else 'dummy'),'_parent':t.get('_name'),'_from':m._from,'_join':''}
+                tables[t['_name']]=t
+                n=''
+            if hasattr(m,'_join'):
+                t['_join']=(t['_join']+"\n"+m._join).strip()
+            queue[0:0]=[('_'.join(filter(None,[n,k])),k,(m.__fields__[k].type_,m.__fields__[k].outer_type_),t,m) for  k in m.__fields__]
+        if '_meta' in tables:
+            m=tables['_meta']
+            del tables['_meta']
+            tables['_meta']=m
 
-            return tables
+        return tables
 
     def prepare_query(self,tables,input):
         primary_table=list(tables.keys())[0]
         for table in [tables[t] for t in tables if '@JOINS@' not in tables[t]['_from']]: table['_from']=table['_from'].strip()+"\n@JOINS@\n"
-        query="with "+",\n".join([t+' as ( select concat('+((tables[t]['_parent']+'.ordering, ') if tables[t]['_parent'] else '')+"lpad(row_number() over(order by "+('@ORDERING@' if t==primary_table else '')+' '+(tables[t]['_model']._order_by if hasattr(tables[t]['_model'],'_order_by') else 'null')+"),5,'0')) as ordering"+(', count(*) over() as row_count' if t==primary_table else '')+', '+', '.join([tables[t][f]+' as "'+f+'"' for f in tables[t].keys() if not f.startswith('_')]+[tables[t]['_model']._select[s]+' as "'+s+'"' for s in tables[t]['_model']._select if s not in tables[t]])+'\n'+tables[t]['_from'].lstrip().replace('@JOINS@',tables[t].get('_join',''))+')' for t in tables])
-        query=query+"\n"+"\nunion ".join(['select '+t+'.ordering, '+(t+'.row_count' if t==primary_table else 'null')+" as row_count, '"+str(tables[t]['_name'])+"' as table_name,"+', '.join([', '.join([t+'.'+f+' as '+t+'_'+f for f in [f for f in tables[t] if not f.startswith('_')]+[s for s  in tables[t]['_model']._select if s not in tables[t]]]) for t in tables])+' '+' '.join([('from'if t2==primary_table else ('right join' if t2==t else 'left join'))+' '+t2+('' if t2==primary_table else ' on false') for t2 in tables]) for t in tables])
+        query="with "+",\n".join([
+            t+' as ( select '+
+            ("'0'" if t=='_meta' else 'concat('+((tables[t]['_parent']+'.ordering, ') if tables[t]['_parent'] and tables[t]['_parent']!='_meta' else '')+"lpad(row_number() over(order by "+('@ORDERING@' if t==primary_table else '')+' '+(tables[t]['_model']._order_by if hasattr(tables[t]['_model'],'_order_by') else 'null')+"),5,'0'))")+' as ordering, '+
+            ('count(*) over() as row_count, ' if t==primary_table else '')+
+            ', '.join([tables[t][f]+' as "'+f+'"' for f in tables[t].keys() if not f.startswith('_')]+[tables[t]['_model']._select[s]+' as "'+s+'"' for s in (tables[t]['_model']._select if hasattr(tables[t]['_model'],'_select') else {}) if s not in tables[t]])+'\n'+
+            tables[t]['_from'].lstrip().replace('@JOINS@',tables[t].get('_join',''))+')'
+            for t in tables
+        ])
+        query=query+"\n"+"\nunion ".join(['select '+t+".ordering, '"+str(tables[t]['_name'])+"' as table_name,"+', '.join([', '.join([t+'.'+f+' as '+t+'_'+f for f in [f for f in tables[t] if not f.startswith('_')]+[s for s  in (tables[t]['_model']._select if hasattr(tables[t]['_model'],'_select') else {}) if s not in tables[t]]]) for t in tables])+' '+' '.join([('from'if t2==primary_table else ('right join' if t2==t else 'left join'))+' '+t2+('' if t2==primary_table else ' on false') for t2 in tables]) for t in tables])
 
         inputclass=type(input)
         inputdict=input.dict()
         filtering={}
-        for f in [f for f in input.__fields__ if f in inputclass._filters and inputdict.get(f)]:
+        for f in [f for f in input.__fields__ if f in (inputclass._filters if hasattr(inputclass,'_filters') else {}) and inputdict.get(f)]:
             v=inputdict.get(f)
             filter=inputclass._filters[f]
             filtering[filter[0](v)]=filter[1](v)
 
-        params=[]
+        filtering_params=[]
         if filtering:
-            for p in filtering.values(): params=params+p
+            for p in filtering.values(): filtering_params=filtering_params+p
             filtering='where '+' and '.join(filtering.keys())
         else:
             filtering=''
         query=query.replace("@FILTERING@",filtering)
 
-        ordering=inputclass._sorts.get(inputdict.get('sortBy'),'')
+        ordering=(inputclass._sorts if hasattr(inputclass,'_sorts') else {}).get(inputdict.get('sortBy'),'')
         if ordering: ordering=ordering+' '+inputdict.get('sortOrder','')+', '
         query=query.replace("@ORDERING@",ordering)
 
         query=query.replace("@LANG@",inputdict.get('lang','en'))
         query=query.replace("@LANG2@",inputdict.get('lang','en').upper().replace('RU',''))
 
-        meta={}
-        if 'page' in inputdict and 'pageSize' in inputdict:
-            meta['page']=inputdict.get('page')
-            meta['page']=int(meta['page']) if meta['page'] is not None else 1
-            meta['pageSize']=inputdict.get('pageSize')
-            meta['pageSize']=int(meta['pageSize']) if meta['pageSize'] is not None else 10
-            query=query.replace('@PAGING@','limit '+str(meta['pageSize'])+' offset '+str(meta['pageSize']*(meta['page']-1)));
+        query=query.replace('@DBNAME@',CONFIG['DB_NAME'])
+        query=query.replace('@PRIMARY_TABLE@',primary_table)
+
+        if 'page' in inputdict and inputdict.get('pageSize',0):
+            query=query.replace('@PAGING@','limit '+str(inputdict['pageSize'])+' offset '+str(inputdict['pageSize']*(inputdict['page']-1)));
+        else:
+            query=query.replace('@PAGING@','')
+
+        params=[]
+        for m in [tables[t]['_model'] for t in tables if hasattr(tables[t]['_model'],'_params') or '@FILTERING@' in tables[t]['_model']._from]:
+            for p in m._params if hasattr(m,'_params') else filtering_params:
+                params.append(p(inputdict) if callable(p) else p)
 
         query=query+"\norder by 1"
-        return query,params,meta
+        return query,params
 
     def read_query(self,query,params,tables,consume=None,process=None):
-
         primary_table=list(tables.keys())[0]
+        root_model=tables[primary_table]['_root_model']
 
-        re=[]
-        row=None
-        row_count=None
-        re_count=0
+        root=[] if repr(root_model[1]).startswith('typing.List') else {}
+        data=root if isinstance(root,dict) else {}
         lists={}
+        if isinstance(root,list): lists[primary_table]=root
+        row=None
+        re_count=0
 
         def handle_row(r):
-            nonlocal re,re_count,process,consume
+            nonlocal re_count,process,consume
             if not r: return
-            if 'row_count' in r:
-                if consume:
-                    consume(r)
-                else:
-                    re.append(r)
-                return
             if process: r=process(r)
             re_count=re_count+1
-            if consume:
-                consume(r)
-                return
-            re.append(r)
+            if consume: consume(r)
 
         def row_consumer(r):
-            nonlocal row,lists,row_count
+            nonlocal data,lists, row
             t=r['table_name']
-            if r['row_count'] is not None and row_count is None:
-                row_count=r['row_count']
-                handle_row({'row_count':row_count}|({'total_count':r[t+'_total_count']} if t+'_total_count' in r else {}))
 
             if t==primary_table:
                 handle_row(row)
-                row={}
-                data=row
-                lists={}
-            else:
-                data={}
+                row=data
 
-            m_outer_type=None
-            queue=[(t,'',tables[t]['_model'],data)]
+            queue=[(t,'',(tables[t]['_model'],tables[t]['_outer_type']),data)]
             while len(queue):
                 (n,k,m,d)=queue.pop(0)
+                m,m_outer_type=m
                 if hasattr(m,'_supress') and m._supress: continue
 
-                if isinstance(m,tuple):
-                    m_outer_type=m[1]
-                    m=m[0]
-                if repr(m_outer_type).startswith('typing.List'):
+                list_name=m._name if hasattr(m,'_name') else k
+                if repr(m_outer_type).startswith('typing.List') and list_name and k:
                     d[k]=[]
-                    lists[m._name if hasattr(m,'_name') else k]=d[k]
+                    lists[list_name]=d[k]
                     continue
                 if not issubclass(m,BaseModel):
                     d[k]=r.get(n)
@@ -148,14 +151,20 @@ class BaseDAO:
                 if k:
                     d[k]={}
                     d=d[k]
-                queue[0:0]=[((n+'_'+k).strip('_'),k,(m.__fields__[k].type_,m.__fields__[k].outer_type_),d) for k in m.__fields__]
-            if tables[t]['_name'] in lists: lists[tables[t]['_name']].append(data)
+                queue[0:0]=[('_'.join(filter(None,[n,k])),k,(m.__fields__[k].type_,m.__fields__[k].outer_type_),d) for k in m.__fields__]
+            if tables[t]['_name'] in lists:
+                lists[tables[t]['_name']].append(data)
+
+            data={}
+
+        if not hasattr(root_model[0],'_from'):
+            tables['_root']={'_model':root_model[0],'_outer_type':root_model[1],'_name':None}
+            row_consumer({'table_name':'_root'})
 
         self.fetch_all(query,params,row_consumer)
-        handle_row (row)
-        if row_count is None: handle_row({'row_count':0})
-        if consume: re=re_count
-        return re
+        handle_row(row)
+        if consume: return re_count
+        return root
 
 
 from models.gene import GeneSearched,GeneSearchOutput,GeneSingle
@@ -175,7 +184,7 @@ def gene_common_fixer(r):
     if not r['familyOrigin']['id']: r['familyOrigin']=None
     r['aliases']=[a for a in r['aliases'].split(' ') if a]
 
-    if sum([len(i) for i in r['researches'].values()])==0: r['researches']=None
+    if 'researches' not in r or sum([len(i) for i in r['researches'].values()])==0: r['researches']=None
     if not r['researches']: return r
     for a in r['researches']['ageRelatedChangesOfGene']:
         a['value'] = str(a['value']) + '%' if a['value'] else a['value']
@@ -188,9 +197,8 @@ def gene_common_fixer(r):
     return r
 
 def age_related_changes_fixer(r):
-    # r['aliases']=[a for a in r['aliases'].split(' ') if a]
-    for f in ['valueForAll','valueForFemale','valueForMale']: r[f]=str(r[f])+'%' if r[f] else r[f]
-    r['measurementType']={'1en':'mRNA','2en':'protein','1ru':'мРНК','2ru':'белок'}.get(r['measurementType'])
+    r['value'] = str(r['value']) + '%' if r['value'] else r['value']
+    r['measurementMethod']={'1en':'mRNA','2en':'protein','1ru':'мРНК','2ru':'белок'}.get(r['measurementMethod'])
     return r
 
 class GeneDAO(BaseDAO):
@@ -200,14 +208,9 @@ class GeneDAO(BaseDAO):
         # mangle aliases type to string, to manually split it into list in fixer
         GeneSearched.__fields__['aliases'].outer_type_=str
 
-        tables=self.prepare_tables(GeneSearched)
-        query,params,meta=self.prepare_query(tables,input)
-
-        re=self.read_query(query,params,tables,process=gene_common_fixer)
-
-        meta.update(re.pop(0))
-
-        return {'options':{'objTotal':meta['row_count'],'total':meta['total_count'],"pagination":{"page":meta['page'],"pageSize":meta['pageSize'],"pagesTotal":meta['row_count']//meta['pageSize'] + (meta['row_count']%meta['pageSize']!=0)}},'items':re}
+        tables=self.prepare_tables(GeneSearchOutput)
+        query,params=self.prepare_query(tables,input)
+        return self.read_query(query,params,tables,process=gene_common_fixer)
 
     def single(self,input):
         GeneSingle.__fields__['researches'].type_._supress= not input.researches=='1'
@@ -216,7 +219,7 @@ class GeneDAO(BaseDAO):
         GeneSingle.__fields__['source'].outer_type_=str
 
         tables=self.prepare_tables(GeneSingle)
-        query,params,meta=self.prepare_query(tables,input)
+        query,params=self.prepare_query(tables,input)
 
         hpa_fields=[ 'Ensembl', 'Uniprot', 'Chromosome', 'Position', 'ProteinClass', 'BiologicalProcess', 'MolecularFunction', 'SubcellularLocation', 'SubcellularMainLocation', 'SubcellularAdditionalLocation', 'DiseaseInvolvement', 'Evidence', ]
 
@@ -242,9 +245,9 @@ class GeneDAO(BaseDAO):
             return r
 
         re=self.read_query(query,params,tables,process=fixer)
-        if len(re)!=2: return None
+        if not re.get('id'): return None
 
-        return re[1]
+        return re
 
     def get_duplicates_genes(self):
         cur = self.cnx.cursor(dictionary=True)
@@ -380,56 +383,99 @@ class GeneDAO(BaseDAO):
         return cur.fetchone()
 
 
-from models.gene import IncreaseLifespanSearched,AgeRelatedChangeOfGeneResearched,GeneActivityChangeImpactResearched
+from models.gene import \
+    IncreaseLifespanSearchOutput,IncreaseLifespanSearched, \
+    AgeRelatedChangeOfGeneResearchOutput,AgeRelatedChangeOfGeneResearched, \
+    GeneActivityChangeImpactResearchedOutput,GeneActivityChangeImpactResearched, \
+    GeneRegulationResearchedOutput, GeneRegulationResearched, \
+    AssociationWithAcceleratedAgingResearchedOutput, AssociationWithAcceleratedAgingResearched, \
+    AssociationsWithLifespanResearchedOutput, AssociationsWithLifespanResearched, \
+    OtherEvidenceResearchedOutput, OtherEvidenceResearched
 
 class ResearchesDAO(BaseDAO):
     def increase_lifespan_search(self,input):
         IncreaseLifespanSearched.__fields__['geneAliases'].outer_type_=str
 
-        tables=self.prepare_tables(IncreaseLifespanSearched)
-        query,params,meta=self.prepare_query(tables,input)
+        tables=self.prepare_tables(IncreaseLifespanSearchOutput)
+        query,params=self.prepare_query(tables,input)
 
         def fixer(r):
             r['geneAliases']=[a for a in r['geneAliases'].split(' ') if a]
             return increase_lifespan_common_fixer(r)
 
-        re=self.read_query(query,params,tables,process=fixer)
-
-        meta.update(re.pop(0))
-
-        return {'options':{'objTotal':meta['row_count'],'total':meta.get('total_count'),"pagination":{"page":meta['page'],"pageSize":meta['pageSize'],"pagesTotal":meta['row_count']//meta['pageSize'] + (meta['row_count']%meta['pageSize']!=0)}},'items':re}
+        return self.read_query(query,params,tables,process=fixer)
 
     def age_related_changes(self,input):
         AgeRelatedChangeOfGeneResearched.__fields__['geneAliases'].outer_type_=str
 
-        tables=self.prepare_tables(AgeRelatedChangeOfGeneResearched)
-        query,params,meta=self.prepare_query(tables,input)
+        tables=self.prepare_tables(AgeRelatedChangeOfGeneResearchOutput)
+        query,params=self.prepare_query(tables,input)
 
         def fixer(r):
             r['geneAliases']=[a for a in r['geneAliases'].split(' ') if a]
             return age_related_changes_fixer(r)
 
-        re=self.read_query(query,params,tables,process=fixer)
-
-        meta.update(re.pop(0))
-
-        return {'options':{'objTotal':meta['row_count'],'total':meta.get('total_count'),"pagination":{"page":meta['page'],"pageSize":meta['pageSize'],"pagesTotal":meta['row_count']//meta['pageSize'] + (meta['row_count']%meta['pageSize']!=0)}},'items':re}
+        return self.read_query(query,params,tables,process=fixer)
 
     def gene_activity_change_impact(self,input):
         GeneActivityChangeImpactResearched.__fields__['geneAliases'].outer_type_=str
 
-        tables=self.prepare_tables(GeneActivityChangeImpactResearched)
-        query,params,meta=self.prepare_query(tables,input)
+        tables=self.prepare_tables(GeneActivityChangeImpactResearchedOutput)
+        query,params=self.prepare_query(tables,input)
 
         def fixer(r):
             r['geneAliases']=[a for a in r['geneAliases'].split(' ') if a]
             return r
 
-        re=self.read_query(query,params,tables,process=fixer)
+        return self.read_query(query,params,tables,process=fixer)
 
-        meta.update(re.pop(0))
+    def gene_regulation(self,input):
+        GeneRegulationResearched.__fields__['geneAliases'].outer_type_=str
 
-        return {'options':{'objTotal':meta['row_count'],'total':meta.get('total_count'),"pagination":{"page":meta['page'],"pageSize":meta['pageSize'],"pagesTotal":meta['row_count']//meta['pageSize'] + (meta['row_count']%meta['pageSize']!=0)}},'items':re}
+        tables=self.prepare_tables(GeneRegulationResearchedOutput)
+        query,params=self.prepare_query(tables,input)
+
+        def fixer(r):
+            r['geneAliases']=[a for a in r['geneAliases'].split(' ') if a]
+            return r
+
+        return self.read_query(query,params,tables,process=fixer)
+
+    def association_with_accelerated_aging(self,input):
+        AssociationWithAcceleratedAgingResearched.__fields__['geneAliases'].outer_type_=str
+
+        tables=self.prepare_tables(AssociationWithAcceleratedAgingResearchedOutput)
+        query,params=self.prepare_query(tables,input)
+
+        def fixer(r):
+            r['geneAliases']=[a for a in r['geneAliases'].split(' ') if a]
+            return r
+
+        return self.read_query(query,params,tables,process=fixer)
+
+    def other_evidence(self,input):
+        OtherEvidenceResearched.__fields__['geneAliases'].outer_type_=str
+
+        tables=self.prepare_tables(OtherEvidenceResearchedOutput)
+        query,params=self.prepare_query(tables,input)
+
+        def fixer(r):
+            r['geneAliases']=[a for a in r['geneAliases'].split(' ') if a]
+            return r
+
+        return self.read_query(query,params,tables,process=fixer)
+
+    def associations_with_lifespan(self,input):
+        AssociationsWithLifespanResearched.__fields__['geneAliases'].outer_type_=str
+
+        tables=self.prepare_tables(AssociationsWithLifespanResearchedOutput)
+        query,params=self.prepare_query(tables,input)
+
+        def fixer(r):
+            r['geneAliases']=[a for a in r['geneAliases'].split(' ') if a]
+            return r
+
+        return self.read_query(query,params,tables,process=fixer)
 
 class FunctionalClusterDAO(BaseDAO):
     """Functional cluster Table fetcher."""
@@ -730,7 +776,7 @@ class PhylumDAO(BaseDAO):
         )
         return cur.fetchall()
 
-from models.gene import CalorieExperiment
+from models.gene import CalorieExperimentOutput,CalorieExperiment
 
 
 class CalorieExperimentDAO(BaseDAO):
@@ -738,17 +784,10 @@ class CalorieExperimentDAO(BaseDAO):
 
     def calorie_experiment_search(self, input):
 
-        tables = self.prepare_tables(CalorieExperiment)
-        query, params, meta = self.prepare_query(tables, input)
+        tables = self.prepare_tables(CalorieExperimentOutput)
+        query, params = self.prepare_query(tables, input)
 
-        re = self.read_query(query, params, tables)
-
-        meta.update(re.pop(0))
-
-        return {'options': {'objTotal': meta['row_count'], 'total': meta.get('total_count'),
-                "pagination": {"page": meta['page'], "pageSize": meta['pageSize'],
-               "pagesTotal": meta['row_count'] // meta['pageSize'] + (
-                   meta['row_count'] % meta['pageSize'] != 0)}}, 'items': re}
+        return self.read_query(query, params, tables)
 
 class WorkerStateDAO(BaseDAO):
     """Worker state Table fetcher."""
@@ -852,3 +891,14 @@ class GeneTranscriptExonDAO(BaseDAO):
         cur.close()
         return cur.lastrowid
 
+from models.various import ModelOrganism,ModelOrganismOutput
+from typing import List
+class ModelOrganismDAO(BaseDAO):
+
+    def list(self,input):
+        tables = self.prepare_tables(ModelOrganismOutput)
+        query, params = self.prepare_query(tables, input)
+
+        re = self.read_query(query, params, tables)
+
+        return re

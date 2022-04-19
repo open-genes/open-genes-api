@@ -30,7 +30,7 @@ def ogmodel(*args,**fields):
 
 class PaginationInput(BaseModel):
     page:int|None=1
-    pageSize:int|None=10
+    pageSize:int|None=20
 
 class SortInput(BaseModel):
     sortOrder: Literal['ASC','DESC']|None = 'DESC'
@@ -42,6 +42,9 @@ class PaginationData(BaseModel):
     page:int
     pageSize:int
     pagesTotal:int
+    _select= {
+            'pagesTotal':"objTotal div pageSize+case when objTotal mod pageSize<>0 then 1 else 0 end",
+    }
 
 class PaginationOptions(BaseModel):
     objTotal:int
@@ -51,6 +54,9 @@ class PaginationOptions(BaseModel):
 class PaginatedOutput(BaseModel):
     options:PaginationOptions
     items:List
+    _name="_meta"
+    _params=[lambda input: input.get('page',1),lambda input:input.get('pageSize'),3]
+    _from="from (select coalesce((select row_count from @PRIMARY_TABLE@ limit 1),0) as objTotal, null as total, %s as page, coalesce(nullif(%s,0),(select row_count from @PRIMARY_TABLE@ limit 1)) as pageSize, %s as pagesTotal) s "
 
 class Timestamp(BaseModel):
     created:int |None = 0
