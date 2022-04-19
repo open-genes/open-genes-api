@@ -29,7 +29,7 @@ class CalorieRestrictionExperiment(BaseModel):
         'lexpressionChangeLogFc': "expression_change_log_fc",
         'id': "calorie_restriction_experiment.id",
         'pValue': "p_val",
-        'crResult': "COALESCE(calorie_restriction_experiment.result_@LANG@,calorie_restriction_experiment.result_en)",
+        'result': "COALESCE(calorie_restriction_experiment.result_@LANG@,calorie_restriction_experiment.result_en)",
         'measurementMethod': "measurement_method.name_@LANG@",
         'expressionEvaluation': "expression_evaluation.name_@LANG@",
         'restrictionPercent': "restriction_percent",
