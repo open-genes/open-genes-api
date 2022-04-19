@@ -222,8 +222,6 @@ left join statistical_significance as ssmedian on ssmedian.id = general_lifespan
 left join statistical_significance as ssmax on ssmax.id = general_lifespan_experiment.lifespan_max_change_stat_sign_id
 """
 
-
-
 class GeneAssociatedWithProgeriaSyndrome(BaseModel):
     progeriaSyndrome:str
     doi:None|str
@@ -240,7 +238,6 @@ from gene
 join gene_to_progeria on gene_to_progeria.gene_id=gene.id
 join progeria_syndrome on progeria_syndrome.id=gene_to_progeria.progeria_syndrome_id
 """
-
 
 class GeneAssociatedWithLongevityEffect(BaseModel):
     longevityEffect:str
@@ -440,7 +437,6 @@ join open_genes.gene as regulated_gene on regulated_gene.id = protein_to_gene.re
 join protein_activity on protein_activity.id = protein_to_gene.protein_activity_id
 join gene_regulation_type on gene_regulation_type.id = protein_to_gene.regulation_type_id
 """
-
 
 class AdditionalEvidence(BaseModel):
     doi:None|str

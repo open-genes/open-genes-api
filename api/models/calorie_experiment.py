@@ -9,7 +9,7 @@ class CalorieRestrictionExperiment(BaseModel):
     pValue: str
     crResult: str
     measurementMethod: str
-    measurementType: str
+    expressionEvaluation: str
     restrictionPercent: int
     duration: int
     durationUnit: str

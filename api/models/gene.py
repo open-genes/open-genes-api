@@ -170,12 +170,10 @@ LEFT JOIN taxon ON gene.taxon_id = taxon.id
 @PAGING@
 """
     _order_by="gene.id"
-    _select = GeneCommon._select | {
-        'total_count':'(select count(*) from gene where isHidden<>1)',
-    }
 
 class GeneSearchOutput(PaginatedOutput):
     items:List[GeneSearched]
+    _from="from (select coalesce((select row_count from @PRIMARY_TABLE@ limit 1),0) as objTotal, (select count(*) from @DBNAME@.gene where isHidden<>1) as total, %s as page, coalesce(nullif(%s,0),(select row_count from @PRIMARY_TABLE@ limit 1)) as pageSize, %s as pagesTotal) s "
 
 class GeneSearchInput(PaginationInput, LanguageInput, SortInput):
     byDiseases: str = None
@@ -300,20 +298,25 @@ class GeneSingle(GeneCommon):
         'accPromoter': "gene.accPromoter",
         'accOrf': 'accOrf',
         'accCds': 'accCds',
-        'source': 'group_concat(distinct source.name separator "||")',
-        'terms':"""
-(select group_concat(distinct concat(`gene_ontology`.`ontology_identifier`,'|',`gene_ontology`.`name_@LANG@`,'|',`gene_ontology`.`category`) separator  '||')
-from gene_to_ontology
-join gene_ontology on gene_ontology.id = gene_to_ontology.gene_ontology_id
-where gene_to_ontology.gene_id=gene.id)
-""",
+        'source': 'source.name',
+        'terms':"ontology.terms",
         'humanProteinAtlas':'gene.human_protein_atlas',
     }
     _from="""
 FROM gene
-left join gene_to_source on gene_to_source.gene_id=gene.id
-left join source on source.id=gene_to_source.source_id
 LEFT JOIN taxon ON gene.taxon_id = taxon.id
+left join (
+select gene_id,group_concat(distinct concat(`gene_ontology`.`ontology_identifier`,'|',`gene_ontology`.`name_@LANG@`,'|',`gene_ontology`.`category`) separator  '||') as terms
+from gene_to_ontology
+join gene_ontology on gene_ontology.id = gene_to_ontology.gene_ontology_id
+group by gene_to_ontology.gene_id
+) ontology on ontology.gene_id=gene.id
+left join (
+select gene_id,group_concat(distinct source.name separator "||") as name
+from gene_to_source
+join source on source.id=gene_to_source.source_id
+group by gene_to_source.gene_id
+) source on source.gene_id=gene.id
 @JOINS@
 @FILTERING@
 """

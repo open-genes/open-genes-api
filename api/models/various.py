@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import List
 from models import *
 
 class ModelOrganism(BaseModel):
@@ -14,3 +15,4 @@ class ModelOrganism(BaseModel):
     _order_by="model_organism.id"
 
 
+ModelOrganismOutput=List[ModelOrganism]
