@@ -229,7 +229,7 @@ class GeneDAO(BaseDAO):
 
             r['source']=[s for s in r['source'].split('||') if s] if r['source'] is not None else None
             terms={}
-            for t in r['terms'].split('||'):
+            for t in (r['terms'] if r['terms'] else'').split('||'):
                 t=t.split('|')
                 if len(t)!=3: continue
                 identifier,name,category=t
