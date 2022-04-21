@@ -237,7 +237,7 @@ class GeneDAO(BaseDAO):
                 terms[category].append({identifier:name})
             r['terms']=terms
 
-            hpa=json.loads(r['humanProteinAtlas'])
+            hpa=json.loads(r['humanProteinAtlas'] if r['humanProteinAtlas'] else '{}')
             for f in list(hpa.keys()):
                 if f not in hpa_fields: del hpa[f]
             r['humanProteinAtlas']=hpa
