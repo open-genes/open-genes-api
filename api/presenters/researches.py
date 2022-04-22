@@ -119,7 +119,6 @@ class GeneAssociatedWithLongevityEffects:
     sex: str = Field(title="Biological sex")
     allelicVariant: str = Field(title="Allelic variant",
                                 description="Polymorphic gene variant associated with the trait")
-    modelOrganism: str = Field(title="Model organism")
     changeType: str = Field(title="Characteristics of the transcriptome / proteome")
     dataType: str = Field(title="Data type")
     doi: str = Field(title="Publication id in DOI format")
