@@ -19,7 +19,7 @@ class GeneLocationFetcherNCBI():
             try:
                 gene_reply = gene_api.gene_metadata_by_tax_and_symbol([self.gene], self.taxon)
                 if len(gene_reply.genes) > 0:
-                    result = gene_reply.genes[0].gene.to_dict()
+                    result = gene_reply.genes[0].hogo_id.to_dict()
                     return result
             except DatasetsApiException as e:
                 print(f'Exception when calling GeneApi: {e}\n')

@@ -331,6 +331,23 @@ class GeneDAO(BaseDAO):
         result = cur.fetchone()
         return result
 
+    def get_by_hugo_id(
+        self,
+        hugo_id: str,
+    ):
+        """
+        HGNC:4263
+        """
+        hugo_id = hugo_id.upper()
+        hugo_id = hugo_id if hugo_id.startswith('HGNC:') else f'HGNC:{hugo_id}'
+
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute(
+            "SELECT * FROM `gene` WHERE hgnc_id='{}';".format(hugo_id)
+        )
+        result = cur.fetchone()
+        return result
+
     def add(
         self,
         gene: entities.Gene,
@@ -902,3 +919,36 @@ class ModelOrganismDAO(BaseDAO):
         re = self.read_query(query, params, tables)
 
         return re
+
+class OrthologDAO(BaseDAO):
+    def get_id(self, symbol:str, model_organism:str, external_base_name:str, external_id:str):
+        cur = self.cnx.cursor(dictionary=True, buffered=True)
+        cur.execute(f"SELECT o.id FROM ortholog o WHERE o.symbol = '{symbol}' AND o.external_base_name = '{external_base_name}';")
+        orth_id = cur.fetchone()
+
+        if orth_id is None:
+            ireq = f'''
+            INSERT INTO ortholog(symbol, model_organism_id, external_base_name, external_base_id)
+                VALUES ('{symbol}', (SELECT id FROM model_organism WHERE name_lat = '{model_organism}'), '{external_base_name}', '{external_id}') ;
+                    '''
+            cur.execute(ireq)
+            self.cnx.commit()
+            orth_id = cur.lastrowid
+        else:
+            orth_id = orth_id['id']
+
+        cur.close()
+        return orth_id
+
+    def link_gene(self, gene_id:int, ortholog_id:int):
+        cur = self.cnx.cursor(dictionary=True,buffered=True)
+        cur.execute(f"SELECT id FROM gene_to_ortholog WHERE gene_id = {gene_id} AND ortholog_id = {ortholog_id};")
+        gto = cur.fetchone()
+
+        if gto is None:
+            cur.execute(f"INSERT INTO gene_to_ortholog(gene_id, ortholog_id) VALUES ({gene_id},{ortholog_id});")
+            self.cnx.commit()
+
+        cur.close()
+
+
