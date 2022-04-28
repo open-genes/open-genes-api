@@ -219,7 +219,7 @@ def update_file_genage(worm_base_orthologs: WormBaseOrthologsList):
     genage_orthologs_file.save_ext_file('./gename_models_ext_human_fly.csv', worm_base_orthologs)
 
 
-WORK_MODE_UPDATE_DB_ORTHOLOGS = False
+WORK_MODE_UPDATE_DB_ORTHOLOGS = True
 
 if __name__ == '__main__':
     print("orthologs parser start...")
