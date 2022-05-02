@@ -220,6 +220,7 @@ class GeneDAO(BaseDAO):
 
         tables=self.prepare_tables(GeneSingle)
         query,params=self.prepare_query(tables,input)
+        #print (query,file=open('api/query.sql','w'))
 
         hpa_fields=[ 'Ensembl', 'Uniprot', 'Chromosome', 'Position', 'ProteinClass', 'BiologicalProcess', 'MolecularFunction', 'SubcellularLocation', 'SubcellularMainLocation', 'SubcellularAdditionalLocation', 'DiseaseInvolvement', 'Evidence', ]
 
@@ -228,14 +229,6 @@ class GeneDAO(BaseDAO):
             r=gene_common_fixer(r);
 
             r['source']=[s for s in r['source'].split('||') if s] if r['source'] is not None else None
-            terms={}
-            for t in (r['terms'] if r['terms'] else'').split('||'):
-                t=t.split('|')
-                if len(t)!=3: continue
-                identifier,name,category=t
-                if category not in terms: terms[category]=[]
-                terms[category].append({identifier:name})
-            r['terms']=terms
 
             hpa=json.loads(r['humanProteinAtlas'] if r['humanProteinAtlas'] else '{}')
             for f in list(hpa.keys()):
