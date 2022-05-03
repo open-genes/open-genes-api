@@ -296,6 +296,14 @@ class GOTerms(BaseModel):
     molecular_activity:List[GOTermM]
     cellular_component:List[GOTermC]
 
+class Source(str):
+    _select={'_value':'source.name'}
+    _from="""
+from gene
+join gene_to_source on gene_to_source.gene_id=gene.id
+join source on source.id=gene_to_source.source_id
+"""
+
 class GeneSingle(GeneCommon):
     commentEvolution:str|None
     proteinDescriptionUniProt:str|None
@@ -312,7 +320,7 @@ class GeneSingle(GeneCommon):
     terms:GOTerms
     ortholog:List[Ortholog]
     humanProteinAtlas:dict
-    source:List[str]|None
+    source:List[Source]|None
     _select = GeneCommon._select | {
         'commentEvolution':'gene.commentEvolution@LANG2@',
         'proteinDescriptionUniProt':'gene.uniprot_summary_@LANG@',
@@ -325,18 +333,11 @@ class GeneSingle(GeneCommon):
         'accPromoter': "gene.accPromoter",
         'accOrf': 'accOrf',
         'accCds': 'accCds',
-        'source': 'source.name',
         'humanProteinAtlas':'gene.human_protein_atlas',
     }
     _from="""
 FROM gene
 LEFT JOIN taxon ON gene.taxon_id = taxon.id
-left join (
-select gene_id,group_concat(distinct source.name separator "||") as name
-from gene_to_source
-join source on source.id=gene_to_source.source_id
-group by gene_to_source.gene_id
-) source on source.gene_id=gene.id
 @JOINS@
 @FILTERING@
 """

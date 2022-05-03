@@ -216,7 +216,6 @@ class GeneDAO(BaseDAO):
         GeneSingle.__fields__['researches'].type_._supress= not input.researches=='1'
         # mangle aliases type to string, to manually split it into list in fixer
         GeneSingle.__fields__['aliases'].outer_type_=str
-        GeneSingle.__fields__['source'].outer_type_=str
 
         tables=self.prepare_tables(GeneSingle)
         query,params=self.prepare_query(tables,input)
@@ -227,8 +226,6 @@ class GeneDAO(BaseDAO):
         def fixer(r):
             nonlocal hpa_fields
             r=gene_common_fixer(r);
-
-            r['source']=[s for s in r['source'].split('||') if s] if r['source'] is not None else None
 
             hpa=json.loads(r['humanProteinAtlas'] if r['humanProteinAtlas'] else '{}')
             for f in list(hpa.keys()):
