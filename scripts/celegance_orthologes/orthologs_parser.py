@@ -80,20 +80,21 @@ class GeneFetcherHUGO():
 
         self.hogo_id = hugo_id
 
-    def exec(self) -> dict:
-        response_raw = requests.get(
-            f'http://rest.genenames.org/fetch/hgnc_id/{self.hogo_id}',
-            headers={'Accept': 'application/json'}
-        )
+    def exec(self) -> dict | None:
+        try:
+            response_raw = requests.get(
+                f'http://rest.genenames.org/fetch/hgnc_id/{self.hogo_id}',
+                headers={'Accept': 'application/json'}
+            )
 
-        if response_raw.status_code != 200:
-            raise Exception(response_raw.status_code)
+            if response_raw.status_code != 200:
+                raise Exception(response_raw.status_code)
 
-        response_json = response_raw.json()
-        response = response_json.get('response')
-        if response is None:
-            raise Exception('response is null')
-        return response
+            response_json = response_raw.json()
+            response = response_json.get('response')
+            return response
+        except:
+            return None
 
 
 class GenAgeGene:
@@ -124,6 +125,8 @@ class GenAgeGene:
             for hugo_id in orths_hugo_id_ls:
                 gf = GeneFetcherHUGO(hugo_id)
                 hugo_resp = gf.exec()
+                if hugo_resp is None:
+                    continue
                 if hugo_resp and hugo_resp['numFound'] > 0:
                     hugo_gene = hugo_resp['docs'][0]
                     hugo_symbol = hugo_gene['symbol']
@@ -139,7 +142,39 @@ class GenAgeGene:
         return self.row + f',{homo_block}'
 
 
+class MissingGenes:
+    def __init__(self, path: str):
+        self.path = path
+        self.symbol_list: [str] = []
+        self.hugo_list = set([])
+
+    def hugo_is_exist(self, hugo_id: str):
+        return hugo_id in self.hugo_list
+
+    def add_gene(self, hugo_id: str):
+        if self.hugo_is_exist(hugo_id):
+            return
+        self.hugo_list.add(hugo_id)
+        gf = GeneFetcherHUGO(hugo_id)
+        hugo_resp = gf.exec()
+        if hugo_resp is None:
+            return
+        if hugo_resp and hugo_resp['numFound'] > 0:
+            hugo_gene = hugo_resp['docs'][0]
+            hugo_symbol = hugo_gene['symbol']
+            if hugo_symbol:
+                print(f'hugo symbol is found: {hugo_id} => {hugo_symbol}')
+                self.symbol_list.append(hugo_symbol)
+
+    def save(self):
+        body = '\n'.join(s.strip() for s in self.symbol_list if s)
+        with open(self.path, 'w') as fl:
+            fl.write(body)
+
+
 class GenAgeOrthologsFile:
+    missing_genes = MissingGenes('missing_genes.txt')
+
     def __init__(self, path: str):
         fl = open(path)
         rows = fl.readlines()
@@ -187,7 +222,6 @@ class OrthologHandlerDB:
         gene = OrthologHandlerDB.gene_dao.get_by_hugo_id(hgnc_id)
         if not gene:
             return
-
         print(f"ortholog handling: gene:{gene['symbol']}, ortholog_symbol: {self.gene_symbol}, hugo_id:{hgnc_id}")
 
         # ortholog id
@@ -203,12 +237,13 @@ class OrthologHandlerDB:
     def save(self):
         if not self.gene_symbol:
             return
+
         for hgnc_id in self.human_orthologs:
             self._handle_human_ortholog(self.gene_symbol, self.wormbase_id, hgnc_id)
 
 
 def update_db_orthologs(worm_base_orthologs: WormBaseOrthologsList):
-    for block in worm_base_orthologs.blocks:
+    for i, block in enumerate(worm_base_orthologs.blocks):
         if block:
             gag_handler = OrthologHandlerDB(block)
             gag_handler.save()
@@ -219,10 +254,34 @@ def update_file_genage(worm_base_orthologs: WormBaseOrthologsList):
     genage_orthologs_file.save_ext_file('./gename_models_ext_human_fly.csv', worm_base_orthologs)
 
 
+class MissingGenesWithOrthologs:
+    def __init__(self, path: str):
+        with open(path) as fl:
+            rows = fl.readlines()
+            self.symbols: [str] = []
+            for row in rows[1:]:
+                row = row[:len(row) - 1]
+                ls = row.rsplit(',')
+                if len(ls) == 9:
+                    field = ls[8][1:-2]
+                    if field:
+                        symbols = [s.strip() for s in field.split(';') if s]
+                        if len(symbols):
+                            self.symbols += symbols
+    def save(self, missing_path:str):
+        with open(missing_path, 'w') as fl:
+            fl.write('\n'.join(self.symbols))
+
+
+
 WORK_MODE_UPDATE_DB_ORTHOLOGS = True
 
 if __name__ == '__main__':
     print("orthologs parser start...")
+    # mss = MissingGenesWithOrthologs('./gename_models_ext_human_fly.csv')
+    # mss.save('missing_genes.txt')
+    # exit()
+
     worm_base_orthologs = WormBaseOrthologsList('./c_elegans_gene_orthologs.txt')
     if WORK_MODE_UPDATE_DB_ORTHOLOGS:
         update_db_orthologs(worm_base_orthologs)
