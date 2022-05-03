@@ -39,15 +39,15 @@ class BaseDAO:
             m_outer_type=m[1]
             m=m[0]
             if hasattr(m,'_supress') and m._supress: continue
-            if not issubclass(m,BaseModel):
-                t[n]=p._select.get(k,k) if hasattr(p,'_select') else k
-                continue
             if hasattr(m,'_from'):
                 t={'_model':m,'_outer_type':m_outer_type,'_root_model':model,'_name':m._name if hasattr(m,'_name') else (k if k else 'dummy'),'_parent':t.get('_name'),'_from':m._from,'_join':''}
                 tables[t['_name']]=t
                 n=''
             if hasattr(m,'_join'):
                 t['_join']=(t['_join']+"\n"+m._join).strip()
+            if not issubclass(m,BaseModel):
+                t[n]=p._select.get(k,k) if hasattr(p,'_select') else k
+                continue
             queue[0:0]=[('_'.join(filter(None,[n,k])),k,(m.__fields__[k].type_,m.__fields__[k].outer_type_),t,m) for  k in m.__fields__]
         if '_meta' in tables:
             m=tables['_meta']
@@ -63,11 +63,11 @@ class BaseDAO:
             t+' as ( select '+
             ("'0'" if t=='_meta' else 'concat('+((tables[t]['_parent']+'.ordering, ') if tables[t]['_parent'] and tables[t]['_parent']!='_meta' else '')+"lpad(row_number() over(order by "+('@ORDERING@' if t==primary_table else '')+' '+(tables[t]['_model']._order_by if hasattr(tables[t]['_model'],'_order_by') else 'null')+"),5,'0'))")+' as ordering, '+
             ('count(*) over() as row_count, ' if t==primary_table else '')+
-            ', '.join([tables[t][f]+' as "'+f+'"' for f in tables[t].keys() if not f.startswith('_')]+[tables[t]['_model']._select[s]+' as "'+s+'"' for s in (tables[t]['_model']._select if hasattr(tables[t]['_model'],'_select') else {}) if s not in tables[t]])+'\n'+
+            ', '.join([tables[t][f]+' as "'+f+'"' for f in tables[t].keys() if f and not f.startswith('_')]+[tables[t]['_model']._select[s]+' as "'+s+'"' for s in (tables[t]['_model']._select if hasattr(tables[t]['_model'],'_select') else {}) if s not in tables[t]])+'\n'+
             tables[t]['_from'].lstrip().replace('@JOINS@',tables[t].get('_join',''))+')'
             for t in tables
         ])
-        query=query+"\n"+"\nunion ".join(['select '+t+".ordering, '"+str(tables[t]['_name'])+"' as table_name,"+', '.join([', '.join([t+'.'+f+' as '+t+'_'+f for f in [f for f in tables[t] if not f.startswith('_')]+[s for s  in (tables[t]['_model']._select if hasattr(tables[t]['_model'],'_select') else {}) if s not in tables[t]]]) for t in tables])+' '+' '.join([('from'if t2==primary_table else ('right join' if t2==t else 'left join'))+' '+t2+('' if t2==primary_table else ' on false') for t2 in tables]) for t in tables])
+        query=query+"\n"+"\nunion ".join(['select '+t+".ordering, '"+str(tables[t]['_name'])+"' as table_name,"+', '.join([', '.join([t+'.'+f+' as '+t+'_'+f for f in [f for f in tables[t] if f and not f.startswith('_')]+[s for s  in (tables[t]['_model']._select if hasattr(tables[t]['_model'],'_select') else {}) if s not in tables[t]]]) for t in tables])+' '+' '.join([('from'if t2==primary_table else ('right join' if t2==t else 'left join'))+' '+t2+('' if t2==primary_table else ' on false') for t2 in tables]) for t in tables])
 
         inputclass=type(input)
         inputdict=input.dict()
@@ -153,7 +153,7 @@ class BaseDAO:
                     d=d[k]
                 queue[0:0]=[('_'.join(filter(None,[n,k])),k,(m.__fields__[k].type_,m.__fields__[k].outer_type_),d) for k in m.__fields__]
             if tables[t]['_name'] in lists:
-                lists[tables[t]['_name']].append(data)
+                lists[tables[t]['_name']].append(data if issubclass(tables[t]['_model'],BaseModel) else r.get(t+'__value'))
 
             data={}
 
