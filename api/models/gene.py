@@ -269,6 +269,41 @@ join ortholog on gene_to_ortholog.ortholog_id = ortholog.id
 left join model_organism on ortholog.model_organism_id = model_organism.id
 """
 
+class GOTerm(BaseModel):
+    id:int
+    GOId:str
+    term:str
+    _select={
+        'id':'gene_ontology.id',
+        'GOId':'gene_ontology.ontology_identifier',
+        'term':'gene_ontology.name_@LANG@',
+    }
+    _from="""
+from gene
+join gene_to_ontology on gene_to_ontology.gene_id=gene.id
+join gene_ontology on gene_ontology.id=gene_to_ontology.gene_ontology_id
+"""
+
+class GOTermB(GOTerm):
+    _from=GOTerm._from+"where gene_ontology.category='biological_process'\n"
+class GOTermM(GOTerm):
+    _from=GOTerm._from+"where gene_ontology.category='molecular_activity'\n"
+class GOTermC(GOTerm):
+    _from=GOTerm._from+"where gene_ontology.category='cellular_component'\n"
+
+class GOTerms(BaseModel):
+    biological_process:List[GOTermB]
+    molecular_activity:List[GOTermM]
+    cellular_component:List[GOTermC]
+
+class Source(str):
+    _select={'_value':'source.name'}
+    _from="""
+from gene
+join gene_to_source on gene_to_source.gene_id=gene.id
+join source on source.id=gene_to_source.source_id
+"""
+
 class GeneSingle(GeneCommon):
     commentEvolution:str|None
     proteinDescriptionUniProt:str|None
@@ -282,10 +317,10 @@ class GeneSingle(GeneCommon):
     accOrf: str|None
     accCds: str|None
     expression:List[ExpressionInSample]
-    terms:dict
+    terms:GOTerms
     ortholog:List[Ortholog]
     humanProteinAtlas:dict
-    source:List[str]|None
+    source:List[Source]|None
     _select = GeneCommon._select | {
         'commentEvolution':'gene.commentEvolution@LANG2@',
         'proteinDescriptionUniProt':'gene.uniprot_summary_@LANG@',
@@ -298,25 +333,11 @@ class GeneSingle(GeneCommon):
         'accPromoter': "gene.accPromoter",
         'accOrf': 'accOrf',
         'accCds': 'accCds',
-        'source': 'source.name',
-        'terms':"ontology.terms",
         'humanProteinAtlas':'gene.human_protein_atlas',
     }
     _from="""
 FROM gene
 LEFT JOIN taxon ON gene.taxon_id = taxon.id
-left join (
-select gene_id,group_concat(distinct concat(`gene_ontology`.`ontology_identifier`,'|',`gene_ontology`.`name_@LANG@`,'|',`gene_ontology`.`category`) separator  '||') as terms
-from gene_to_ontology
-join gene_ontology on gene_ontology.id = gene_to_ontology.gene_ontology_id
-group by gene_to_ontology.gene_id
-) ontology on ontology.gene_id=gene.id
-left join (
-select gene_id,group_concat(distinct source.name separator "||") as name
-from gene_to_source
-join source on source.id=gene_to_source.source_id
-group by gene_to_source.gene_id
-) source on source.gene_id=gene.id
 @JOINS@
 @FILTERING@
 """

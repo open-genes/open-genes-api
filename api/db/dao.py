@@ -39,15 +39,15 @@ class BaseDAO:
             m_outer_type=m[1]
             m=m[0]
             if hasattr(m,'_supress') and m._supress: continue
-            if not issubclass(m,BaseModel):
-                t[n]=p._select.get(k,k) if hasattr(p,'_select') else k
-                continue
             if hasattr(m,'_from'):
                 t={'_model':m,'_outer_type':m_outer_type,'_root_model':model,'_name':m._name if hasattr(m,'_name') else (k if k else 'dummy'),'_parent':t.get('_name'),'_from':m._from,'_join':''}
                 tables[t['_name']]=t
                 n=''
             if hasattr(m,'_join'):
                 t['_join']=(t['_join']+"\n"+m._join).strip()
+            if not issubclass(m,BaseModel):
+                t[n]=p._select.get(k,k) if hasattr(p,'_select') else k
+                continue
             queue[0:0]=[('_'.join(filter(None,[n,k])),k,(m.__fields__[k].type_,m.__fields__[k].outer_type_),t,m) for  k in m.__fields__]
         if '_meta' in tables:
             m=tables['_meta']
@@ -63,11 +63,11 @@ class BaseDAO:
             t+' as ( select '+
             ("'0'" if t=='_meta' else 'concat('+((tables[t]['_parent']+'.ordering, ') if tables[t]['_parent'] and tables[t]['_parent']!='_meta' else '')+"lpad(row_number() over(order by "+('@ORDERING@' if t==primary_table else '')+' '+(tables[t]['_model']._order_by if hasattr(tables[t]['_model'],'_order_by') else 'null')+"),5,'0'))")+' as ordering, '+
             ('count(*) over() as row_count, ' if t==primary_table else '')+
-            ', '.join([tables[t][f]+' as "'+f+'"' for f in tables[t].keys() if not f.startswith('_')]+[tables[t]['_model']._select[s]+' as "'+s+'"' for s in (tables[t]['_model']._select if hasattr(tables[t]['_model'],'_select') else {}) if s not in tables[t]])+'\n'+
+            ', '.join([tables[t][f]+' as "'+f+'"' for f in tables[t].keys() if f and not f.startswith('_')]+[tables[t]['_model']._select[s]+' as "'+s+'"' for s in (tables[t]['_model']._select if hasattr(tables[t]['_model'],'_select') else {}) if s not in tables[t]])+'\n'+
             tables[t]['_from'].lstrip().replace('@JOINS@',tables[t].get('_join',''))+')'
             for t in tables
         ])
-        query=query+"\n"+"\nunion ".join(['select '+t+".ordering, '"+str(tables[t]['_name'])+"' as table_name,"+', '.join([', '.join([t+'.'+f+' as '+t+'_'+f for f in [f for f in tables[t] if not f.startswith('_')]+[s for s  in (tables[t]['_model']._select if hasattr(tables[t]['_model'],'_select') else {}) if s not in tables[t]]]) for t in tables])+' '+' '.join([('from'if t2==primary_table else ('right join' if t2==t else 'left join'))+' '+t2+('' if t2==primary_table else ' on false') for t2 in tables]) for t in tables])
+        query=query+"\n"+"\nunion ".join(['select '+t+".ordering, '"+str(tables[t]['_name'])+"' as table_name,"+', '.join([', '.join([t+'.'+f+' as '+t+'_'+f for f in [f for f in tables[t] if f and not f.startswith('_')]+[s for s  in (tables[t]['_model']._select if hasattr(tables[t]['_model'],'_select') else {}) if s not in tables[t]]]) for t in tables])+' '+' '.join([('from'if t2==primary_table else ('right join' if t2==t else 'left join'))+' '+t2+('' if t2==primary_table else ' on false') for t2 in tables]) for t in tables])
 
         inputclass=type(input)
         inputdict=input.dict()
@@ -153,7 +153,7 @@ class BaseDAO:
                     d=d[k]
                 queue[0:0]=[('_'.join(filter(None,[n,k])),k,(m.__fields__[k].type_,m.__fields__[k].outer_type_),d) for k in m.__fields__]
             if tables[t]['_name'] in lists:
-                lists[tables[t]['_name']].append(data)
+                lists[tables[t]['_name']].append(data if issubclass(tables[t]['_model'],BaseModel) else r.get(t+'__value'))
 
             data={}
 
@@ -216,26 +216,16 @@ class GeneDAO(BaseDAO):
         GeneSingle.__fields__['researches'].type_._supress= not input.researches=='1'
         # mangle aliases type to string, to manually split it into list in fixer
         GeneSingle.__fields__['aliases'].outer_type_=str
-        GeneSingle.__fields__['source'].outer_type_=str
 
         tables=self.prepare_tables(GeneSingle)
         query,params=self.prepare_query(tables,input)
+        #print (query,file=open('api/query.sql','w'))
 
         hpa_fields=[ 'Ensembl', 'Uniprot', 'Chromosome', 'Position', 'ProteinClass', 'BiologicalProcess', 'MolecularFunction', 'SubcellularLocation', 'SubcellularMainLocation', 'SubcellularAdditionalLocation', 'DiseaseInvolvement', 'Evidence', ]
 
         def fixer(r):
             nonlocal hpa_fields
             r=gene_common_fixer(r);
-
-            r['source']=[s for s in r['source'].split('||') if s] if r['source'] is not None else None
-            terms={}
-            for t in (r['terms'] if r['terms'] else'').split('||'):
-                t=t.split('|')
-                if len(t)!=3: continue
-                identifier,name,category=t
-                if category not in terms: terms[category]=[]
-                terms[category].append({identifier:name})
-            r['terms']=terms
 
             hpa=json.loads(r['humanProteinAtlas'] if r['humanProteinAtlas'] else '{}')
             for f in list(hpa.keys()):
@@ -327,6 +317,23 @@ class GeneDAO(BaseDAO):
         cur = self.cnx.cursor(dictionary=True)
         cur.execute(
             "SELECT * FROM `gene` WHERE symbol='{}';".format(gene)
+        )
+        result = cur.fetchone()
+        return result
+
+    def get_by_hugo_id(
+        self,
+        hugo_id: str,
+    ):
+        """
+        HGNC:4263
+        """
+        hugo_id = hugo_id.upper()
+        hugo_id = hugo_id if hugo_id.startswith('HGNC:') else f'HGNC:{hugo_id}'
+
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute(
+            "SELECT * FROM `gene` WHERE hgnc_id='{}';".format(hugo_id)
         )
         result = cur.fetchone()
         return result
@@ -902,3 +909,36 @@ class ModelOrganismDAO(BaseDAO):
         re = self.read_query(query, params, tables)
 
         return re
+
+class OrthologDAO(BaseDAO):
+    def get_id(self, symbol:str, model_organism:str, external_base_name:str, external_id:str):
+        cur = self.cnx.cursor(dictionary=True, buffered=True)
+        cur.execute(f"SELECT o.id FROM ortholog o WHERE o.symbol = '{symbol}' AND o.external_base_name = '{external_base_name}';")
+        orth_id = cur.fetchone()
+
+        if orth_id is None:
+            ireq = f'''
+            INSERT INTO ortholog(symbol, model_organism_id, external_base_name, external_base_id)
+                VALUES ('{symbol}', (SELECT id FROM model_organism WHERE name_lat = '{model_organism}'), '{external_base_name}', '{external_id}') ;
+                    '''
+            cur.execute(ireq)
+            self.cnx.commit()
+            orth_id = cur.lastrowid
+        else:
+            orth_id = orth_id['id']
+
+        cur.close()
+        return orth_id
+
+    def link_gene(self, gene_id:int, ortholog_id:int):
+        cur = self.cnx.cursor(dictionary=True,buffered=True)
+        cur.execute(f"SELECT id FROM gene_to_ortholog WHERE gene_id = {gene_id} AND ortholog_id = {ortholog_id};")
+        gto = cur.fetchone()
+
+        if gto is None:
+            cur.execute(f"INSERT INTO gene_to_ortholog(gene_id, ortholog_id) VALUES ({gene_id},{ortholog_id});")
+            self.cnx.commit()
+
+        cur.close()
+
+
