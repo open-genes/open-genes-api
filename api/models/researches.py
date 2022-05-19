@@ -241,9 +241,27 @@ join progeria_syndrome on progeria_syndrome.id=gene_to_progeria.progeria_syndrom
 
 class GeneAssociatedWithLongevityEffect(BaseModel):
     longevityEffect:str
-    allelicPolymorphism:None|str
+    polymorphismId:None|str
     sex:None|str
-    allelicVariant:None|str
+    associatedAllele:None|str
+    nucleotideChange:None|str
+    aminoAcidChange:None|str
+    polymorphismOther:None|str
+    nonAssociatedAllele:None|str
+    frequencyControls:None|float
+    frequencyExperiment:None|float
+    minAgeOfControls:None|float
+    maxAgeOfControls:None|float
+    meanAgeOfControls:None|float
+    minAgeOfExperiment:None|float
+    maxAgeOfExperiment:None|float
+    meanAgeOfExperiment:None|float
+    nOfControls:None|int
+    nOfExperiment:None|int
+    position:None|str
+    polymorphismType:None|str
+    ethnicity:None|str
+    studyType:None|str
     changeType:None|str
     dataType:None|str
     doi:None|str
@@ -251,10 +269,29 @@ class GeneAssociatedWithLongevityEffect(BaseModel):
     comment:None|str
     _select={
         'longevityEffect':'longevity_effect.name_@LANG@',
-        'allelicPolymorphism':'polymorphism.name_@LANG@',
-        'allelicVariant':'gene_to_longevity_effect.allele_variant',
+        'polymorphismId':'polymorphism.name_@LANG@',
+        'associatedAllele':'gene_to_longevity_effect.allele_variant',
+        'nucleotideChange':'gene_to_longevity_effect.nucleotide_change',
+        'aminoAcidChange':'gene_to_longevity_effect.amino_acid_change',
+        'polymorphismOther':'gene_to_longevity_effect.polymorphism_other',
+        'nonAssociatedAllele':'gene_to_longevity_effect.non_associated_allele',
+        'frequencyControls':'gene_to_longevity_effect.frequency_controls',
+        'frequencyExperiment':'gene_to_longevity_effect.frequency_experiment',
+        'nOfControls':'gene_to_longevity_effect.n_of_controls',
+        'nOfExperiment':'gene_to_longevity_effect.n_of_experiment',
+        'minAgeOfControls':'gene_to_longevity_effect.min_age_of_controls',
+        'maxAgeOfControls':'gene_to_longevity_effect.max_age_of_controls',
+        'meanAgeOfControls':'gene_to_longevity_effect.mean_age_of_controls',
+        'minAgeOfExperiment':'gene_to_longevity_effect.min_age_of_experiment',
+        'maxAgeOfExperiment':'gene_to_longevity_effect.max_age_of_experiment',
+        'meanAgeOfExperiment':'gene_to_longevity_effect.mean_age_of_experiment',
+        'significance':'gene_to_longevity_effect.significance',
         'changeType':'longevity_effect_age_related_change_type.name_@LANG@',
         'sex':'longevity_effect_organism_sex.name_@LANG@',
+        'position':'longevity_effect_position.name_@LANG@',
+        'polymorphismType':'longevity_effect_polymorphism_type.name_@LANG@',
+        'ethnicity':'longevity_effect_ethnicity.name_@LANG@',
+        'studyType':'longevity_effect_study_type.name_@LANG@',
         'dataType':"concat(gene_to_longevity_effect.data_type,'@LANG@')",
         'doi':'gene_to_longevity_effect.reference',
         'pmid':'gene_to_longevity_effect.pmid',
@@ -267,6 +304,10 @@ join longevity_effect on longevity_effect.id = gene_to_longevity_effect.longevit
 left join polymorphism on polymorphism.id = gene_to_longevity_effect.polymorphism_id
 left join age_related_change_type as longevity_effect_age_related_change_type on longevity_effect_age_related_change_type.id = gene_to_longevity_effect.age_related_change_type_id
 left join organism_sex as longevity_effect_organism_sex on longevity_effect_organism_sex.id = gene_to_longevity_effect.sex_of_organism
+left join position as longevity_effect_position on longevity_effect_position.id = gene_to_longevity_effect.position_id
+left join polymorphism_type as longevity_effect_polymorphism_type on longevity_effect_polymorphism_type.id = gene_to_longevity_effect.polymorphism_type_id
+left join ethnicity as longevity_effect_ethnicity on longevity_effect_ethnicity.id = gene_to_longevity_effect.ethnicity_id
+left join study_type as longevity_effect_study_type on longevity_effect_study_type.id = gene_to_longevity_effect.study_type_id
 """
 
 class AgeRelatedChangeOfGene(BaseModel):
