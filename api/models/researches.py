@@ -241,9 +241,9 @@ join progeria_syndrome on progeria_syndrome.id=gene_to_progeria.progeria_syndrom
 
 class GeneAssociatedWithLongevityEffect(BaseModel):
     longevityEffect:str
-    allelicPolymorphism:None|str
+    polymorphismId:None|str
     sex:None|str
-    allelicVariant:None|str
+    associatedAllele:None|str
     nucleotideChange:None|str
     aminoAcidChange:None|str
     polymorphismOther:None|str
@@ -269,8 +269,8 @@ class GeneAssociatedWithLongevityEffect(BaseModel):
     comment:None|str
     _select={
         'longevityEffect':'longevity_effect.name_@LANG@',
-        'allelicPolymorphism':'polymorphism.name_@LANG@',
-        'allelicVariant':'gene_to_longevity_effect.allele_variant',
+        'polymorphismId':'polymorphism.name_@LANG@',
+        'associatedAllele':'gene_to_longevity_effect.allele_variant',
         'nucleotideChange':'gene_to_longevity_effect.nucleotide_change',
         'aminoAcidChange':'gene_to_longevity_effect.amino_acid_change',
         'polymorphismOther':'gene_to_longevity_effect.polymorphism_other',
