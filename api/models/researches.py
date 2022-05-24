@@ -244,7 +244,6 @@ class GeneAssociatedWithLongevityEffect(BaseModel):
     allelicPolymorphism:None|str
     sex:None|str
     allelicVariant:None|str
-    modelOrganism:str
     changeType:None|str
     dataType:None|str
     doi:None|str
@@ -253,10 +252,9 @@ class GeneAssociatedWithLongevityEffect(BaseModel):
     _select={
         'longevityEffect':'longevity_effect.name_@LANG@',
         'allelicPolymorphism':'polymorphism.name_@LANG@',
-        'sex':"concat(gene_to_longevity_effect.sex_of_organism,'@LANG@')",
         'allelicVariant':'gene_to_longevity_effect.allele_variant',
-        'modelOrganism':'longevity_effect_model_organism.name_@LANG@',
         'changeType':'longevity_effect_age_related_change_type.name_@LANG@',
+        'sex':'longevity_effect_organism_sex.name_@LANG@',
         'dataType':"concat(gene_to_longevity_effect.data_type,'@LANG@')",
         'doi':'gene_to_longevity_effect.reference',
         'pmid':'gene_to_longevity_effect.pmid',
