@@ -174,7 +174,6 @@ def increase_lifespan_common_fixer(r):
     for i in r['interventions']['experiment']+r['interventions']['controlAndExperiment']:
         i['tissueSpecific']=i['tissueSpecific']==1
         i['tissueSpecificPromoter']=i['tissueSpecificPromoter']==1
-        if not i['tissueSpecific']: i['tissueSpecificPromoter']=None
     for f in ['lMinChangeStatSignificance', 'lMeanChangeStatSignificance', 'lMedianChangeStatSignificance', 'lMaxChangeStatSignificance']:
         r[f]={'yes':True,'да':True,'no':False,'нет':False}.get(r[f])
     return r
