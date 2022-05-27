@@ -43,7 +43,7 @@ class LifespanExperiment(BaseModel):
     interventionMethod:str|None
     interventionWay:str|None
     tissueSpecific:bool|None
-    tissueSpecificPromoter:bool|None
+    tissueSpecificPromoter:str|None
     treatmentStart:float|None
     treatmentEnd:float|None
     inductionByDrugWithdrawal:int|None
