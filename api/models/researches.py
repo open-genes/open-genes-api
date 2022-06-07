@@ -667,28 +667,29 @@ class AssociationWithAcceleratedAgingResearchedOutput(PaginatedOutput):
 
 #
 class AssociationsWithLifespanResearched(GeneAssociatedWithLongevityEffect):
-    geneId:int
-    geneNcbiId:int|None
-    geneName:str|None
-    geneSymbol:str|None
-    geneAliases:List[str]
-    _select=GeneAssociatedWithLongevityEffect._select|{
-        'geneId':'gene.id',
-        'geneSymbol':'gene.symbol',
-        'geneNcbiId':'gene.ncbi_id',
-        'geneName':'gene.name',
-        'geneAliases':'gene.aliases',
+    geneId: int
+    geneNcbiId: int | None
+    geneName: str | None
+    geneSymbol: str | None
+    geneAliases: List[str]
+    _select = GeneAssociatedWithLongevityEffect._select | {
+        'geneId': 'gene.id',
+        'geneSymbol': 'gene.symbol',
+        'geneNcbiId': 'gene.ncbi_id',
+        'geneName': 'gene.name',
+        'geneAliases': 'gene.aliases',
     }
-    _name='geneAssociatedWithLongevityEffect'
-    _from="""
-from gene_to_longevity_effect
-join gene on gene_to_longevity_effect.gene_id=gene.id
-join longevity_effect on longevity_effect.id = gene_to_longevity_effect.longevity_effect_id
-left join polymorphism on polymorphism.id = gene_to_longevity_effect.polymorphism_id
-left join age_related_change_type as longevity_effect_age_related_change_type on longevity_effect_age_related_change_type.id = gene_to_longevity_effect.age_related_change_type_id
-left join model_organism as longevity_effect_model_organism on longevity_effect_model_organism.id=gene_to_longevity_effect.model_organism_id
-@PAGING@
-"""
+    _name = 'geneAssociatedWithLongevityEffect'
+    if not GeneAssociatedWithLongevityEffect._from:
+        _from = """
+    from gene_to_longevity_effect
+    join gene on gene_to_longevity_effect.gene_id=gene.id
+    join longevity_effect on longevity_effect.id = gene_to_longevity_effect.longevity_effect_id
+    left join polymorphism on polymorphism.id = gene_to_longevity_effect.polymorphism_id
+    left join age_related_change_type as longevity_effect_age_related_change_type on longevity_effect_age_related_change_type.id = gene_to_longevity_effect.age_related_change_type_id
+    left join model_organism as longevity_effect_model_organism on longevity_effect_model_organism.id=gene_to_longevity_effect.model_organism_id
+    @PAGING@
+    """
 
 class AssociationsWithLifespanResearchedOutput(PaginatedOutput):
     items:List[AssociationsWithLifespanResearched]
