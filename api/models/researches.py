@@ -262,6 +262,7 @@ class GeneAssociatedWithLongevityEffect(BaseModel):
     polymorphismType:None|str
     ethnicity:None|str
     studyType:None|str
+    significance:None|str
     changeType:None|str
     dataType:None|str
     doi:None|str
