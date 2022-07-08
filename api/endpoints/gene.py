@@ -25,7 +25,7 @@ async def gene_search(input:GeneSearchInput=Depends(GeneSearchInput))->List:
         idls = []
         for item in sls['items']:
             idls.append(item['id'])
-        suggfilter = ','.join(str(f) for f in idls)
+        suggfilter = ','.join(str(f) for f in idls) if idls else input.bySuggestions
         input.bySuggestions = None
         input.byGeneId = suggfilter
     #
