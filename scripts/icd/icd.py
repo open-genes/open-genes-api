@@ -2,8 +2,8 @@ import os
 
 import pandas as pd
 
-from api.entities import entities
 from api.db import dao
+from api.entities import entities
 
 
 def icd_ru_upload():

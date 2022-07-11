@@ -49,4 +49,3 @@ FROM gene
 @LIMIT@
 ) jsout;
 '''
-

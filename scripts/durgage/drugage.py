@@ -1,11 +1,11 @@
+import json
 import os
 import re
 import time
-import json
 from collections import defaultdict
 
-import requests
 import pandas as pd
+import requests
 from bs4 import BeautifulSoup
 from tqdm import tqdm
 
@@ -72,8 +72,8 @@ def itp_articles_fetcher():
 
     # Get NIH Aging Institute html with publications.
     r = requests.get(
-        'https://www.nia.nih.gov/' +
-        'research/dab/interventions-testing-program-itp/publications-nia-interventions-testing-program'
+        'https://www.nia.nih.gov/'
+        + 'research/dab/interventions-testing-program-itp/publications-nia-interventions-testing-program'
     )
 
     # Prepare for parse
@@ -82,9 +82,11 @@ def itp_articles_fetcher():
 
     # Get PMIDs from links.
     pmids_from_href = set(
-        [re.search(
-            r'\d+', a.attrs['href']
-        ).group() for a in soup.find_all('a') if 'href' in a.attrs.keys() and 'pubmed' in a.attrs['href']]
+        [
+            re.search(r'\d+', a.attrs['href']).group()
+            for a in soup.find_all('a')
+            if 'href' in a.attrs.keys() and 'pubmed' in a.attrs['href']
+        ]
     )
 
     # Get raw text with PMID or DOI in.
@@ -238,7 +240,9 @@ def fetch_pubchem_id():
             cas_to_cid[cas] = cid.text.split('\n')[0]
         time.sleep(1)
 
-    drugage['PubChemCID'] = drugage['cas_number'].apply(lambda x: cas_to_cid[x] if x in cas_to_cid.keys() else '')
+    drugage['PubChemCID'] = drugage['cas_number'].apply(
+        lambda x: cas_to_cid[x] if x in cas_to_cid.keys() else ''
+    )
     drugage.to_csv(DRUGAGE_MODIFIED, sep='\t', index=False)
     print('Done.')
     print('Found:', len(cas_to_cid), 'Missed:', len(set(drugage['cas_number'])) - len(cas_to_cid))

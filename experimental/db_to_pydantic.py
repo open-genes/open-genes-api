@@ -1,10 +1,8 @@
-import re
 import os
+import re
 
 from mysql import connector
-
 from opengenes.config import CONFIG
-
 
 STR = 'str'
 INT = 'int'
@@ -39,7 +37,7 @@ MYSQL_TYPES_MAP = {
 CUR_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
-class MySQLGenerator():
+class MySQLGenerator:
     def __init__(self, cnx: connector.CMySQLConnection):
         self.cnx = cnx
 
@@ -48,9 +46,7 @@ class MySQLGenerator():
         cur.execute(f"SHOW COLUMNS FROM {table_name}")
         columns_info = cur.fetchall()
 
-        class_name = ''.join([
-            substring.capitalize() for substring in table_name.split('_')
-        ])
+        class_name = ''.join([substring.capitalize() for substring in table_name.split('_')])
 
         text = f'class {class_name}(BaseModel):\n'
         for column in columns_info:
