@@ -1,11 +1,12 @@
-from db import dao
-import os
 import csv
-import requests
-from entities.entities import Gene, Source, GeneToSource, CalorieRestrictionExperiment
+import os
 import time
-from mysql.connector.errors import DataError
 import traceback
+
+import requests
+from db import dao
+from entities.entities import CalorieRestrictionExperiment, Gene, GeneToSource, Source
+from mysql.connector.errors import DataError
 
 
 def parser():
@@ -32,9 +33,11 @@ def parser():
             gene_id = gene_db['id']
             gene_symbol = gene_db['symbol']
         if not gene_db:
-            gene = requests.get('https://mygene.info/v3/query'
-                                '?fields=symbol%2Cname%2Centrezgene%2Calias%2Csummary'
-                                '&species=human&q={}'.format(row['symbol']))
+            gene = requests.get(
+                'https://mygene.info/v3/query'
+                '?fields=symbol%2Cname%2Centrezgene%2Calias%2Csummary'
+                '&species=human&q={}'.format(row['symbol'])
+            )
             if 'hits' not in gene.json():
                 continue
             if len(gene.json()['hits']) > 0:
@@ -48,7 +51,6 @@ def parser():
                         name=gene_answer['name'],
                         created_at=time.time(),
                         updated_at=time.time(),
-
                     )
                     if 'alias' in gene_answer:
                         if type(gene_answer['alias']) == list:
@@ -75,12 +77,16 @@ def parser():
             source_id=source_id,
         )
         dao.SourceDAO().add_relation(gene_to_source=gene_to_source)
-        if row['measurementMethod'] == "chromatography, mass_spectrometry" \
-                or row['measurementMethod'] == "mass_spectrometry":
+        if (
+            row['measurementMethod'] == "chromatography, mass_spectrometry"
+            or row['measurementMethod'] == "mass_spectrometry"
+        ):
             measurement_method_str = row['measurementMethod']
         else:
             measurement_method_str = row['measurementMethod'].lower().replace('_', ' ')
-        measurement_method_id = calorie_dao.get_measurement_method(name=measurement_method_str)['id']
+        measurement_method_id = calorie_dao.get_measurement_method(name=measurement_method_str)[
+            'id'
+        ]
         if row['organism'] == "mouse":
             organism = "mice"
             strain_id = calorie_dao.get_organism_line(row['line'])['id']
@@ -100,7 +106,7 @@ def parser():
             sex = row['sex']
         try:
             tissue_str = row['tissue'].lower().replace('_', ' ')
-            tissue_id = calorie_dao.get_sample(name=tissue_str)['id'],
+            tissue_id = (calorie_dao.get_sample(name=tissue_str)['id'],)
         except TypeError:
             tissue_str = row['tissue'].lower().replace('_', ' ')
             result = calorie_dao.add_sample(name=tissue_str)
@@ -121,11 +127,14 @@ def parser():
             p_val=row['pValue'],
             result=row['crResult'],
             measurement_method_id=measurement_method_id,
-            expression_evaluation_by_id=calorie_dao.get_measurement_type(name=row['measurementType'].lower().replace('_', ' '))['id'],
+            expression_evaluation_by_id=calorie_dao.get_measurement_type(
+                name=row['measurementType'].lower().replace('_', ' ')
+            )['id'],
             restriction_percent=row['restrictionPercent'],
             restriction_time=row['restrictionTime'].split('_')[0],
-            restriction_time_unit_id=calorie_dao.get_treatment_time(row['restrictionTime'].split('_')[1])[
-                'id'],
+            restriction_time_unit_id=calorie_dao.get_treatment_time(
+                row['restrictionTime'].split('_')[1]
+            )['id'],
             age=row['age'].split('_')[0],
             tissue_id=calorie_dao.get_sample(name=row['tissue'])['id'],
             age_time_unit_id=calorie_dao.get_treatment_time(row['age'].split('_')[1])['id'],

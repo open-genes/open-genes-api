@@ -2,13 +2,14 @@ import os
 import pathlib
 from enum import Enum
 
-from dotenv import load_dotenv, dotenv_values
+from dotenv import dotenv_values, load_dotenv
 
 load_dotenv(os.path.join(pathlib.Path(__file__).parent.resolve().parent, '.env'))
 CONFIG = dict(os.environ)
 
-for k in ['DEBUG','RELOAD']:
-    if k in CONFIG: CONFIG[k]=CONFIG[k].lower() in ['true','1','yes','enable']
+for k in ['DEBUG', 'RELOAD']:
+    if k in CONFIG:
+        CONFIG[k] = CONFIG[k].lower() in ['true', '1', 'yes', 'enable']
 
 VERSION = {}
 version_file = os.path.join(os.path.dirname(os.path.dirname(__file__)), '/VERSION')

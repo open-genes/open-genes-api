@@ -1,11 +1,10 @@
-import os
 import ast
+import os
 
-import requests
 import pandas as pd
+import requests
 
 from api.db import dao
-
 
 cur_dir = os.path.dirname(os.path.abspath(__file__))
 go_and_mechanisms = pd.read_table(os.path.join(cur_dir, 'go_and_mechanisms.tsv'))

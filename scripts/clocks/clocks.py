@@ -2,8 +2,8 @@ import os
 
 import pandas as pd
 
-from api.entities import entities
 from api.db import dao
+from api.entities import entities
 
 
 def checker():
@@ -25,13 +25,15 @@ def checker():
             updated_counter += 1
             print(f'UPDATED: ncbi_id={gene_id}')
         else:
-            dao.GeneDAO().add(gene=entities.Gene(
-                isHidden=1,
-                symbol=row['Symbol'],
-                ncbi_id=gene_id,
-                methylation_horvath=methylation_horvath,
-                source='horvath',
-            ))
+            dao.GeneDAO().add(
+                gene=entities.Gene(
+                    isHidden=1,
+                    symbol=row['Symbol'],
+                    ncbi_id=gene_id,
+                    methylation_horvath=methylation_horvath,
+                    source='horvath',
+                )
+            )
             added_counter += 1
             print(f'ADDED: ncbi_id={gene_id}')
     print(f'UPDATED: {updated_counter}')
