@@ -262,6 +262,7 @@ class GeneAssociatedWithLongevityEffect(BaseModel):
     polymorphismType:None|str
     ethnicity:None|str
     studyType:None|str
+    significance:None|str
     changeType:None|str
     dataType:None|str
     doi:None|str
@@ -289,7 +290,7 @@ class GeneAssociatedWithLongevityEffect(BaseModel):
         'changeType':'longevity_effect_age_related_change_type.name_@LANG@',
         'sex':'longevity_effect_organism_sex.name_@LANG@',
         'position':'longevity_effect_position.name_@LANG@',
-        'polymorphismType':'longevity_effect_polymorphism_type.name_@LANG@',
+        'polymorphismType':'longevity_effect_polymorphism_type.name_en',
         'ethnicity':'longevity_effect_ethnicity.name_@LANG@',
         'studyType':'longevity_effect_study_type.name_@LANG@',
         'dataType':"concat(gene_to_longevity_effect.data_type,'@LANG@')",
