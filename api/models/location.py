@@ -1,5 +1,5 @@
-from pydantic import BaseModel
 from models import *
+from pydantic import BaseModel
 
 
 class Exon(BaseModel):

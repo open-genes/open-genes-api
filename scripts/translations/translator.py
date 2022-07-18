@@ -1,5 +1,6 @@
-import re
 import argparse
+import re
+
 from deep_translator import GoogleTranslator
 
 from api.db import dao
@@ -37,36 +38,21 @@ def translate(table_name: str, field_name_en: str, field_name_ru: str):
             subcnx.commit()
             subsubcur.close()
             subcnx.close()
-            print(
-                f"TRANSLATED IN {table_name}: id={field_id}, {field_en} => {ru_field}"
-            )
+            print(f"TRANSLATED IN {table_name}: id={field_id}, {field_en} => {ru_field}")
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(
-        description='Translate specific fields'
+    parser = argparse.ArgumentParser(description='Translate specific fields')
+    parser.add_argument('--table-name', dest='table_name', required=True, help='table name')
+    parser.add_argument(
+        '--field_name_en', dest='field_name_en', help='field_name en', required=True
     )
     parser.add_argument(
-        '--table-name',
-        dest='table_name',
-        required=True,
-        help='table name'
-    )
-    parser.add_argument(
-        '--field_name_en',
-        dest='field_name_en',
-        help='field_name en',
-        required=True
-    )
-    parser.add_argument(
-        '--field_name_ru',
-        dest='field_name_ru',
-        help='field_name ru',
-        required=True
+        '--field_name_ru', dest='field_name_ru', help='field_name ru', required=True
     )
     args = parser.parse_args()
     translate(
         table_name=args.table_name,
         field_name_en=args.field_name_en,
-        field_name_ru=args.field_name_ru
+        field_name_ru=args.field_name_ru,
     )

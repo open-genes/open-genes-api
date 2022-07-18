@@ -2,9 +2,9 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-
 # TODO(dmtgk): Add all entities.
 # TODO(dmtgk): Validate schema with team.
+
 
 class Age(BaseModel):
     # id: int
@@ -115,6 +115,7 @@ class CalorieRestrictionExperiment(BaseModel):
     expression_change_log_fc: Optional[str] = None
     expression_change_percent: Optional[str] = None
     doi: Optional[str] = None
+
 
 class GeneTranscript(BaseModel):
     gene_id: Optional[int] = None
