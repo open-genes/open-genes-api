@@ -450,6 +450,7 @@ class CalorieExperiment(BaseModel):
     ncbiId: int | None
     uniprot: str | None
     ensembl: str | None
+    isHidden: bool | None
     calorieRestrictionExperiments: List[CalorieRestrictionExperiment]
     _name = 'gene'
     _select = {
@@ -459,6 +460,7 @@ class CalorieExperiment(BaseModel):
         'ncbiId': "gene.ncbi_id",
         'uniprot': "gene.uniprot",
         'ensembl': "gene.ensembl",
+        'isHidden': "gene.isHidden",
     }
 
     _from = """
