@@ -860,7 +860,8 @@ class DiseaseDAO(BaseDAO):
 class GeneSuggestionDAO(BaseDAO):
     """Gene suggestion fetcher for gene table"""
 
-    def search(self, input: str):
+    def search(self, input: str, suggestHidden: int):
+        is_hidden_filter = "AND isHidden = %(suggestHidden)s" if suggestHidden == 0 else ""
         terms = [
             term
             for term in [[w for w in t.strip().split(' ') if w] for t in input.split(',') if t]
@@ -906,13 +907,14 @@ class GeneSuggestionDAO(BaseDAO):
                     re['notFound'] = [t for t in re['notFound'] if t != term]
 
         # sql block
-        sql = f"SELECT {names_block} FROM gene WHERE {where_block} AND isHidden=0;"
-        self.fetch_all(sql, {}, consume_row)
+        sql = f"SELECT {names_block},isHidden FROM gene WHERE {where_block} {is_hidden_filter};"
+        self.fetch_all(sql, {"suggestHidden": suggestHidden}, consume_row)
 
         re['notFound'] = [' '.join(t) for t in re['notFound']]
         return re
 
-    def search_by_genes_id(self, byGeneId: str):
+    def search_by_genes_id(self, byGeneId: str, suggestHidden: int):
+        is_hidden_filter = "AND isHidden = %(suggestHidden)s" if suggestHidden == 0 else ""
         idls = [i.strip() for i in byGeneId.split(',') if i.strip().isdigit()]
         re = {'items': [], 'found': [], 'notFound': idls}
         if not idls:
@@ -934,12 +936,15 @@ class GeneSuggestionDAO(BaseDAO):
 
         # sql block
         idls_str = ','.join([str(i) for i in idls])
-        sql = f"SELECT {names_block} FROM gene WHERE id IN ({idls_str}) AND isHidden=0;"
-        self.fetch_all(sql, {}, consume_row)
+        sql = (
+            f"SELECT {names_block},isHidden FROM gene WHERE id IN ({idls_str}) {is_hidden_filter};"
+        )
+        self.fetch_all(sql, {"suggestHidden": suggestHidden}, consume_row)
 
         return re
 
-    def search_by_genes_symbol(self, byGeneSmb: str):
+    def search_by_genes_symbol(self, byGeneSmb: str, suggestHidden: int):
+        is_hidden_filter = "AND isHidden = %(suggestHidden)s" if suggestHidden == 0 else ""
         symbols = [i.strip().upper() for i in byGeneSmb.split(',')]
         re = {'items': [], 'found': [], 'notFound': symbols}
         if not symbols:
@@ -961,8 +966,8 @@ class GeneSuggestionDAO(BaseDAO):
 
         # sql block
         idls_str = ','.join([f"'{i}'" for i in symbols])
-        sql = f"SELECT {names_block} FROM gene WHERE symbol IN ({idls_str}) AND isHidden=0;"
-        self.fetch_all(sql, {}, consume_row)
+        sql = f"SELECT {names_block},isHidden FROM gene WHERE symbol IN ({idls_str}) {is_hidden_filter};"
+        self.fetch_all(sql, {"suggestHidden": suggestHidden}, consume_row)
 
         return re
 
