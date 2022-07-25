@@ -49,6 +49,7 @@ class GeneSuggestion:
     symbol: str = Field(title="Gene symbol (HGNC)", default=None)
     name: str = Field(title="Gene name", default=None)
     aliases: str = Field(title="Gene symbols in the other nomenclatures", default=None)
+    isHidden: bool = Field(title="TODO askisHidden", default=False)
 
 
 @dataclass
