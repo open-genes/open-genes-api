@@ -409,13 +409,6 @@ class GeneSingle(GeneCommon):
     proteinDescriptionUniProt: str | None
     descriptionNCBI: str | None
     proteinDescriptionOpenGenes: str | None
-    band: str | None
-    locationStart: int | None
-    locationEnd: int | None
-    orientation: int | None
-    accPromoter: str | None
-    accOrf: str | None
-    accCds: str | None
     expression: List[ExpressionInSample]
     terms: GOTerms
     ortholog: List[Ortholog]
@@ -426,13 +419,6 @@ class GeneSingle(GeneCommon):
         'proteinDescriptionUniProt': 'gene.uniprot_summary_@LANG@',
         'descriptionNCBI': 'gene.ncbi_summary_@LANG@',
         'proteinDescriptionOpenGenes': 'gene.og_summary_@LANG@',
-        'band': 'gene.band',
-        'locationStart': 'gene.locationStart',
-        'locationEnd': 'gene.locationEnd',
-        'orientation': 'gene.orientation',
-        'accPromoter': "gene.accPromoter",
-        'accOrf': 'accOrf',
-        'accCds': 'accCds',
         'humanProteinAtlas': 'gene.human_protein_atlas',
     }
     _from = """
