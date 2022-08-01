@@ -522,14 +522,105 @@ class Researches(BaseModel):
 
 class IncreaseLifespanSearchInput(PaginationInput, LanguageInput, SortInput):
     byGeneId: int | None
+    byDiseases: str = None
+    byDiseaseCategories: str = None
+    byAgeRelatedProcess: str = None
+    byExpressionChange: str = None
+    bySelectionCriteria: str = None
+    byAgingMechanism: str = None
+    byProteinClass: str = None
+    bySpecies: str = None
+    byOrigin: str = None
+    byFamilyOrigin: str = None
+    byConservativeIn: str = None
+    byGeneSymbol: str = None
+    bySuggestions: str = None
+    byChromosomeNum: str = None
     sortBy: Literal[
         'lifespanMinChangePercent',
         'lifespanMeanChangePercent',
         'lifespanMedianChangePercent',
         'lifespanMaxChangePercent',
     ] | None = None
+    researches: str = None
+    isHidden: str = 1
     _filters = {
         'byGeneId': [lambda value: 'gene.id=%s', lambda value: [value]],
+        'isHidden': [lambda value: 'gene.isHidden!=1', lambda value: []],
+        'byChromosomeNum': [
+            lambda value: 'gene.chromosome in (' + ','.join(['%s' for v in value.split(',')]) + ')',
+            lambda value: value.split(','),
+        ],
+        'byGeneSymbol': [
+            lambda value: 'gene.symbol in (' + ','.join(['%s' for v in value.split(',')]) + ')',
+            lambda value: value.split(','),
+        ],
+        'byDiseases': [
+            lambda value: '(select count(*) from gene_to_disease where gene_to_disease.gene_id=gene.id and disease_id in ('
+            + ','.join(['%s' for v in value.split(',')])
+            + '))=%s',
+            lambda value: value.split(',') + [len(value.split(','))],
+        ],
+        'byDiseaseCategories': [
+            lambda value: '(select count(*) from gene_to_disease g join disease d on g.disease_id=d.id join disease c on c.icd_code=d.icd_code_visible where g.gene_id=gene.id and c.id in ('
+            + ','.join(['%s' for v in value.split(',')])
+            + '))=%s',
+            lambda value: value.split(',') + [len(value.split(','))],
+        ],
+        'byAgeRelatedProcess': [
+            lambda value: '(select count(*) from gene_to_functional_cluster where gene_id=gene.id and functional_cluster_id in ('
+            + ','.join(['%s' for v in value.split(',')])
+            + '))=%s',
+            lambda value: value.split(',') + [len(value.split(','))],
+        ],
+        'byExpressionChange': [
+            lambda value: 'gene.expressionChange in ('
+            + ','.join(['%s' for v in value.split(',')])
+            + ')',
+            lambda value: value.split(','),
+        ],
+        'bySelectionCriteria': [
+            lambda value: '(select count(*) from gene_to_comment_cause where gene_id=gene.id and comment_cause_id in ('
+            + ','.join(['%s' for v in value.split(',')])
+            + '))=%s',
+            lambda value: value.split(',') + [len(value.split(','))],
+        ],
+        'byAgingMechanism': [
+            lambda value: '(select count(distinct aging_mechanism_id) from gene_to_ontology o join gene_ontology_to_aging_mechanism_visible a on a.gene_ontology_id=o.gene_ontology_id where o.gene_id=gene.id and aging_mechanism_id in ('
+            + ','.join(['%s' for v in value.split(',')])
+            + '))=%s',
+            lambda value: value.split(',') + [len(value.split(','))],
+        ],
+        'byProteinClass': [
+            lambda value: '(select count(*) from gene_to_protein_class where gene_id=gene.id and protein_class_id in ('
+            + ','.join(['%s' for v in value.split(',')])
+            + '))=%s',
+            lambda value: value.split(',') + [len(value.split(','))],
+        ],
+        'bySpecies': [
+            lambda value: '(select count(distinct model_organism_id) from lifespan_experiment where lifespan_experiment.gene_id=gene.id and model_organism_id in ('
+            + ','.join(['%s' for v in value.split(',')])
+            + '))=%s',
+            lambda value: value.split(',') + [len(value.split(','))],
+        ],
+        'byOrigin': [
+            lambda value: '(select count(*) from phylum where gene.phylum_id=phylum.id and phylum.name_phylo in ('
+            + ','.join(['%s' for v in value.split(',')])
+            + '))=%s',
+            lambda value: value.split(',') + [len(value.split(','))],
+        ],
+        'byFamilyOrigin': [
+            lambda value: '(select count(*) from phylum where gene.phylum_id=family_phylum.id and phylum.id in ('
+            + ','.join(['%s' for v in value.split(',')])
+            + '))=%s',
+            lambda value: value.split(',') + [len(value.split(','))],
+        ],
+        'byConservativeIn': [
+            lambda value: '(select count(*) from taxon where gene.taxon_id=taxon.id and taxon.id in ('
+            + ','.join(['%s' for v in value.split(',')])
+            + '))=%s',
+            lambda value: value.split(',') + [len(value.split(','))],
+        ],
     }
     _sorts = {
         'lifespanMinChangePercent': 'general_lifespan_experiment.lifespan_min_change',
