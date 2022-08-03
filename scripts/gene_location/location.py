@@ -1,14 +1,14 @@
 import json
 
+import requests
+from db import dao
+from entities import entities
 from ncbi.datasets.openapi import ApiClient as DatasetsApiClient
 from ncbi.datasets.openapi import ApiException as DatasetsApiException
 from ncbi.datasets.openapi.api.gene_api import GeneApi as DatasetsGeneApi
-from db import dao
-import requests
-from entities import entities
 
 
-class GeneLocationFetcherNCBI():
+class GeneLocationFetcherNCBI:
     def __init__(self, symbol: str):
         self.gene = symbol
         self.taxon = 'human'
@@ -25,14 +25,14 @@ class GeneLocationFetcherNCBI():
                 print(f'Exception when calling GeneApi: {e}\n')
 
 
-class GeneFetcherHUGO():
+class GeneFetcherHUGO:
     def __init__(self, symbol: str):
         self.gene = symbol
 
     def exec(self) -> dict:
         response_raw = requests.get(
             f'http://rest.genenames.org/fetch/symbol/{self.gene}',
-            headers={'Accept': 'application/json'}
+            headers={'Accept': 'application/json'},
         )
 
         if response_raw.status_code != 200:
@@ -110,7 +110,9 @@ class Worker:
                     tr_obj.genomic_range_acc_version = ''
                     if genomic_rng:
                         #
-                        tr_obj.genomic_range_acc_version = genomic_rng.get('accession_version') or ''
+                        tr_obj.genomic_range_acc_version = (
+                            genomic_rng.get('accession_version') or ''
+                        )
                         #
                         range_genomic_rng = genomic_rng.get('range')
                         if range_genomic_rng and len(range_genomic_rng) > 0:
@@ -119,7 +121,9 @@ class Worker:
                             #
                             tr_obj.genomic_range_end = range_genomic_rng.get('end')
                             #
-                            tr_obj.genomic_range_orientation = -1 if range_genomic_rng.get('orientation') == 'minus' else 1
+                            tr_obj.genomic_range_orientation = (
+                                -1 if range_genomic_rng.get('orientation') == 'minus' else 1
+                            )
 
                     tr_id = self.trans_dao.add(tr_obj)
 
@@ -187,14 +191,35 @@ class Worker:
                     print(f" GENE: {symbol} ERROR: {type(e)} {str(e)}")
 
                 # update gene
-                self.update_gene(gid, loc_start,
-                                 loc_end, loc_orient_int, hgnc_id, gene_group_id, gene_locus_group_id, hugo_location, loc_acc_orf, loc_acc_cds)
+                self.update_gene(
+                    gid,
+                    loc_start,
+                    loc_end,
+                    loc_orient_int,
+                    hgnc_id,
+                    gene_group_id,
+                    gene_locus_group_id,
+                    hugo_location,
+                    loc_acc_orf,
+                    loc_acc_cds,
+                )
 
                 # set state
                 self.state_dao.set(str(gid))
 
-    def update_gene(self, id: int, loc_start,
-                    loc_end, loc_orient, hgnc_id, gene_group_id, gene_locus_group_id, location, loc_acc_orf, loc_acc_cds):
+    def update_gene(
+        self,
+        id: int,
+        loc_start,
+        loc_end,
+        loc_orient,
+        hgnc_id,
+        gene_group_id,
+        gene_locus_group_id,
+        location,
+        loc_acc_orf,
+        loc_acc_cds,
+    ):
         chstr = ''
         for l in location:
             if l.isdigit():

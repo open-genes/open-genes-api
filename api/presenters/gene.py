@@ -1,13 +1,13 @@
 from typing import List, Optional
 
 from presenters.aging_mechanism import AgingMechanism
-from presenters.disease import DiseaseShort, DiseaseCategories
+from presenters.disease import DiseaseCategories, DiseaseShort
 from presenters.expression import Expression
-from presenters.protein_class import ProteinClass
 from presenters.functional_cluster import FunctionalCluster
 from presenters.human_protein_atlas import HumanProteinAtlas
 from presenters.origin import Origin
-from presenters.researches import Researches, IncreaseLifespan
+from presenters.protein_class import ProteinClass
+from presenters.researches import IncreaseLifespan, Researches
 from presenters.timestamp import Timestamp
 from pydantic import Field
 from pydantic.dataclasses import dataclass
@@ -25,17 +25,22 @@ class GeneShort:
     homologueTaxon: Optional[str] = Field(title="An organism the gene is conservative in")
     aliases: List[str] = Field(title="Gene symbols in the other nomenclatures")
     diseases: DiseaseShort = Field(title="Association with diseases (eDGAR)")
-    functionalClusters: List[FunctionalCluster] = Field(title="Age-related processes/systems the gene involved in")
+    functionalClusters: List[FunctionalCluster] = Field(
+        title="Age-related processes/systems the gene involved in"
+    )
     expressionChange: str = Field(
         title="Age-dependent changes of gene expression",
-        description="Designations: \n0 — no data \n1 — decreases\n2 — increases\n3 — mixed"
+        description="Designations: \n0 — no data \n1 — decreases\n2 — increases\n3 — mixed",
     )
     timestamp: int = Field(title="Unix time of the latest changes")
     ensembl: str = Field(title="Ensembl id")
-    methylationCorrelation: str = Field(title="Whether gene methylation changes with age (according to Horvath's epigenetic clock)")
+    methylationCorrelation: str = Field(
+        title="Whether gene methylation changes with age (according to Horvath's epigenetic clock)"
+    )
     diseaseCategories: dict = Field(title="Disease categories (ICD)")
     commentCause: dict = Field(title="Gene selection criteria")
     proteinClass: List[ProteinClass] = Field()
+
 
 @dataclass
 class GeneSuggestion:
@@ -44,6 +49,8 @@ class GeneSuggestion:
     symbol: str = Field(title="Gene symbol (HGNC)", default=None)
     name: str = Field(title="Gene name", default=None)
     aliases: str = Field(title="Gene symbols in the other nomenclatures", default=None)
+    isHidden: bool = Field(title="TODO askisHidden", default=False)
+
 
 @dataclass
 class GeneSuggestionOutput:
@@ -51,9 +58,11 @@ class GeneSuggestionOutput:
     found: List[str]
     notFound: List[str]
 
+
 @dataclass
 class GeneSymbolsOutput:
     items: List[str]
+
 
 @dataclass
 class GeneForMethylation:
@@ -65,7 +74,7 @@ class GeneForMethylation:
     ensembl: str = Field(title="Ensembl id")
     methylationCorrelation: str = Field(
         title="Horvath's epigenetic clock",
-        description="Whether gene methylation changes with age (according to Horvath's epigenetic clock)"
+        description="Whether gene methylation changes with age (according to Horvath's epigenetic clock)",
     )
 
 
@@ -79,9 +88,11 @@ class GeneWithResearches:
     ensembl: str = Field(title="Ensembl id")
     methylationCorrelation: str = Field(
         title="Horvath's epigenetic clock",
-        description="Whether gene methylation changes with age (according to Horvath's epigenetic clock)"
+        description="Whether gene methylation changes with age (according to Horvath's epigenetic clock)",
     )
-    researches: IncreaseLifespan = Field(title="Researches", description="Effect of modulation of gene activity on a lifespan")
+    researches: IncreaseLifespan = Field(
+        title="Researches", description="Effect of modulation of gene activity on a lifespan"
+    )
 
 
 @dataclass
@@ -102,14 +113,21 @@ class Gene:
     descriptionNCBI: str = Field(title="Gene description (NCBI)")
     proteinDescriptionUniProt: str = Field(title="Protein description (UniProt)")
     commentCause: dict = Field(title="Gene selection criteria")
-    functionalClusters: List[FunctionalCluster] = Field(title="Age-related processes/systems the gene involved in")
+    functionalClusters: List[FunctionalCluster] = Field(
+        title="Age-related processes/systems the gene involved in"
+    )
     agingMechanisms: List[AgingMechanism] = Field(title="Aging mechanism the gene involved in")
-    researches: Researches = Field(title="Researches", description="Researches confirming the association of the gene with life expectancy and aging")
+    researches: Researches = Field(
+        title="Researches",
+        description="Researches confirming the association of the gene with life expectancy and aging",
+    )
     expression: List[Expression] = Field(title="Gene expression in organs and tissues (NCBI)")
-    proteinClasses: List[str] = Field(title="Protein classes", description="Protein classification by their function")
+    proteinClasses: List[str] = Field(
+        title="Protein classes", description="Protein classification by their function"
+    )
     expressionChange: str = Field(
         title="Age-dependent changes of gene expression",
-        description="Designations: \n0 — no data \n1 — decreases\n2 — increases\n3 — mixed"
+        description="Designations: \n0 — no data \n1 — decreases\n2 — increases\n3 — mixed",
     )
     band: str = Field(title="Location on chromosome — cytogenetic band")
     locationStart: str = Field(title="Location on chromosome — start")
@@ -125,5 +143,5 @@ class Gene:
     ensembl: str = Field(title="Ensembl id")
     methylationCorrelation: str = Field(
         title="Horvath's epigenetic clock",
-        description="Whether gene methylation changes with age (according to Horvath's epigenetic clock)"
+        description="Whether gene methylation changes with age (according to Horvath's epigenetic clock)",
     )

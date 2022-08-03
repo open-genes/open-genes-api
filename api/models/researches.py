@@ -1,67 +1,69 @@
-from pydantic import BaseModel
 from models import *
+from pydantic import BaseModel
+
 
 class GeneralLifespanExperiment(BaseModel):
-    id:int
-    modelOrganism:str|None
-    organismLine:str|None
-    sex:str|None
-    temperatureFrom:float|None
-    temperatureTo:float|None
-    diet:str|None
-    expressionChangeTissue:str|None
-    lifespanTimeUnit:str|None
-    interventionResultForLifespan:str|None
-    expressionMeasurementType:str|None
-    controlCohortSize:int|None
-    experimentCohortSize:int|None
-    expressionChangePercent:float|None
-    lifespanMinControl:float|None
-    lifespanMeanControl:float|None
-    lifespanMedianControl:float|None
-    lifespanMaxControl:float|None
-    lifespanMinExperiment:float|None
-    lifespanMeanExperiment:float|None
-    lifespanMedianExperiment:float|None
-    lifespanMaxExperiment:float|None
-    lifespanMinChangePercent:float|None
-    lifespanMeanChangePercent:float|None
-    lifespanMedianChangePercent:float|None
-    lifespanMaxChangePercent:float|None
-    lMinChangeStatSignificance:bool|None
-    lMeanChangeStatSignificance:bool|None
-    lMedianChangeStatSignificance:bool|None
-    lMaxChangeStatSignificance:bool|None
-    doi:str|None
-    pmid:str|None
-    comment:str|None
-    populationDensity:int|None
+    id: int
+    modelOrganism: str | None
+    organismLine: str | None
+    sex: str | None
+    temperatureFrom: float | None
+    temperatureTo: float | None
+    diet: str | None
+    expressionChangeTissue: str | None
+    lifespanTimeUnit: str | None
+    interventionResultForLifespan: str | None
+    expressionMeasurementType: str | None
+    controlCohortSize: int | None
+    experimentCohortSize: int | None
+    expressionChangePercent: float | None
+    lifespanMinControl: float | None
+    lifespanMeanControl: float | None
+    lifespanMedianControl: float | None
+    lifespanMaxControl: float | None
+    lifespanMinExperiment: float | None
+    lifespanMeanExperiment: float | None
+    lifespanMedianExperiment: float | None
+    lifespanMaxExperiment: float | None
+    lifespanMinChangePercent: float | None
+    lifespanMeanChangePercent: float | None
+    lifespanMedianChangePercent: float | None
+    lifespanMaxChangePercent: float | None
+    lMinChangeStatSignificance: bool | None
+    lMeanChangeStatSignificance: bool | None
+    lMedianChangeStatSignificance: bool | None
+    lMaxChangeStatSignificance: bool | None
+    doi: str | None
+    pmid: str | None
+    comment: str | None
+    populationDensity: int | None
+
 
 class LifespanExperiment(BaseModel):
     id: int
-    gene:int|None
-    interventionMethod:str|None
-    interventionWay:str|None
-    tissueSpecific:bool|None
-    tissueSpecificPromoter:str|None
-    treatmentStart:float|None
-    treatmentEnd:float|None
-    inductionByDrugWithdrawal:int|None
-    treatmentDescription:str|None
-    startTimeUnit:str|None
-    endTimeUnit:str|None
-    genotype:str|None
-    drugDeliveryWay:str|None
-    drug:str|None
-    startStageOfDevelopment:str|None
-    endStageOfDevelopment:str|None
-    treatmentPeriod:str|None
-    experimentMainEffect:str|None
-    _select= {
-        'id':'lifespan_experiment.id',
-        'gene':'lifespan_experiment.gene_id',
-        'interventionMethod':'gene_intervention_method.name_@LANG@',
-        'interventionWay':'gene_intervention_way.name_@LANG@',
+    gene: int | None
+    interventionMethod: str | None
+    interventionWay: str | None
+    tissueSpecific: bool | None
+    tissueSpecificPromoter: str | None
+    treatmentStart: float | None
+    treatmentEnd: float | None
+    inductionByDrugWithdrawal: int | None
+    treatmentDescription: str | None
+    startTimeUnit: str | None
+    endTimeUnit: str | None
+    genotype: str | None
+    drugDeliveryWay: str | None
+    drug: str | None
+    startStageOfDevelopment: str | None
+    endStageOfDevelopment: str | None
+    treatmentPeriod: str | None
+    experimentMainEffect: str | None
+    _select = {
+        'id': 'lifespan_experiment.id',
+        'gene': 'lifespan_experiment.gene_id',
+        'interventionMethod': 'gene_intervention_method.name_@LANG@',
+        'interventionWay': 'gene_intervention_way.name_@LANG@',
         "tissueSpecific": "lifespan_experiment.tissue_specificity",
         "tissueSpecificPromoter": "lifespan_experiment.tissue_specific_promoter",
         "treatmentStart": 'lifespan_experiment.treatment_start',
@@ -78,7 +80,7 @@ class LifespanExperiment(BaseModel):
         "treatmentPeriod": 'experiment_treatment_period.name_@LANG@',
         "experimentMainEffect": "experiment_main_effect.name_@LANG@",
     }
-    _from="""
+    _from = """
 from increaseLifespan
 join lifespan_experiment on lifespan_experiment.general_lifespan_experiment_id=increaseLifespan.id
 left join gene_intervention_method on lifespan_experiment.gene_intervention_method_id=gene_intervention_method.id
@@ -94,85 +96,99 @@ left join active_substance on lifespan_experiment.active_substance_id=active_sub
 left join experiment_main_effect on lifespan_experiment.experiment_main_effect_id=experiment_main_effect.id
 """
 
+
 class Tissue(BaseModel):
-    id:int
-    name:str|None
-    _select= {
-        'id':'sample.id',
-        'name':'sample.name_@LANG@',
+    id: int
+    name: str | None
+    _select = {
+        'id': 'sample.id',
+        'name': 'sample.name_@LANG@',
     }
 
+
 class ControlAndExperimentTissue(Tissue):
-    _name='ce_tissues'
-    _from="""
+    _name = 'ce_tissues'
+    _from = """
 from controlAndExperiment
 join lifespan_experiment_to_tissue on lifespan_experiment_to_tissue.lifespan_experiment_id=controlAndExperiment.id
 join sample on lifespan_experiment_to_tissue.tissue_id=sample.id
 """
 
+
 class ExperimentTissue(Tissue):
-    _name='e_tissues'
-    _from="""
+    _name = 'e_tissues'
+    _from = """
 from experiment
 join lifespan_experiment_to_tissue on lifespan_experiment_to_tissue.lifespan_experiment_id=experiment.id
 join sample on lifespan_experiment_to_tissue.tissue_id=sample.id
 """
 
+
 class ControlAndExperiment(LifespanExperiment):
-    tissues:List[ControlAndExperimentTissue]
-    _from=LifespanExperiment._from+"""
+    tissues: List[ControlAndExperimentTissue]
+    _from = (
+        LifespanExperiment._from
+        + """
 where lifespan_experiment.type='control' and lifespan_experiment.gene_id<>increaseLifespan.gene_id
 """
+    )
+
 
 class Experiment(LifespanExperiment):
-    tissues:List[ExperimentTissue]
-    _from=LifespanExperiment._from+"""
+    tissues: List[ExperimentTissue]
+    _from = (
+        LifespanExperiment._from
+        + """
 where lifespan_experiment.type='experiment'
 """
+    )
 
 
 class Interventions(BaseModel):
-    controlAndExperiment:List[ControlAndExperiment]
-    experiment:List[Experiment]
+    controlAndExperiment: List[ControlAndExperiment]
+    experiment: List[Experiment]
+
 
 class InterventionImprove(BaseModel):
-    id:int
-    name:str
-    _select={
-        'id':"vital_process.id",
-        'name':"vital_process.name_@LANG@",
+    id: int
+    name: str
+    _select = {
+        'id': "vital_process.id",
+        'name': "vital_process.name_@LANG@",
     }
-    _from="""
+    _from = """
 from increaseLifespan
 join general_lifespan_experiment_to_vital_process on general_lifespan_experiment_to_vital_process.general_lifespan_experiment_id=increaseLifespan.id
 join vital_process on general_lifespan_experiment_to_vital_process.vital_process_id=vital_process.id
 where general_lifespan_experiment_to_vital_process.intervention_result_for_vital_process_id=1 /* IMPROVE */
 """
 
+
 class InterventionDeteriorate(BaseModel):
-    id:int
-    name:str
-    _select={
-        'id':"vital_process.id",
-        'name':"vital_process.name_@LANG@",
+    id: int
+    name: str
+    _select = {
+        'id': "vital_process.id",
+        'name': "vital_process.name_@LANG@",
     }
-    _from="""
+    _from = """
 from increaseLifespan
 join general_lifespan_experiment_to_vital_process on general_lifespan_experiment_to_vital_process.general_lifespan_experiment_id=increaseLifespan.id
 join vital_process on general_lifespan_experiment_to_vital_process.vital_process_id=vital_process.id
 where general_lifespan_experiment_to_vital_process.intervention_result_for_vital_process_id=2 /* DETERIOR */
 """
 
+
 class IncreaseLifespan(GeneralLifespanExperiment):
-    interventions:Interventions
-    interventionImproves:List[InterventionImprove]
-    interventionDeteriorates:List[InterventionDeteriorate]
-    _select= {
-        'id':'general_lifespan_experiment.id',
-        'gene_id':'gene.id',
-        'modelOrganism':'general_lifespan_experiment_model_organism.name_@LANG@',
-        'organismLine':'lifespan_experiment_organism_line.name_@LANG@',
-        'sex':'lifespan_experiment_organism_sex.name_@LANG@',
+    interventions: Interventions
+    interventionImproves: List[InterventionImprove]
+    interventionDeteriorates: List[InterventionDeteriorate]
+    _select = {
+        'id': 'general_lifespan_experiment.id',
+        'gene_id': 'gene.id',
+        'modelOrganism': 'general_lifespan_experiment_model_organism.name_@LANG@',
+        'organismLine': 'lifespan_experiment_organism_line.name_@LANG@',
+        'sex': 'lifespan_experiment_organism_sex.name_@LANG@',
         'temperatureFrom': 'general_lifespan_experiment.temperature_from',
         'temperatureTo': 'general_lifespan_experiment.temperature_to',
         'diet': 'lifespan_experiment_diet.name_@LANG@',
@@ -200,11 +216,11 @@ class IncreaseLifespan(GeneralLifespanExperiment):
         'lMedianChangeStatSignificance': 'ssmedian.name_@LANG@',
         'lMaxChangeStatSignificance': 'ssmax.name_@LANG@',
         'doi': 'general_lifespan_experiment.reference',
-        'pmid':'general_lifespan_experiment.pmid',
-        'comment':'general_lifespan_experiment.comment_@LANG@',
-        'populationDensity':'general_lifespan_experiment.organism_number_in_cage',
+        'pmid': 'general_lifespan_experiment.pmid',
+        'comment': 'general_lifespan_experiment.comment_@LANG@',
+        'populationDensity': 'general_lifespan_experiment.organism_number_in_cage',
     }
-    _from="""
+    _from = """
 from gene
 join lifespan_experiment on lifespan_experiment.gene_id=gene.id
 join general_lifespan_experiment on general_lifespan_experiment.id = lifespan_experiment.general_lifespan_experiment_id
@@ -222,83 +238,85 @@ left join statistical_significance as ssmedian on ssmedian.id = general_lifespan
 left join statistical_significance as ssmax on ssmax.id = general_lifespan_experiment.lifespan_max_change_stat_sign_id
 """
 
+
 class GeneAssociatedWithProgeriaSyndrome(BaseModel):
-    progeriaSyndrome:str
-    doi:None|str
-    pmid:None|str
-    comment:None|str
-    _select={
-        'progeriaSyndrome':'progeria_syndrome.name_@LANG@',
-        'doi':'gene_to_progeria.reference',
-        'pmid':'gene_to_progeria.pmid',
-        'comment':'gene_to_progeria.comment_@LANG@',
+    progeriaSyndrome: str
+    doi: None | str
+    pmid: None | str
+    comment: None | str
+    _select = {
+        'progeriaSyndrome': 'progeria_syndrome.name_@LANG@',
+        'doi': 'gene_to_progeria.reference',
+        'pmid': 'gene_to_progeria.pmid',
+        'comment': 'gene_to_progeria.comment_@LANG@',
     }
-    _from="""
+    _from = """
 from gene
 join gene_to_progeria on gene_to_progeria.gene_id=gene.id
 join progeria_syndrome on progeria_syndrome.id=gene_to_progeria.progeria_syndrome_id
 """
 
+
 class GeneAssociatedWithLongevityEffect(BaseModel):
-    longevityEffect:str
-    polymorphismId:None|str
-    sex:None|str
-    associatedAllele:None|str
-    nucleotideChange:None|str
-    aminoAcidChange:None|str
-    polymorphismOther:None|str
-    nonAssociatedAllele:None|str
-    frequencyControls:None|float
-    frequencyExperiment:None|float
-    minAgeOfControls:None|float
-    maxAgeOfControls:None|float
-    meanAgeOfControls:None|float
-    minAgeOfExperiment:None|float
-    maxAgeOfExperiment:None|float
-    meanAgeOfExperiment:None|float
-    nOfControls:None|int
-    nOfExperiment:None|int
-    position:None|str
-    polymorphismType:None|str
-    ethnicity:None|str
-    studyType:None|str
-    significance:None|str
-    changeType:None|str
-    dataType:None|str
-    doi:None|str
-    pmid:None|str
-    comment:None|str
-    _select={
-        'longevityEffect':'longevity_effect.name_@LANG@',
-        'polymorphismId':'polymorphism.name_@LANG@',
-        'associatedAllele':'gene_to_longevity_effect.allele_variant',
-        'nucleotideChange':'gene_to_longevity_effect.nucleotide_change',
-        'aminoAcidChange':'gene_to_longevity_effect.amino_acid_change',
-        'polymorphismOther':'gene_to_longevity_effect.polymorphism_other',
-        'nonAssociatedAllele':'gene_to_longevity_effect.non_associated_allele',
-        'frequencyControls':'gene_to_longevity_effect.frequency_controls',
-        'frequencyExperiment':'gene_to_longevity_effect.frequency_experiment',
-        'nOfControls':'gene_to_longevity_effect.n_of_controls',
-        'nOfExperiment':'gene_to_longevity_effect.n_of_experiment',
-        'minAgeOfControls':'gene_to_longevity_effect.min_age_of_controls',
-        'maxAgeOfControls':'gene_to_longevity_effect.max_age_of_controls',
-        'meanAgeOfControls':'gene_to_longevity_effect.mean_age_of_controls',
-        'minAgeOfExperiment':'gene_to_longevity_effect.min_age_of_experiment',
-        'maxAgeOfExperiment':'gene_to_longevity_effect.max_age_of_experiment',
-        'meanAgeOfExperiment':'gene_to_longevity_effect.mean_age_of_experiment',
-        'significance':'gene_to_longevity_effect.significance',
-        'changeType':'longevity_effect_age_related_change_type.name_@LANG@',
-        'sex':'longevity_effect_organism_sex.name_@LANG@',
-        'position':'longevity_effect_position.name_@LANG@',
-        'polymorphismType':'longevity_effect_polymorphism_type.name_en',
-        'ethnicity':'longevity_effect_ethnicity.name_@LANG@',
-        'studyType':'longevity_effect_study_type.name_@LANG@',
-        'dataType':"concat(gene_to_longevity_effect.data_type,'@LANG@')",
-        'doi':'gene_to_longevity_effect.reference',
-        'pmid':'gene_to_longevity_effect.pmid',
-        'comment':'gene_to_longevity_effect.comment_@LANG@',
+    longevityEffect: str
+    polymorphismId: None | str
+    sex: None | str
+    associatedAllele: None | str
+    nucleotideChange: None | str
+    aminoAcidChange: None | str
+    polymorphismOther: None | str
+    nonAssociatedAllele: None | str
+    frequencyControls: None | float
+    frequencyExperiment: None | float
+    minAgeOfControls: None | float
+    maxAgeOfControls: None | float
+    meanAgeOfControls: None | float
+    minAgeOfExperiment: None | float
+    maxAgeOfExperiment: None | float
+    meanAgeOfExperiment: None | float
+    nOfControls: None | int
+    nOfExperiment: None | int
+    position: None | str
+    polymorphismType: None | str
+    ethnicity: None | str
+    studyType: None | str
+    significance: None | str
+    changeType: None | str
+    dataType: None | str
+    doi: None | str
+    pmid: None | str
+    comment: None | str
+    _select = {
+        'longevityEffect': 'longevity_effect.name_@LANG@',
+        'polymorphismId': 'polymorphism.name_@LANG@',
+        'associatedAllele': 'gene_to_longevity_effect.allele_variant',
+        'nucleotideChange': 'gene_to_longevity_effect.nucleotide_change',
+        'aminoAcidChange': 'gene_to_longevity_effect.amino_acid_change',
+        'polymorphismOther': 'gene_to_longevity_effect.polymorphism_other',
+        'nonAssociatedAllele': 'gene_to_longevity_effect.non_associated_allele',
+        'frequencyControls': 'gene_to_longevity_effect.frequency_controls',
+        'frequencyExperiment': 'gene_to_longevity_effect.frequency_experiment',
+        'nOfControls': 'gene_to_longevity_effect.n_of_controls',
+        'nOfExperiment': 'gene_to_longevity_effect.n_of_experiment',
+        'minAgeOfControls': 'gene_to_longevity_effect.min_age_of_controls',
+        'maxAgeOfControls': 'gene_to_longevity_effect.max_age_of_controls',
+        'meanAgeOfControls': 'gene_to_longevity_effect.mean_age_of_controls',
+        'minAgeOfExperiment': 'gene_to_longevity_effect.min_age_of_experiment',
+        'maxAgeOfExperiment': 'gene_to_longevity_effect.max_age_of_experiment',
+        'meanAgeOfExperiment': 'gene_to_longevity_effect.mean_age_of_experiment',
+        'significance': 'gene_to_longevity_effect.significance',
+        'changeType': 'longevity_effect_age_related_change_type.name_@LANG@',
+        'sex': 'longevity_effect_organism_sex.name_@LANG@',
+        'position': 'longevity_effect_position.name_@LANG@',
+        'polymorphismType': 'longevity_effect_polymorphism_type.name_en',
+        'ethnicity': 'longevity_effect_ethnicity.name_@LANG@',
+        'studyType': 'longevity_effect_study_type.name_@LANG@',
+        'dataType': "concat(gene_to_longevity_effect.data_type,'@LANG@')",
+        'doi': 'gene_to_longevity_effect.reference',
+        'pmid': 'gene_to_longevity_effect.pmid',
+        'comment': 'gene_to_longevity_effect.comment_@LANG@',
     }
-    _from="""
+    _from = """
 from gene
 join gene_to_longevity_effect on gene_to_longevity_effect.gene_id=gene.id
 join longevity_effect on longevity_effect.id = gene_to_longevity_effect.longevity_effect_id
@@ -311,54 +329,55 @@ left join ethnicity as longevity_effect_ethnicity on longevity_effect_ethnicity.
 left join study_type as longevity_effect_study_type on longevity_effect_study_type.id = gene_to_longevity_effect.study_type_id
 """
 
+
 class AgeRelatedChangeOfGene(BaseModel):
-    changeType:str
-    sample:None|str
-    modelOrganism:str
-    organismLine:str|None
-    value:None|str
-    pValue:None|str
-    measurementMethod:None|str
-    doi:None|str
-    pmid:None|str
-    meanAgeOfControls:None|float
-    meanAgeOfExperiment:None|float
-    minAgeOfControls:None|float
-    maxAgeOfControls:None|float
-    minAgeOfExperiment:None|float
-    maxAgeOfExperiment:None|float
-    ageUnit:None|str
-    expressionEvaluationBy:None|str
-    statisticalMethod:None|str
-    controlCohortSize:None|float
-    experimentCohortSize:None|float
-    sex:None|str
-    comment:None|str
-    _select= {
-        'changeType':'age_related_change_age_related_change_type.name_@LANG@',
-        'sample':'sample.name_@LANG@',
-        'modelOrganism':'age_related_change_model_organism.name_@LANG@',
-        'organismLine':'age_related_change_organism_line.name_@LANG@',
-        'ageUnit':"age_related_change_time_unit.name_@LANG@",
-        'value':'age_related_change.change_value',
-        'doi':'age_related_change.reference',
-        'pmid':'age_related_change.pmid',
-        'comment':'age_related_change.comment_@LANG@',
-        'meanAgeOfControls':'age_related_change.mean_age_of_controls',
-        'meanAgeOfExperiment':'age_related_change.mean_age_of_experiment',
-        'minAgeOfControls':'age_related_change.min_age_of_controls',
-        'maxAgeOfControls':'age_related_change.max_age_of_controls',
-        'minAgeOfExperiment':'age_related_change.min_age_of_experiment',
-        'maxAgeOfExperiment':'age_related_change.max_age_of_experiment',
-        'controlCohortSize':'age_related_change.n_of_controls',
-        'experimentCohortSize':'age_related_change.n_of_experiment',
-        'pValue':'age_related_change.p_value',
-        'expressionEvaluationBy':'expression_evaluation.name_@LANG@',
-        'measurementMethod':'measurement_method.name_@LANG@',
-        'statisticalMethod':'statistical_method.name_@LANG@',
-        'sex':'organism_sex.name_@LANG@',
+    changeType: str
+    sample: None | str
+    modelOrganism: str
+    organismLine: str | None
+    value: None | str
+    pValue: None | str
+    measurementMethod: None | str
+    doi: None | str
+    pmid: None | str
+    meanAgeOfControls: None | float
+    meanAgeOfExperiment: None | float
+    minAgeOfControls: None | float
+    maxAgeOfControls: None | float
+    minAgeOfExperiment: None | float
+    maxAgeOfExperiment: None | float
+    ageUnit: None | str
+    expressionEvaluationBy: None | str
+    statisticalMethod: None | str
+    controlCohortSize: None | float
+    experimentCohortSize: None | float
+    sex: None | str
+    comment: None | str
+    _select = {
+        'changeType': 'age_related_change_age_related_change_type.name_@LANG@',
+        'sample': 'sample.name_@LANG@',
+        'modelOrganism': 'age_related_change_model_organism.name_@LANG@',
+        'organismLine': 'age_related_change_organism_line.name_@LANG@',
+        'ageUnit': "age_related_change_time_unit.name_@LANG@",
+        'value': 'age_related_change.change_value',
+        'doi': 'age_related_change.reference',
+        'pmid': 'age_related_change.pmid',
+        'comment': 'age_related_change.comment_@LANG@',
+        'meanAgeOfControls': 'age_related_change.mean_age_of_controls',
+        'meanAgeOfExperiment': 'age_related_change.mean_age_of_experiment',
+        'minAgeOfControls': 'age_related_change.min_age_of_controls',
+        'maxAgeOfControls': 'age_related_change.max_age_of_controls',
+        'minAgeOfExperiment': 'age_related_change.min_age_of_experiment',
+        'maxAgeOfExperiment': 'age_related_change.max_age_of_experiment',
+        'controlCohortSize': 'age_related_change.n_of_controls',
+        'experimentCohortSize': 'age_related_change.n_of_experiment',
+        'pValue': 'age_related_change.p_value',
+        'expressionEvaluationBy': 'expression_evaluation.name_@LANG@',
+        'measurementMethod': 'measurement_method.name_@LANG@',
+        'statisticalMethod': 'statistical_method.name_@LANG@',
+        'sex': 'organism_sex.name_@LANG@',
     }
-    _from="""
+    _from = """
 from gene
 join age_related_change on age_related_change.gene_id=gene.id
 join age_related_change_type as age_related_change_age_related_change_type on age_related_change_age_related_change_type.id=age_related_change.age_related_change_type_id
@@ -372,62 +391,63 @@ left join statistical_method on age_related_change.statistical_method_id = stati
 left join organism_sex on age_related_change.sex = organism_sex.id
 """
 
+
 class InterventionImproveVitalProcess(BaseModel):
-    id:str
-    name:str
-    _name='interventionImproveVitalProcess'
-    _select={
-        'id':"vitalProcessId",
-        'name':"vitalProcess",
+    id: str
+    name: str
+    _name = 'interventionImproveVitalProcess'
+    _select = {
+        'id': "vitalProcessId",
+        'name': "vitalProcess",
     }
-    _from=""" from interventionToGeneImprovesVitalProcesses where resultCode=1 /* IMPROVE */ """
+    _from = """ from interventionToGeneImprovesVitalProcesses where resultCode=1 /* IMPROVE */ """
+
 
 class InterventionDeteriorateVitalProcess(BaseModel):
-    id:str
-    name:str
-    _name='interventionDeteriorateVitalProcess'
-    _select={
-        'id':"vitalProcessId",
-        'name':"vitalProcess",
+    id: str
+    name: str
+    _name = 'interventionDeteriorateVitalProcess'
+    _select = {
+        'id': "vitalProcessId",
+        'name': "vitalProcess",
     }
-    _from=""" from interventionToGeneImprovesVitalProcesses where resultCode=2 /* DETERIOR */ """
-
+    _from = """ from interventionToGeneImprovesVitalProcesses where resultCode=2 /* DETERIOR */ """
 
 
 class InterventionToGeneImprovesVitalProcess(BaseModel):
-    id:str
-    geneIntervention:str
-    result:str
-    resultCode:int
-    vitalProcess:str
-    vitalProcessId:str
-    modelOrganism:str
-    organismLine:None|str
-    age:None|str
-    genotype:None|str
-    sex:None|str
-    doi:None|str
-    pmid:None|str
-    comment:None|str
-    interventionImproves:List[InterventionImproveVitalProcess]
-    interventionDeteriorates:List[InterventionDeteriorateVitalProcess]
-    _select= {
-        'id':'gene_intervention_to_vital_process.id',
-        'geneIntervention':'gene_intervention_method.name_@LANG@',
-        'result':'intervention_result_for_vital_process.name_@LANG@',
-        'resultCode':'intervention_result_for_vital_process.id',
-        'vitalProcess':'vital_process.name_@LANG@',
-        'vitalProcessId':'vital_process.id',
-        'modelOrganism':'gene_intervention_to_vital_process_model_organism.name_@LANG@',
-        'organismLine':'gene_intervention_to_vital_process_organism_line.name_@LANG@',
-        'age':"concat(gene_intervention_to_vital_process.age,' ',gene_intervention_to_vital_process_time_unit.name_@LANG@)",
-        'genotype':'genotype.name_@LANG@',
-        'sex':'gene_intervention_to_vital_process_organism_sex.name_@LANG@',
-        'doi':'gene_intervention_to_vital_process.reference',
-        'pmid':'gene_intervention_to_vital_process.pmid',
-        'comment':'gene_intervention_to_vital_process.comment_@LANG@',
+    id: str
+    geneIntervention: str
+    result: str
+    resultCode: int
+    vitalProcess: str
+    vitalProcessId: str
+    modelOrganism: str
+    organismLine: None | str
+    age: None | str
+    genotype: None | str
+    sex: None | str
+    doi: None | str
+    pmid: None | str
+    comment: None | str
+    interventionImproves: List[InterventionImproveVitalProcess]
+    interventionDeteriorates: List[InterventionDeteriorateVitalProcess]
+    _select = {
+        'id': 'gene_intervention_to_vital_process.id',
+        'geneIntervention': 'gene_intervention_method.name_@LANG@',
+        'result': 'intervention_result_for_vital_process.name_@LANG@',
+        'resultCode': 'intervention_result_for_vital_process.id',
+        'vitalProcess': 'vital_process.name_@LANG@',
+        'vitalProcessId': 'vital_process.id',
+        'modelOrganism': 'gene_intervention_to_vital_process_model_organism.name_@LANG@',
+        'organismLine': 'gene_intervention_to_vital_process_organism_line.name_@LANG@',
+        'age': "concat(gene_intervention_to_vital_process.age,' ',gene_intervention_to_vital_process_time_unit.name_@LANG@)",
+        'genotype': 'genotype.name_@LANG@',
+        'sex': 'gene_intervention_to_vital_process_organism_sex.name_@LANG@',
+        'doi': 'gene_intervention_to_vital_process.reference',
+        'pmid': 'gene_intervention_to_vital_process.pmid',
+        'comment': 'gene_intervention_to_vital_process.comment_@LANG@',
     }
-    _from="""
+    _from = """
 from gene
 join gene_intervention_to_vital_process on gene_intervention_to_vital_process.gene_id=gene.id
 join gene_intervention_result_to_vital_process on gene_intervention_to_vital_process.id = gene_intervention_result_to_vital_process.gene_intervention_to_vital_process_id
@@ -441,35 +461,35 @@ left join time_unit gene_intervention_to_vital_process_time_unit on gene_interve
 left join genotype on genotype.id=gene_intervention_to_vital_process.genotype
 """
 
-class RegulatedGene(BaseModel):
-    id:int
-    symbol:str
-    name:str
-    ncbiId:int
-    _select= {
-        'id':'regulated_gene.id',
-        'symbol':'regulated_gene.symbol',
-        'name':'regulated_gene.name',
-        'ncbiId':'regulated_gene.ncbi_id',
-    }
 
+class RegulatedGene(BaseModel):
+    id: int
+    symbol: str
+    name: str
+    ncbiId: int
+    _select = {
+        'id': 'regulated_gene.id',
+        'symbol': 'regulated_gene.symbol',
+        'name': 'regulated_gene.name',
+        'ncbiId': 'regulated_gene.ncbi_id',
+    }
 
 
 class ProteinRegulatesOtherGene(BaseModel):
-    proteinActivity:str
-    regulationType:str
-    doi:None|str
-    pmid:None|str
-    comment:None|str
-    regulatedGene:RegulatedGene
-    _select={
-        'proteinActivity':'protein_activity.name_@LANG@',
-        'regulationType':'gene_regulation_type.name_@LANG@',
-        'doi':'protein_to_gene.reference',
-        'pmid':'protein_to_gene.pmid',
-        'comment':'protein_to_gene.comment_@LANG@',
+    proteinActivity: str
+    regulationType: str
+    doi: None | str
+    pmid: None | str
+    comment: None | str
+    regulatedGene: RegulatedGene
+    _select = {
+        'proteinActivity': 'protein_activity.name_@LANG@',
+        'regulationType': 'gene_regulation_type.name_@LANG@',
+        'doi': 'protein_to_gene.reference',
+        'pmid': 'protein_to_gene.pmid',
+        'comment': 'protein_to_gene.comment_@LANG@',
     }
-    _from="""
+    _from = """
 from gene
 join protein_to_gene on protein_to_gene.gene_id=gene.id
 join open_genes.gene as regulated_gene on regulated_gene.id = protein_to_gene.regulated_gene_id
@@ -477,32 +497,130 @@ join protein_activity on protein_activity.id = protein_to_gene.protein_activity_
 join gene_regulation_type on gene_regulation_type.id = protein_to_gene.regulation_type_id
 """
 
+
 class AdditionalEvidence(BaseModel):
-    doi:None|str
-    pmid:None|str
-    comment:str
-    _select={
-        'doi':'gene_to_additional_evidence.reference',
-        'pmid':'gene_to_additional_evidence.pmid',
-        'comment':'gene_to_additional_evidence.comment_@LANG@',
+    doi: None | str
+    pmid: None | str
+    comment: str
+    _select = {
+        'doi': 'gene_to_additional_evidence.reference',
+        'pmid': 'gene_to_additional_evidence.pmid',
+        'comment': 'gene_to_additional_evidence.comment_@LANG@',
     }
-    _from=""" from gene join gene_to_additional_evidence on gene_to_additional_evidence.gene_id=gene.id """
+    _from = """ from gene join gene_to_additional_evidence on gene_to_additional_evidence.gene_id=gene.id """
+
 
 class Researches(BaseModel):
-    increaseLifespan:List[IncreaseLifespan]
-    geneAssociatedWithProgeriaSyndromes:List[GeneAssociatedWithProgeriaSyndrome]
-    geneAssociatedWithLongevityEffects:List[GeneAssociatedWithLongevityEffect]
-    ageRelatedChangesOfGene:List[AgeRelatedChangeOfGene]
-    interventionToGeneImprovesVitalProcesses:List[InterventionToGeneImprovesVitalProcess]
-    proteinRegulatesOtherGenes:List[ProteinRegulatesOtherGene]
-    additionalEvidences:List[AdditionalEvidence]
+    increaseLifespan: List[IncreaseLifespan]
+    geneAssociatedWithProgeriaSyndromes: List[GeneAssociatedWithProgeriaSyndrome]
+    geneAssociatedWithLongevityEffects: List[GeneAssociatedWithLongevityEffect]
+    ageRelatedChangesOfGene: List[AgeRelatedChangeOfGene]
+    interventionToGeneImprovesVitalProcesses: List[InterventionToGeneImprovesVitalProcess]
+    proteinRegulatesOtherGenes: List[ProteinRegulatesOtherGene]
+    additionalEvidences: List[AdditionalEvidence]
+
 
 class IncreaseLifespanSearchInput(PaginationInput, LanguageInput, SortInput):
-    byGeneId:int|None
-    sortBy: Literal['lifespanMinChangePercent','lifespanMeanChangePercent',
-            'lifespanMedianChangePercent','lifespanMaxChangePercent']|None = None
+    byGeneId: int | None
+    byDiseases: str = None
+    byDiseaseCategories: str = None
+    byAgeRelatedProcess: str = None
+    byExpressionChange: str = None
+    bySelectionCriteria: str = None
+    byAgingMechanism: str = None
+    byProteinClass: str = None
+    bySpecies: str = None
+    byOrigin: str = None
+    byFamilyOrigin: str = None
+    byConservativeIn: str = None
+    byGeneSymbol: str = None
+    bySuggestions: str = None
+    byChromosomeNum: str = None
+    sortBy: Literal[
+        'lifespanMinChangePercent',
+        'lifespanMeanChangePercent',
+        'lifespanMedianChangePercent',
+        'lifespanMaxChangePercent',
+    ] | None = None
+    researches: str = None
+    isHidden: str = 1
     _filters = {
-        'byGeneId':[lambda value: 'gene.id=%s',lambda value:[value]],
+        'byGeneId': [lambda value: 'gene.id=%s', lambda value: [value]],
+        'isHidden': [lambda value: 'gene.isHidden!=1', lambda value: []],
+        'byChromosomeNum': [
+            lambda value: 'gene.chromosome in (' + ','.join(['%s' for v in value.split(',')]) + ')',
+            lambda value: value.split(','),
+        ],
+        'byGeneSymbol': [
+            lambda value: 'gene.symbol in (' + ','.join(['%s' for v in value.split(',')]) + ')',
+            lambda value: value.split(','),
+        ],
+        'byDiseases': [
+            lambda value: '(select count(*) from gene_to_disease where gene_to_disease.gene_id=gene.id and disease_id in ('
+            + ','.join(['%s' for v in value.split(',')])
+            + '))=%s',
+            lambda value: value.split(',') + [len(value.split(','))],
+        ],
+        'byDiseaseCategories': [
+            lambda value: '(select count(*) from gene_to_disease g join disease d on g.disease_id=d.id join disease c on c.icd_code=d.icd_code_visible where g.gene_id=gene.id and c.id in ('
+            + ','.join(['%s' for v in value.split(',')])
+            + '))=%s',
+            lambda value: value.split(',') + [len(value.split(','))],
+        ],
+        'byAgeRelatedProcess': [
+            lambda value: '(select count(*) from gene_to_functional_cluster where gene_id=gene.id and functional_cluster_id in ('
+            + ','.join(['%s' for v in value.split(',')])
+            + '))=%s',
+            lambda value: value.split(',') + [len(value.split(','))],
+        ],
+        'byExpressionChange': [
+            lambda value: 'gene.expressionChange in ('
+            + ','.join(['%s' for v in value.split(',')])
+            + ')',
+            lambda value: value.split(','),
+        ],
+        'bySelectionCriteria': [
+            lambda value: '(select count(*) from gene_to_comment_cause where gene_id=gene.id and comment_cause_id in ('
+            + ','.join(['%s' for v in value.split(',')])
+            + '))=%s',
+            lambda value: value.split(',') + [len(value.split(','))],
+        ],
+        'byAgingMechanism': [
+            lambda value: '(select count(distinct aging_mechanism_id) from gene_to_ontology o join gene_ontology_to_aging_mechanism_visible a on a.gene_ontology_id=o.gene_ontology_id where o.gene_id=gene.id and aging_mechanism_id in ('
+            + ','.join(['%s' for v in value.split(',')])
+            + '))=%s',
+            lambda value: value.split(',') + [len(value.split(','))],
+        ],
+        'byProteinClass': [
+            lambda value: '(select count(*) from gene_to_protein_class where gene_id=gene.id and protein_class_id in ('
+            + ','.join(['%s' for v in value.split(',')])
+            + '))=%s',
+            lambda value: value.split(',') + [len(value.split(','))],
+        ],
+        'bySpecies': [
+            lambda value: '(select count(distinct model_organism_id) from lifespan_experiment where lifespan_experiment.gene_id=gene.id and model_organism_id in ('
+            + ','.join(['%s' for v in value.split(',')])
+            + '))=%s',
+            lambda value: value.split(',') + [len(value.split(','))],
+        ],
+        'byOrigin': [
+            lambda value: '(select count(*) from phylum where gene.phylum_id=phylum.id and phylum.name_phylo in ('
+            + ','.join(['%s' for v in value.split(',')])
+            + '))=%s',
+            lambda value: value.split(',') + [len(value.split(','))],
+        ],
+        'byFamilyOrigin': [
+            lambda value: '(select count(*) from phylum where gene.phylum_id=family_phylum.id and phylum.id in ('
+            + ','.join(['%s' for v in value.split(',')])
+            + '))=%s',
+            lambda value: value.split(',') + [len(value.split(','))],
+        ],
+        'byConservativeIn': [
+            lambda value: '(select count(*) from taxon where gene.taxon_id=taxon.id and taxon.id in ('
+            + ','.join(['%s' for v in value.split(',')])
+            + '))=%s',
+            lambda value: value.split(',') + [len(value.split(','))],
+        ],
     }
     _sorts = {
         'lifespanMinChangePercent': 'general_lifespan_experiment.lifespan_min_change',
@@ -511,21 +629,22 @@ class IncreaseLifespanSearchInput(PaginationInput, LanguageInput, SortInput):
         'lifespanMaxChangePercent': 'general_lifespan_experiment.lifespan_max_change',
     }
 
+
 class IncreaseLifespanSearched(IncreaseLifespan):
-    geneId:int
-    geneNcbiId:int|None
-    geneName:str|None
-    geneSymbol:str|None
-    geneAliases:List[str]
-    _select=IncreaseLifespan._select|{
-        'geneId':'gene.id',
-        'geneSymbol':'gene.symbol',
-        'geneNcbiId':'gene.ncbi_id',
-        'geneName':'gene.name',
-        'geneAliases':'gene.aliases',
+    geneId: int
+    geneNcbiId: int | None
+    geneName: str | None
+    geneSymbol: str | None
+    geneAliases: List[str]
+    _select = IncreaseLifespan._select | {
+        'geneId': 'gene.id',
+        'geneSymbol': 'gene.symbol',
+        'geneNcbiId': 'gene.ncbi_id',
+        'geneName': 'gene.name',
+        'geneAliases': 'gene.aliases',
     }
-    _name='increaseLifespan'
-    _from="""
+    _name = 'increaseLifespan'
+    _from = """
 from general_lifespan_experiment
 join lifespan_experiment on lifespan_experiment.general_lifespan_experiment_id=general_lifespan_experiment.id
 join gene on gene.id = lifespan_experiment.gene_id
@@ -544,26 +663,28 @@ left join statistical_significance as ssmax on ssmax.id = general_lifespan_exper
 @FILTERING@
 @PAGING@
 """
-    _order_by="gene.id, general_lifespan_experiment.id"
+    _order_by = "gene.id, general_lifespan_experiment.id"
+
 
 class IncreaseLifespanSearchOutput(PaginatedOutput):
-    items:List[IncreaseLifespanSearched]
+    items: List[IncreaseLifespanSearched]
+
 
 class AgeRelatedChangeOfGeneResearched(AgeRelatedChangeOfGene):
-    geneId:int
-    geneNcbiId:int|None
-    geneName:str|None
-    geneSymbol:str|None
-    geneAliases:List[str]
-    _select=AgeRelatedChangeOfGene._select|{
-        'geneId':'gene.id',
-        'geneSymbol':'gene.symbol',
-        'geneNcbiId':'gene.ncbi_id',
-        'geneName':'gene.name',
-        'geneAliases':'gene.aliases',
+    geneId: int
+    geneNcbiId: int | None
+    geneName: str | None
+    geneSymbol: str | None
+    geneAliases: List[str]
+    _select = AgeRelatedChangeOfGene._select | {
+        'geneId': 'gene.id',
+        'geneSymbol': 'gene.symbol',
+        'geneNcbiId': 'gene.ncbi_id',
+        'geneName': 'gene.name',
+        'geneAliases': 'gene.aliases',
     }
-    _name='ageRelatedChangeOfGene'
-    _from="""
+    _name = 'ageRelatedChangeOfGene'
+    _from = """
 from age_related_change
 left join gene on age_related_change.gene_id=gene.id
 join age_related_change_type as age_related_change_age_related_change_type on age_related_change_age_related_change_type.id=age_related_change.age_related_change_type_id
@@ -578,25 +699,27 @@ left join organism_sex on age_related_change.sex = organism_sex.id
 @PAGING@
 """
 
+
 class AgeRelatedChangeOfGeneResearchOutput(PaginatedOutput):
-    items:List[AgeRelatedChangeOfGeneResearched]
+    items: List[AgeRelatedChangeOfGeneResearched]
+
 
 #
 class GeneActivityChangeImpactResearched(InterventionToGeneImprovesVitalProcess):
-    geneId:int
-    geneNcbiId:int|None
-    geneName:str|None
-    geneSymbol:str|None
-    geneAliases:List[str]
-    _select=InterventionToGeneImprovesVitalProcess._select|{
-        'geneId':'gene.id',
-        'geneSymbol':'gene.symbol',
-        'geneNcbiId':'gene.ncbi_id',
-        'geneName':'gene.name',
-        'geneAliases':'gene.aliases',
+    geneId: int
+    geneNcbiId: int | None
+    geneName: str | None
+    geneSymbol: str | None
+    geneAliases: List[str]
+    _select = InterventionToGeneImprovesVitalProcess._select | {
+        'geneId': 'gene.id',
+        'geneSymbol': 'gene.symbol',
+        'geneNcbiId': 'gene.ncbi_id',
+        'geneName': 'gene.name',
+        'geneAliases': 'gene.aliases',
     }
-    _name='interventionToGeneImprovesVitalProcesses'
-    _from="""
+    _name = 'interventionToGeneImprovesVitalProcesses'
+    _from = """
 from gene_intervention_to_vital_process
 left join gene on gene_intervention_to_vital_process.gene_id=gene.id
 join gene_intervention_result_to_vital_process on gene_intervention_to_vital_process.id = gene_intervention_result_to_vital_process.gene_intervention_to_vital_process_id
@@ -611,25 +734,27 @@ left join genotype on genotype.id=gene_intervention_to_vital_process.genotype
 @PAGING@
 """
 
+
 class GeneActivityChangeImpactResearchedOutput(PaginatedOutput):
-    items:List[GeneActivityChangeImpactResearched]
+    items: List[GeneActivityChangeImpactResearched]
+
 
 #
 class GeneRegulationResearched(ProteinRegulatesOtherGene):
-    geneId:int
-    geneNcbiId:int|None
-    geneName:str|None
-    geneSymbol:str|None
-    geneAliases:List[str]
-    _select=ProteinRegulatesOtherGene._select|{
-        'geneId':'gene.id',
-        'geneSymbol':'gene.symbol',
-        'geneNcbiId':'gene.ncbi_id',
-        'geneName':'gene.name',
-        'geneAliases':'gene.aliases',
+    geneId: int
+    geneNcbiId: int | None
+    geneName: str | None
+    geneSymbol: str | None
+    geneAliases: List[str]
+    _select = ProteinRegulatesOtherGene._select | {
+        'geneId': 'gene.id',
+        'geneSymbol': 'gene.symbol',
+        'geneNcbiId': 'gene.ncbi_id',
+        'geneName': 'gene.name',
+        'geneAliases': 'gene.aliases',
     }
-    _name='proteinRegulatesOtherGene'
-    _from="""
+    _name = 'proteinRegulatesOtherGene'
+    _from = """
 from protein_to_gene
 left join gene on protein_to_gene.gene_id=gene.id
 join open_genes.gene as regulated_gene on regulated_gene.id = protein_to_gene.regulated_gene_id
@@ -638,33 +763,37 @@ join gene_regulation_type on gene_regulation_type.id = protein_to_gene.regulatio
 @PAGING@
 """
 
+
 class GeneRegulationResearchedOutput(PaginatedOutput):
-    items:List[GeneRegulationResearched]
+    items: List[GeneRegulationResearched]
+
 
 #
 class AssociationWithAcceleratedAgingResearched(GeneAssociatedWithProgeriaSyndrome):
-    geneId:int
-    geneNcbiId:int|None
-    geneName:str|None
-    geneSymbol:str|None
-    geneAliases:List[str]
-    _select=GeneAssociatedWithProgeriaSyndrome._select|{
-        'geneId':'gene.id',
-        'geneSymbol':'gene.symbol',
-        'geneNcbiId':'gene.ncbi_id',
-        'geneName':'gene.name',
-        'geneAliases':'gene.aliases',
+    geneId: int
+    geneNcbiId: int | None
+    geneName: str | None
+    geneSymbol: str | None
+    geneAliases: List[str]
+    _select = GeneAssociatedWithProgeriaSyndrome._select | {
+        'geneId': 'gene.id',
+        'geneSymbol': 'gene.symbol',
+        'geneNcbiId': 'gene.ncbi_id',
+        'geneName': 'gene.name',
+        'geneAliases': 'gene.aliases',
     }
-    _name='geneAssociatedWithProgeriaSyndrome'
-    _from="""
+    _name = 'geneAssociatedWithProgeriaSyndrome'
+    _from = """
 from gene_to_progeria
 join gene on gene_to_progeria.gene_id=gene.id
 join progeria_syndrome on progeria_syndrome.id=gene_to_progeria.progeria_syndrome_id
 @PAGING@
 """
 
+
 class AssociationWithAcceleratedAgingResearchedOutput(PaginatedOutput):
-    items:List[AssociationWithAcceleratedAgingResearched]
+    items: List[AssociationWithAcceleratedAgingResearched]
+
 
 #
 class AssociationsWithLifespanResearched(GeneAssociatedWithLongevityEffect):
@@ -692,31 +821,35 @@ class AssociationsWithLifespanResearched(GeneAssociatedWithLongevityEffect):
     @PAGING@
     """
 
+
 class AssociationsWithLifespanResearchedOutput(PaginatedOutput):
-    items:List[AssociationsWithLifespanResearched]
+    items: List[AssociationsWithLifespanResearched]
+
 
 #
 class OtherEvidenceResearched(AdditionalEvidence):
-    geneId:int
-    geneNcbiId:int|None
-    geneName:str|None
-    geneSymbol:str|None
-    geneAliases:List[str]
-    _select=AdditionalEvidence._select|{
-        'geneId':'gene.id',
-        'geneSymbol':'gene.symbol',
-        'geneNcbiId':'gene.ncbi_id',
-        'geneName':'gene.name',
-        'geneAliases':'gene.aliases',
+    geneId: int
+    geneNcbiId: int | None
+    geneName: str | None
+    geneSymbol: str | None
+    geneAliases: List[str]
+    _select = AdditionalEvidence._select | {
+        'geneId': 'gene.id',
+        'geneSymbol': 'gene.symbol',
+        'geneNcbiId': 'gene.ncbi_id',
+        'geneName': 'gene.name',
+        'geneAliases': 'gene.aliases',
     }
-    _name='additionalEvidence'
-    _from="""
+    _name = 'additionalEvidence'
+    _from = """
 from gene_to_additional_evidence
 join gene on gene_to_additional_evidence.gene_id=gene.id 
 @PAGING@
  """
 
+
 class OtherEvidenceResearchedOutput(PaginatedOutput):
-    items:List[OtherEvidenceResearched]
+    items: List[OtherEvidenceResearched]
+
 
 #

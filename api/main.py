@@ -2,14 +2,23 @@ from os import getenv
 from typing import Optional
 
 import uvicorn
+from config import CONFIG, VERSION
+from endpoints import (
+    aging_mechanism,
+    calorie_experiment,
+    criteria,
+    disease,
+    functional_cluster,
+    gene,
+    phylum,
+    protein_class,
+    research,
+    root,
+)
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 from pydantic import BaseModel
-
-from endpoints import root, gene, disease, calorie_experiment, aging_mechanism, functional_cluster, criteria, protein_class, \
-    phylum, research
-from config import CONFIG, VERSION
 
 
 def assembling_endpoints(app: FastAPI):
@@ -64,7 +73,7 @@ def init():
     app = FastAPI(
         debug=CONFIG.get('DEBUG', False),
         title='Open Genes backend API',
-        root_path=getenv('ROOT_PATH')
+        root_path=getenv('ROOT_PATH'),
     )
     app.add_middleware(
         CORSMiddleware,
@@ -105,10 +114,15 @@ def version() -> dict:
 
 
 def custom_openapi():
-    if app.openapi_schema: return app.openapi_schema
+    if app.openapi_schema:
+        return app.openapi_schema
     openapi_schema = get_openapi(
         title=app.title,
-        version=str(VERSION.get('major', '0')) + '.' + str(VERSION.get('minor', '0')) + '.' + VERSION.get('build', '-'),
+        version=str(VERSION.get('major', '0'))
+        + '.'
+        + str(VERSION.get('minor', '0'))
+        + '.'
+        + VERSION.get('build', '-'),
         routes=app.routes,
         servers=[{'url': CONFIG.get('API_URL', '')}],
     )

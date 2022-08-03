@@ -39,7 +39,9 @@ class WormBaseOrthologsBlock:
                     self.fly_orthologs.append(ortholog.gene_symbol)
 
     def print(self):
-        print(f'symbol:{self.gene_symbol}, homo_len:{len(self.homo_orthologs)}, fly_len:{len(self.fly_orthologs)}')
+        print(
+            f'symbol:{self.gene_symbol}, homo_len:{len(self.homo_orthologs)}, fly_len:{len(self.fly_orthologs)}'
+        )
         exit(13)
 
 
@@ -73,7 +75,7 @@ class WormBaseOrthologsList:
         self.new_block(block_rows)
 
 
-class GeneFetcherHUGO():
+class GeneFetcherHUGO:
     def __init__(self, hugo_id: str):
         if ':' in hugo_id:
             hugo_id = hugo_id.strip().split(':')[1]
@@ -84,7 +86,7 @@ class GeneFetcherHUGO():
         try:
             response_raw = requests.get(
                 f'http://rest.genenames.org/fetch/hgnc_id/{self.hogo_id}',
-                headers={'Accept': 'application/json'}
+                headers={'Accept': 'application/json'},
             )
 
             if response_raw.status_code != 200:
@@ -136,7 +138,9 @@ class GenAgeGene:
 
             return '"' + ';'.join(orths_human_symbol_ls) + '"'
 
-        homo_block = build_ortholog_field(self.wbase_block.homo_orthologs) if self.wbase_block else ""
+        homo_block = (
+            build_ortholog_field(self.wbase_block.homo_orthologs) if self.wbase_block else ""
+        )
         # fly_block = build_ortholog_field(self.wbase_block.fly_orthologs) if self.wbase_block else ""
 
         return self.row + f',{homo_block}'
@@ -182,13 +186,13 @@ class GenAgeOrthologsFile:
         self.header = rows[0]
         self.genes = []
         for row in rows[1:]:
-            row = row[:len(row) - 1]
+            row = row[: len(row) - 1]
             gag = GenAgeGene(row)
             self.genes.append(gag)
         print(f'source file len:{len(self.genes)}')
 
     def save_ext_file(self, path: str, wbase_orthologs: WormBaseOrthologsList):
-        ext_header = self.header[:len(self.header) - 1] + ',human'
+        ext_header = self.header[: len(self.header) - 1] + ',human'
         for ga_orth in self.genes:
             ga_orth.find_orthologs(wbase_orthologs)
         print(GenAgeGene.found_blocks)
@@ -222,12 +226,18 @@ class OrthologHandlerDB:
         gene = OrthologHandlerDB.gene_dao.get_by_hugo_id(hgnc_id)
         if not gene:
             return
-        print(f"ortholog handling: gene:{gene['symbol']}, ortholog_symbol: {self.gene_symbol}, hugo_id:{hgnc_id}")
+        print(
+            f"ortholog handling: gene:{gene['symbol']}, ortholog_symbol: {self.gene_symbol}, hugo_id:{hgnc_id}"
+        )
 
         # ortholog id
         try:
-            ortholog_id = OrthologHandlerDB.ortholog_dao.get_id(ortholog_symbol, OrthologHandlerDB.model_organism_lat,
-                                                                OrthologHandlerDB.wormbase_name, wormbase_id)
+            ortholog_id = OrthologHandlerDB.ortholog_dao.get_id(
+                ortholog_symbol,
+                OrthologHandlerDB.model_organism_lat,
+                OrthologHandlerDB.wormbase_name,
+                wormbase_id,
+            )
         except:
             return
         # gene to ortholog
@@ -260,7 +270,7 @@ class MissingGenesWithOrthologs:
             rows = fl.readlines()
             self.symbols: [str] = []
             for row in rows[1:]:
-                row = row[:len(row) - 1]
+                row = row[: len(row) - 1]
                 ls = row.rsplit(',')
                 if len(ls) == 9:
                     field = ls[8][1:-2]
@@ -268,10 +278,10 @@ class MissingGenesWithOrthologs:
                         symbols = [s.strip() for s in field.split(';') if s]
                         if len(symbols):
                             self.symbols += symbols
-    def save(self, missing_path:str):
+
+    def save(self, missing_path: str):
         with open(missing_path, 'w') as fl:
             fl.write('\n'.join(self.symbols))
-
 
 
 WORK_MODE_UPDATE_DB_ORTHOLOGS = True

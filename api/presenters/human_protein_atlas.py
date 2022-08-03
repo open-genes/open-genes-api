@@ -13,18 +13,24 @@ class HumanProteinAtlas:
     Uniprot: List[str] = Field()
     Chromosome: str = Field()
     Position: str = Field()
-    ProteinClass: List[str] = Field(title="Protein classes", description="see https://www.proteinatlas.org"
-                                                                         "/humanproteome/proteinclasses")
-    BiologicalProcess: List[str] = Field(title="Biological process (UniProt)", description="Separate classification, "
-                                                                                           "but corresponds with Gene "
-                                                                                           "Ontology")
-    MolecularFunction: List[str] = Field(title="Molecular function (UniProt)", description="Separate classification, "
-                                                                                           "but corresponds with Gene"
-                                                                                           " Ontology")
+    ProteinClass: List[str] = Field(
+        title="Protein classes",
+        description="see https://www.proteinatlas.org" "/humanproteome/proteinclasses",
+    )
+    BiologicalProcess: List[str] = Field(
+        title="Biological process (UniProt)",
+        description="Separate classification, " "but corresponds with Gene " "Ontology",
+    )
+    MolecularFunction: List[str] = Field(
+        title="Molecular function (UniProt)",
+        description="Separate classification, " "but corresponds with Gene" " Ontology",
+    )
     SubcellularLocation: List[str] = Field()
     SubcellularMainLocation: List[str] = Field()
     SubcellularAdditionalLocation: List[str] = Field()
-    DiseaseInvolvement: List[str] = Field(title="Disease involvement",
-                                          description="The genes group the gene belongs to associated with a certain "
-                                                      "type of diseases")
+    DiseaseInvolvement: List[str] = Field(
+        title="Disease involvement",
+        description="The genes group the gene belongs to associated with a certain "
+        "type of diseases",
+    )
     Evidence: str = Field(title="Evidence", description="Example: Evidence at protein level")

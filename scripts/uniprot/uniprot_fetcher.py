@@ -1,13 +1,12 @@
+import logging
 import os
 import sys
-import logging
 
 import requests
 from deep_translator import GoogleTranslator
 
-from api.entities import entities
 from api.db import dao
-
+from api.entities import entities
 
 TRANSLATOR = GoogleTranslator(source='en', target='ru')
 
@@ -18,16 +17,16 @@ logging.basicConfig(
     level=logging.WARNING,
     handlers=[
         logging.StreamHandler(sys.stdout.flush()),
-        logging.FileHandler(
-            os.path.join(cur_dir, 'uniprot_fetcher.log')
-        )
+        logging.FileHandler(os.path.join(cur_dir, 'uniprot_fetcher.log')),
     ],
 )
 
 
 counter = 0
-for gene_object in dao.GeneDAO().fetch_all(query="SELECT ncbi_id, symbol, uniprot, uniprot_summary_ru FROM `gene` "
-                                                  "WHERE uniprot IS NULL OR uniprot='' OR uniprot_summary_ru IS NULL"):
+for gene_object in dao.GeneDAO().fetch_all(
+    query="SELECT ncbi_id, symbol, uniprot, uniprot_summary_ru FROM `gene` "
+    "WHERE uniprot IS NULL OR uniprot='' OR uniprot_summary_ru IS NULL"
+):
     try:
         response_raw = requests.get(
             'https://www.ebi.ac.uk/proteins/api/proteins',
@@ -37,28 +36,28 @@ for gene_object in dao.GeneDAO().fetch_all(query="SELECT ncbi_id, symbol, unipro
                 'isoform': 0,
                 'reviewed': True,
             },
-            headers={'Accept': 'application/json'}
+            headers={'Accept': 'application/json'},
         )
-    
+
         if response_raw.status_code != 200:
             logging.warning('-' * 100)
             logging.warning(f"GENE SYMBOL: {gene_object['symbol']}")
             logging.warning(f"RESPONSE: {response_raw.json()}")
             continue
-    
+
         response_json = response_raw.json()
         if len(response_json) < 1:
             continue
-    
+
         reference_protein = response_json[0]
-    
+
         protein = {
             'gene_ncbi_id': gene_object['ncbi_id'],
             'gene_symbol': gene_object['symbol'],
             'uniprot_summary_en': '',
             'uniprot_summary_ru': '',
         }
-    
+
         for comment in reference_protein['comments']:
             if comment['type'] == 'FUNCTION':
                 for text in comment['text']:
@@ -83,5 +82,5 @@ for gene_object in dao.GeneDAO().fetch_all(query="SELECT ncbi_id, symbol, unipro
         counter += 1
         print(f'COUNT: {counter} ', f" GENE: {gene_object['symbol']}")
     except Exception as e:
-        print (f'COUNT: {counter} ', f" GENE: {gene_object['symbol']} ERROR: {type(e)} {str(e)}")
+        print(f'COUNT: {counter} ', f" GENE: {gene_object['symbol']} ERROR: {type(e)} {str(e)}")
 print(f'DONE. TOTAL COUNT: {counter}')

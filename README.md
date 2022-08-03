@@ -1,4 +1,4 @@
-# open-genes-backend
+# Open Genes Python API
 
 ## Architecture
 
@@ -34,3 +34,16 @@
 ```
 ./open-genes-backend.sh run scripts
 ```
+
+### Dependencies
+
+All dependencies are listed in **./requirements_dev.txt**
+
+### Linters
+
+Please use linter and code auto formatting when contributing to this repository.
+
+#### Configs: 
+- .pylintrc
+- pyproject.toml
+

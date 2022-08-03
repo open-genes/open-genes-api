@@ -3,7 +3,6 @@ from db.sorts import SORTS
 
 
 class RequestHandler:
-
     def __init__(self, sql_row: str):
         self.sql_row = sql_row
 
@@ -17,18 +16,12 @@ class RequestHandler:
             temp_sql_row = temp_sql_row.replace('@PAGE@', str(page))
             temp_sql_row = temp_sql_row.replace('@PAGESIZE@', str(pagesize))
             temp_sql_row = temp_sql_row.replace(
-                '@LIMIT@',
-                'LIMIT {} OFFSET {}'.format(
-                    str(pagesize), str(pagesize * (page - 1))
-                )
+                '@LIMIT@', 'LIMIT {} OFFSET {}'.format(str(pagesize), str(pagesize * (page - 1)))
             )
         else:
             temp_sql_row = self.sql_row.replace('@PAGE@', '1')
             temp_sql_row = temp_sql_row.replace('@PAGESIZE@', 'MAX(jsout.fRows)')
-            temp_sql_row = temp_sql_row.replace(
-                '@LIMIT@',
-                ''
-            )
+            temp_sql_row = temp_sql_row.replace('@LIMIT@', '')
         self.sql_row = temp_sql_row
 
     def set_language(self, lang: str):
