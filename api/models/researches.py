@@ -336,7 +336,7 @@ class AgeRelatedChangeOfGene(BaseModel):
     modelOrganism: str
     organismLine: str | None
     value: None | str
-    pValue: None | float
+    pValue: None | str
     measurementMethod: None | str
     doi: None | str
     pmid: None | str
