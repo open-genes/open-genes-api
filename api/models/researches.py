@@ -317,7 +317,7 @@ class AgeRelatedChangeOfGene(BaseModel):
     modelOrganism:str
     organismLine:str|None
     value:None|str
-    pValue:None|float
+    pValue:None|str
     measurementMethod:None|str
     doi:None|str
     pmid:None|str
@@ -333,7 +333,7 @@ class AgeRelatedChangeOfGene(BaseModel):
     controlCohortSize:None|float
     experimentCohortSize:None|float
     sex:None|str
-    comment:str
+    comment:None|str
     _select= {
         'changeType':'age_related_change_age_related_change_type.name_@LANG@',
         'sample':'sample.name_@LANG@',
