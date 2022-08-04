@@ -11,7 +11,7 @@ from presenters.gene import (
     GeneShort,
     GeneSuggestionOutput,
     GeneSymbolsOutput,
-    GeneWithResearches,
+    GeneWithStudies,
 )
 
 router = APIRouter()
@@ -194,7 +194,7 @@ async def get_gene_by_id(ncbi_id: int, lang: Language = Language.en):
 
 @router.get(
     '/gene/increase-lifespan',
-    response_model=GeneWithResearches,
+    response_model=GeneWithStudies,
 )
 async def get_gene_by_id(ncbi_id: int, lang: Language = Language.en):
     return 'dummy'

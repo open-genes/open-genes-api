@@ -7,7 +7,7 @@ from presenters.functional_cluster import FunctionalCluster
 from presenters.human_protein_atlas import HumanProteinAtlas
 from presenters.origin import Origin
 from presenters.protein_class import ProteinClass
-from presenters.researches import IncreaseLifespan, Researches
+from presenters.studies import IncreaseLifespan, Studies
 from presenters.timestamp import Timestamp
 from pydantic import Field
 from pydantic.dataclasses import dataclass
@@ -79,7 +79,7 @@ class GeneForMethylation:
 
 
 @dataclass
-class GeneWithResearches:
+class GeneWithStudies:
     id: int
     name: str = Field(title="Gene name")
     symbol: str = Field(title="Gene symbol (HGNC)")
@@ -90,8 +90,8 @@ class GeneWithResearches:
         title="Horvath's epigenetic clock",
         description="Whether gene methylation changes with age (according to Horvath's epigenetic clock)",
     )
-    researches: IncreaseLifespan = Field(
-        title="Researches", description="Effect of modulation of gene activity on a lifespan"
+    studies: IncreaseLifespan = Field(
+        title="Studies", description="Effect of modulation of gene activity on a lifespan"
     )
 
 
@@ -117,9 +117,9 @@ class Gene:
         title="Age-related processes/systems the gene involved in"
     )
     agingMechanisms: List[AgingMechanism] = Field(title="Aging mechanism the gene involved in")
-    researches: Researches = Field(
-        title="Researches",
-        description="Researches confirming the association of the gene with life expectancy and aging",
+    studies: Studies = Field(
+        title="Studies",
+        description="Studies confirming the association of the gene with life expectancy and aging",
     )
     expression: List[Expression] = Field(title="Gene expression in organs and tissues (NCBI)")
     proteinClasses: List[str] = Field(

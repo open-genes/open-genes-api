@@ -154,7 +154,7 @@ class AdditionalEvidence:
 
 
 @dataclass
-class Researches:
+class Studies:
     increaseLifespan: List[IncreaseLifespan] = Field(
         title="Effect of modulation of gene activity on a lifespan"
     )
