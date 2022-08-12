@@ -24,6 +24,52 @@ class Disease(BaseModel):
     name: str | None
     icdName: str | None
 
+    _name = 'disease'
+
+    _select={
+        'id': "disease.id",
+        'icdCode': "disease.icd_code",
+        'name': "COALESCE(disease.name_@LANG@,disease.name_@LANG@)",
+        'icdName': "COALESCE(disease.icd_name_@LANG@,disease.icd_name_@LANG@)",
+    }
+    _from="""
+        from disease
+        join gene_to_disease on gene_to_disease.disease_id=disease.id
+        join gene on gene.id=gene_to_disease.gene_id
+    """
+
+
+class DiseaseSearchInput(PaginationInput, LanguageInput):
+    byGeneId: str = '6'
+    byGeneSymbol: str = None
+    bySuggestions: str = None
+    _filters = {
+        'byGeneId': [
+            lambda value: 'gene.id in (' + ','.join(['%s' for v in value.split(',')]) + ')',
+            lambda value: value.split(','),
+        ],
+        'byGeneSymbol': [
+            lambda value: 'gene.symbol in (' + ','.join(['%s' for v in value.split(',')]) + ')',
+            lambda value: value.split(','),
+        ],
+    }   
+    _order_by = "disease.id"
+
+
+class DiseaseSearched(Disease):
+    _from = """
+from disease
+@JOINS@
+@FILTERING@
+@PAGING@
+"""
+    _order_by = "disease.id"
+
+
+class DiseaseSearchOutput(PaginatedOutput):
+    items: List[DiseaseSearched]
+    _from = "from (select coalesce((select row_count from @PRIMARY_TABLE@ limit 1),0) as objTotal, (select count(*) from @DBNAME@.gene where isHidden<>1) as total, %s as page, coalesce(nullif(%s,0),(select row_count from @PRIMARY_TABLE@ limit 1)) as pageSize, %s as pagesTotal) s "
+
 
 class CommentCause(BaseModel):
     id: int

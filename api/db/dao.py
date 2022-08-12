@@ -1,4 +1,5 @@
 from typing import get_args, get_origin
+from api.models.gene import Disease
 
 from config import CONFIG
 from db.suggestion_handler import suggestion_request_builder
@@ -808,6 +809,15 @@ class CommentCauseDAO(BaseDAO):
 
 class DiseaseDAO(BaseDAO):
     """Disease Table fetcher."""
+
+    def get_by_gene_id(self, input):
+        tables = self.prepare_tables(List[Disease])
+        query, params = self.prepare_query(tables, input)
+        print(input)
+        print(tables)
+        print(params)
+        print(query)
+        return self.read_query(query, params, tables)
 
     def get(
         self,
