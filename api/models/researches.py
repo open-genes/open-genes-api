@@ -327,6 +327,7 @@ left join position as longevity_effect_position on longevity_effect_position.id 
 left join polymorphism_type as longevity_effect_polymorphism_type on longevity_effect_polymorphism_type.id = gene_to_longevity_effect.polymorphism_type_id
 left join ethnicity as longevity_effect_ethnicity on longevity_effect_ethnicity.id = gene_to_longevity_effect.ethnicity_id
 left join study_type as longevity_effect_study_type on longevity_effect_study_type.id = gene_to_longevity_effect.study_type_id
+@FILTERING@
 """
 
 
@@ -696,6 +697,7 @@ left join expression_evaluation on age_related_change.expression_evaluation_by_i
 left join measurement_method on age_related_change.measurement_method_id = measurement_method.id
 left join statistical_method on age_related_change.statistical_method_id = statistical_method.id
 left join organism_sex on age_related_change.sex = organism_sex.id
+@FILTERING@
 @PAGING@
 """
 
@@ -731,6 +733,7 @@ left join model_organism as gene_intervention_to_vital_process_model_organism on
 left join organism_line as gene_intervention_to_vital_process_organism_line on gene_intervention_to_vital_process_organism_line.id = gene_intervention_to_vital_process.organism_line_id
 left join time_unit gene_intervention_to_vital_process_time_unit on gene_intervention_to_vital_process_time_unit.id=gene_intervention_to_vital_process.age_unit
 left join genotype on genotype.id=gene_intervention_to_vital_process.genotype
+@FILTERING@
 @PAGING@
 """
 
@@ -760,6 +763,7 @@ left join gene on protein_to_gene.gene_id=gene.id
 join open_genes.gene as regulated_gene on regulated_gene.id = protein_to_gene.regulated_gene_id
 join protein_activity on protein_activity.id = protein_to_gene.protein_activity_id
 join gene_regulation_type on gene_regulation_type.id = protein_to_gene.regulation_type_id
+@FILTERING@
 @PAGING@
 """
 
@@ -787,6 +791,7 @@ class AssociationWithAcceleratedAgingResearched(GeneAssociatedWithProgeriaSyndro
 from gene_to_progeria
 join gene on gene_to_progeria.gene_id=gene.id
 join progeria_syndrome on progeria_syndrome.id=gene_to_progeria.progeria_syndrome_id
+@FILTERING@
 @PAGING@
 """
 
@@ -818,6 +823,7 @@ class AssociationsWithLifespanResearched(GeneAssociatedWithLongevityEffect):
     left join polymorphism on polymorphism.id = gene_to_longevity_effect.polymorphism_id
     left join age_related_change_type as longevity_effect_age_related_change_type on longevity_effect_age_related_change_type.id = gene_to_longevity_effect.age_related_change_type_id
     left join model_organism as longevity_effect_model_organism on longevity_effect_model_organism.id=gene_to_longevity_effect.model_organism_id
+    @FILTERING@
     @PAGING@
     """
 
@@ -844,6 +850,7 @@ class OtherEvidenceResearched(AdditionalEvidence):
     _from = """
 from gene_to_additional_evidence
 join gene on gene_to_additional_evidence.gene_id=gene.id 
+@FILTERING@
 @PAGING@
  """
 
