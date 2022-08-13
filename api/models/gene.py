@@ -25,22 +25,17 @@ class Disease(BaseModel):
     icdName: str | None
 
     _name = 'disease'
-
     _select={
         'id': "disease.id",
         'icdCode': "disease.icd_code",
         'name': "COALESCE(disease.name_@LANG@,disease.name_@LANG@)",
         'icdName': "COALESCE(disease.icd_name_@LANG@,disease.icd_name_@LANG@)",
     }
-    _from="""
-        from disease
-        join gene_to_disease on gene_to_disease.disease_id=disease.id
-        join gene on gene.id=gene_to_disease.gene_id
-    """
+
 
 
 class DiseaseSearchInput(PaginationInput, LanguageInput):
-    byGeneId: str = '6'
+    byGeneId: str = None
     byGeneSymbol: str = None
     bySuggestions: str = None
     _filters = {
@@ -52,17 +47,19 @@ class DiseaseSearchInput(PaginationInput, LanguageInput):
             lambda value: 'gene.symbol in (' + ','.join(['%s' for v in value.split(',')]) + ')',
             lambda value: value.split(','),
         ],
-    }   
-    _order_by = "disease.id"
+    }
 
 
 class DiseaseSearched(Disease):
-    _from = """
-from disease
+    _from="""
+FROM disease
+JOIN gene_to_disease ON gene_to_disease.disease_id=disease.id
+JOIN gene ON gene.id=gene_to_disease.gene_id
 @JOINS@
 @FILTERING@
 @PAGING@
 """
+
     _order_by = "disease.id"
 
 

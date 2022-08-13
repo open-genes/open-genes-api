@@ -1,4 +1,5 @@
 from typing import List
+from api.db.dao import GeneSuggestionDAO
 from api.models.gene import DiseaseSearchInput, DiseaseSearchOutput
 
 from config import Language
@@ -9,7 +10,7 @@ from models.gene import Disease, DiseaseCategory
 router = APIRouter()
 
 
-@router.get('/disease', response_model=List[Disease])
+@router.get('/disease', response_model=DiseaseSearchOutput)
 async def get_disease_list(
     input: DiseaseSearchInput = Depends(DiseaseSearchInput)
 ) -> List :
@@ -20,9 +21,17 @@ async def get_disease_list(
             detail='At least one parameter shold be provided: byGeneId, byGeneSymbol, bySuggestions',
         )
     
-    return DiseaseDAO().get_by_gene_id(input)
-#    elif input.byGeneSymbol:
-#        return DiseaseDAO().search_by_genes_symbol(input.byGeneSymbol)
+    if input.bySuggestions is not None:
+        sls = GeneSuggestionDAO().search(input.bySuggestions, suggestHidden=0)
+        idls = []
+        for item in sls['items']:
+            idls.append(item['id'])
+        suggfilter = ','.join(str(f) for f in idls) if idls else input.bySuggestions
+        input.bySuggestions = None
+        input.byGeneId = suggfilter
+    
+    return DiseaseDAO().get_by_gene(input)
+
 
 
 @router.get(
