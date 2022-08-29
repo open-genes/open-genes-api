@@ -3,7 +3,7 @@ from typing import List
 
 from config import Language
 from db.dao import GeneDAO, GeneSuggestionDAO
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from models.gene import GeneSearchInput, GeneSearchOutput, GeneSingle, GeneSingleInput
 from presenters.gene import (
     Gene,
@@ -21,7 +21,7 @@ router = APIRouter()
 async def gene_search(input: GeneSearchInput = Depends(GeneSearchInput)) -> List:
 
     if input.bySuggestions is not None:
-        sls = GeneSuggestionDAO().search(input.bySuggestions)
+        sls = GeneSuggestionDAO().search(input.bySuggestions, suggestHidden=0)
         idls = []
         for item in sls['items']:
             idls.append(item['id'])
@@ -36,13 +36,23 @@ async def gene_search(input: GeneSearchInput = Depends(GeneSearchInput)) -> List
     '/gene/suggestions',
     response_model=GeneSuggestionOutput,
 )
-async def get_gene_suggestions(input: str = None, byGeneId: str = None, byGeneSymbol: str = None):
-    if byGeneSymbol:
-        return GeneSuggestionDAO().search_by_genes_symbol(byGeneSymbol)
+async def get_gene_suggestions(
+    input: str = None,
+    byGeneId: str = None,
+    byGeneSymbol: str = None,
+    suggestHidden: int = Query(default=0, ge=0, le=1),
+):
+    if not any((byGeneId, byGeneSymbol, input)):
+        raise HTTPException(
+            status_code=400,
+            detail='At least one parameter shold be provided: byGeneId, byGeneSymbol, input',
+        )
+    elif byGeneSymbol:
+        return GeneSuggestionDAO().search_by_genes_symbol(byGeneSymbol, suggestHidden)
     elif byGeneId:
-        return GeneSuggestionDAO().search_by_genes_id(byGeneId)
+        return GeneSuggestionDAO().search_by_genes_id(byGeneId, suggestHidden)
     else:
-        return GeneSuggestionDAO().search(input)
+        return GeneSuggestionDAO().search(input, suggestHidden)
 
 
 @router.get(

@@ -327,6 +327,7 @@ left join position as longevity_effect_position on longevity_effect_position.id 
 left join polymorphism_type as longevity_effect_polymorphism_type on longevity_effect_polymorphism_type.id = gene_to_longevity_effect.polymorphism_type_id
 left join ethnicity as longevity_effect_ethnicity on longevity_effect_ethnicity.id = gene_to_longevity_effect.ethnicity_id
 left join study_type as longevity_effect_study_type on longevity_effect_study_type.id = gene_to_longevity_effect.study_type_id
+@FILTERING@
 """
 
 
@@ -336,7 +337,7 @@ class AgeRelatedChangeOfGene(BaseModel):
     modelOrganism: str
     organismLine: str | None
     value: None | str
-    pValue: None | float
+    pValue: None | str
     measurementMethod: None | str
     doi: None | str
     pmid: None | str
@@ -352,7 +353,7 @@ class AgeRelatedChangeOfGene(BaseModel):
     controlCohortSize: None | float
     experimentCohortSize: None | float
     sex: None | str
-    comment: str
+    comment: None | str
     _select = {
         'changeType': 'age_related_change_age_related_change_type.name_@LANG@',
         'sample': 'sample.name_@LANG@',
@@ -522,14 +523,105 @@ class Researches(BaseModel):
 
 class IncreaseLifespanSearchInput(PaginationInput, LanguageInput, SortInput):
     byGeneId: int | None
+    byDiseases: str = None
+    byDiseaseCategories: str = None
+    byAgeRelatedProcess: str = None
+    byExpressionChange: str = None
+    bySelectionCriteria: str = None
+    byAgingMechanism: str = None
+    byProteinClass: str = None
+    bySpecies: str = None
+    byOrigin: str = None
+    byFamilyOrigin: str = None
+    byConservativeIn: str = None
+    byGeneSymbol: str = None
+    bySuggestions: str = None
+    byChromosomeNum: str = None
     sortBy: Literal[
         'lifespanMinChangePercent',
         'lifespanMeanChangePercent',
         'lifespanMedianChangePercent',
         'lifespanMaxChangePercent',
     ] | None = None
+    researches: str = None
+    isHidden: str = 1
     _filters = {
         'byGeneId': [lambda value: 'gene.id=%s', lambda value: [value]],
+        'isHidden': [lambda value: 'gene.isHidden!=1', lambda value: []],
+        'byChromosomeNum': [
+            lambda value: 'gene.chromosome in (' + ','.join(['%s' for v in value.split(',')]) + ')',
+            lambda value: value.split(','),
+        ],
+        'byGeneSymbol': [
+            lambda value: 'gene.symbol in (' + ','.join(['%s' for v in value.split(',')]) + ')',
+            lambda value: value.split(','),
+        ],
+        'byDiseases': [
+            lambda value: '(select count(*) from gene_to_disease where gene_to_disease.gene_id=gene.id and disease_id in ('
+            + ','.join(['%s' for v in value.split(',')])
+            + '))=%s',
+            lambda value: value.split(',') + [len(value.split(','))],
+        ],
+        'byDiseaseCategories': [
+            lambda value: '(select count(*) from gene_to_disease g join disease d on g.disease_id=d.id join disease c on c.icd_code=d.icd_code_visible where g.gene_id=gene.id and c.id in ('
+            + ','.join(['%s' for v in value.split(',')])
+            + '))=%s',
+            lambda value: value.split(',') + [len(value.split(','))],
+        ],
+        'byAgeRelatedProcess': [
+            lambda value: '(select count(*) from gene_to_functional_cluster where gene_id=gene.id and functional_cluster_id in ('
+            + ','.join(['%s' for v in value.split(',')])
+            + '))=%s',
+            lambda value: value.split(',') + [len(value.split(','))],
+        ],
+        'byExpressionChange': [
+            lambda value: 'gene.expressionChange in ('
+            + ','.join(['%s' for v in value.split(',')])
+            + ')',
+            lambda value: value.split(','),
+        ],
+        'bySelectionCriteria': [
+            lambda value: '(select count(*) from gene_to_comment_cause where gene_id=gene.id and comment_cause_id in ('
+            + ','.join(['%s' for v in value.split(',')])
+            + '))=%s',
+            lambda value: value.split(',') + [len(value.split(','))],
+        ],
+        'byAgingMechanism': [
+            lambda value: '(select count(distinct aging_mechanism_id) from gene_to_ontology o join gene_ontology_to_aging_mechanism_visible a on a.gene_ontology_id=o.gene_ontology_id where o.gene_id=gene.id and aging_mechanism_id in ('
+            + ','.join(['%s' for v in value.split(',')])
+            + '))=%s',
+            lambda value: value.split(',') + [len(value.split(','))],
+        ],
+        'byProteinClass': [
+            lambda value: '(select count(*) from gene_to_protein_class where gene_id=gene.id and protein_class_id in ('
+            + ','.join(['%s' for v in value.split(',')])
+            + '))=%s',
+            lambda value: value.split(',') + [len(value.split(','))],
+        ],
+        'bySpecies': [
+            lambda value: '(select count(distinct model_organism_id) from lifespan_experiment where lifespan_experiment.gene_id=gene.id and model_organism_id in ('
+            + ','.join(['%s' for v in value.split(',')])
+            + '))=%s',
+            lambda value: value.split(',') + [len(value.split(','))],
+        ],
+        'byOrigin': [
+            lambda value: '(select count(*) from phylum where gene.phylum_id=phylum.id and phylum.name_phylo in ('
+            + ','.join(['%s' for v in value.split(',')])
+            + '))=%s',
+            lambda value: value.split(',') + [len(value.split(','))],
+        ],
+        'byFamilyOrigin': [
+            lambda value: '(select count(*) from phylum where gene.phylum_id=family_phylum.id and phylum.id in ('
+            + ','.join(['%s' for v in value.split(',')])
+            + '))=%s',
+            lambda value: value.split(',') + [len(value.split(','))],
+        ],
+        'byConservativeIn': [
+            lambda value: '(select count(*) from taxon where gene.taxon_id=taxon.id and taxon.id in ('
+            + ','.join(['%s' for v in value.split(',')])
+            + '))=%s',
+            lambda value: value.split(',') + [len(value.split(','))],
+        ],
     }
     _sorts = {
         'lifespanMinChangePercent': 'general_lifespan_experiment.lifespan_min_change',
@@ -605,6 +697,7 @@ left join expression_evaluation on age_related_change.expression_evaluation_by_i
 left join measurement_method on age_related_change.measurement_method_id = measurement_method.id
 left join statistical_method on age_related_change.statistical_method_id = statistical_method.id
 left join organism_sex on age_related_change.sex = organism_sex.id
+@FILTERING@
 @PAGING@
 """
 
@@ -640,6 +733,7 @@ left join model_organism as gene_intervention_to_vital_process_model_organism on
 left join organism_line as gene_intervention_to_vital_process_organism_line on gene_intervention_to_vital_process_organism_line.id = gene_intervention_to_vital_process.organism_line_id
 left join time_unit gene_intervention_to_vital_process_time_unit on gene_intervention_to_vital_process_time_unit.id=gene_intervention_to_vital_process.age_unit
 left join genotype on genotype.id=gene_intervention_to_vital_process.genotype
+@FILTERING@
 @PAGING@
 """
 
@@ -669,6 +763,7 @@ left join gene on protein_to_gene.gene_id=gene.id
 join open_genes.gene as regulated_gene on regulated_gene.id = protein_to_gene.regulated_gene_id
 join protein_activity on protein_activity.id = protein_to_gene.protein_activity_id
 join gene_regulation_type on gene_regulation_type.id = protein_to_gene.regulation_type_id
+@FILTERING@
 @PAGING@
 """
 
@@ -696,6 +791,7 @@ class AssociationWithAcceleratedAgingResearched(GeneAssociatedWithProgeriaSyndro
 from gene_to_progeria
 join gene on gene_to_progeria.gene_id=gene.id
 join progeria_syndrome on progeria_syndrome.id=gene_to_progeria.progeria_syndrome_id
+@FILTERING@
 @PAGING@
 """
 
@@ -727,6 +823,7 @@ class AssociationsWithLifespanResearched(GeneAssociatedWithLongevityEffect):
     left join polymorphism on polymorphism.id = gene_to_longevity_effect.polymorphism_id
     left join age_related_change_type as longevity_effect_age_related_change_type on longevity_effect_age_related_change_type.id = gene_to_longevity_effect.age_related_change_type_id
     left join model_organism as longevity_effect_model_organism on longevity_effect_model_organism.id=gene_to_longevity_effect.model_organism_id
+    @FILTERING@
     @PAGING@
     """
 
@@ -753,6 +850,7 @@ class OtherEvidenceResearched(AdditionalEvidence):
     _from = """
 from gene_to_additional_evidence
 join gene on gene_to_additional_evidence.gene_id=gene.id 
+@FILTERING@
 @PAGING@
  """
 
