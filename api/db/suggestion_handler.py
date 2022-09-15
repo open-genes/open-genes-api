@@ -7,7 +7,7 @@ class FieldForSuggestionSearch:
         ls = []
         if substring.isdigit() and self.is_digit:
             ls.append(f"{self.name} = {substring}")
-        ls.append(f"{self.name} LIKE '%{substring}%'")
+        ls.append(f"{self.name} LIKE {substring}")
         return " OR ".join(ls)
 
     def get_name(self):
