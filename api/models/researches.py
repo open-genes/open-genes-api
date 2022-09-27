@@ -281,6 +281,7 @@ class GeneAssociatedWithLongevityEffect(BaseModel):
     ethnicity: None | str
     studyType: None | str
     significance: None | str
+    pValue: None | str
     changeType: None | str
     dataType: None | str
     doi: None | str
@@ -305,6 +306,7 @@ class GeneAssociatedWithLongevityEffect(BaseModel):
         'maxAgeOfExperiment': 'gene_to_longevity_effect.max_age_of_experiment',
         'meanAgeOfExperiment': 'gene_to_longevity_effect.mean_age_of_experiment',
         'significance': 'gene_to_longevity_effect.significance',
+        'pValue': 'gene_to_longevity_effect.p_value',
         'changeType': 'longevity_effect_age_related_change_type.name_@LANG@',
         'sex': 'longevity_effect_organism_sex.name_@LANG@',
         'position': 'longevity_effect_position.name_@LANG@',
