@@ -2,7 +2,7 @@ from os import getenv
 from typing import Optional
 
 import uvicorn
-from config import CONFIG, VERSION
+from config import CONFIG, VERSION, Cache
 from endpoints import (
     aging_mechanism,
     calorie_experiment,
@@ -15,9 +15,11 @@ from endpoints import (
     research,
     root,
 )
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, Body
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
+from fastapi_cache import FastAPICache
+from fastapi_cache.backends.inmemory import InMemoryBackend
 from pydantic import BaseModel
 
 
@@ -111,6 +113,25 @@ def version() -> dict:
     Version information for the running application instance
     """
     return VERSION
+
+
+@app.post("/clear_cache", tags=["cache"], summary="Clear cache")
+async def clear(secret_token: str = Body(..., embed=True)):
+    """Clears cache for all endpoints with given namespace. Secret token is required."""
+
+    if secret_token == Cache.secret_token:
+        await FastAPICache.clear(namespace=Cache.namespace)
+        return {"status_code": 200, "detail": "Cache deleted successfully"}
+
+    raise HTTPException(
+        status_code=400,
+        detail='Provided secret token is invalid',
+    )
+
+
+@app.on_event("startup")
+async def startup():
+    FastAPICache.init(InMemoryBackend())
 
 
 def custom_openapi():

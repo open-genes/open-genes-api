@@ -1,5 +1,6 @@
 import os
 import pathlib
+from dataclasses import dataclass
 from enum import Enum
 
 from dotenv import dotenv_values, load_dotenv
@@ -28,3 +29,10 @@ class SortVariant(Enum):
     criteriaQuantity = "criteriaQuantity"
     familyPhylum = "familyPhylum"
     default = "default"
+
+
+@dataclass
+class Cache:
+    expire = CONFIG.get('CACHE_EXPIRE')
+    namespace = CONFIG.get('CACHE_NAMESPACE')
+    secret_token = CONFIG.get('CACHE_SECRET_TOKEN')

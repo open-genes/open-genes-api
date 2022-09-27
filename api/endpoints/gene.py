@@ -1,9 +1,10 @@
 import json
 from typing import List
 
-from config import Language
+from config import Cache, Language
 from db.dao import GeneDAO, GeneSuggestionDAO
 from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi_cache.decorator import cache
 from models.gene import GeneSearchInput, GeneSearchOutput, GeneSingle, GeneSingleInput
 from presenters.gene import (
     Gene,
@@ -18,6 +19,7 @@ router = APIRouter()
 
 
 @router.get('/gene/search', response_model=GeneSearchOutput)
+@cache(expire=int(Cache.expire), namespace=Cache.namespace)
 async def gene_search(input: GeneSearchInput = Depends(GeneSearchInput)) -> List:
 
     if input.bySuggestions is not None:
@@ -36,6 +38,7 @@ async def gene_search(input: GeneSearchInput = Depends(GeneSearchInput)) -> List
     '/gene/suggestions',
     response_model=GeneSuggestionOutput,
 )
+@cache(expire=int(Cache.expire), namespace=Cache.namespace)
 async def get_gene_suggestions(
     input: str = None,
     byGeneId: str = None,
@@ -59,6 +62,7 @@ async def get_gene_suggestions(
     '/gene/symbols',
     response_model=List[GeneSymbolsOutput],
 )
+@cache(expire=int(Cache.expire), namespace=Cache.namespace)
 async def get_gene_symbols():
     req = GeneDAO().get_symbols()
     rs = [{'id': data[0], 'symbol': data[1]} for data in req]
@@ -126,6 +130,7 @@ async def get_gene_by_expression_change(expression_change: str, lang: Language =
 
 
 @router.get('/gene/{id_or_symbol}', response_model=GeneSingle)
+@cache(expire=int(Cache.expire), namespace=Cache.namespace)
 async def gene_search(
     id_or_symbol: int | str, input: GeneSingleInput = Depends(GeneSingleInput)
 ) -> GeneSingle:
