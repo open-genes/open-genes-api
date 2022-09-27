@@ -475,8 +475,21 @@ RIGHT JOIN calorie_restriction_experiment ON calorie_restriction_experiment.gene
 
 class CalorieExperimentOutput(PaginatedOutput):
     items: List[CalorieExperiment]
+    _from = "from (select coalesce((select row_count from @PRIMARY_TABLE@ limit 1),0) as objTotal, (select count(*) from @DBNAME@.gene where isHidden<>1) as total, %s as page, coalesce(nullif(%s,0),(select row_count from @PRIMARY_TABLE@ limit 1)) as pageSize, %s as pagesTotal) s "
 
 
 class CalorieExperimentInput(PaginationInput, LanguageInput):
-    _filters = {}
+    byGeneId: str = None
+    byGeneSymbol: str = None
+    bySuggestions: str = None
+    _filters = {
+        'byGeneId': [
+            lambda value: 'gene.id in (' + ','.join(['%s' for v in value.split(',')]) + ')',
+            lambda value: value.split(','),
+        ],
+        'byGeneSymbol': [
+            lambda value: 'gene.symbol in (' + ','.join(['%s' for v in value.split(',')]) + ')',
+            lambda value: value.split(','),
+        ],
+    }
     _sorts = {}

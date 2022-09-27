@@ -56,5 +56,6 @@ class CalorieRestrictionExperiment(BaseModel):
     JOIN model_organism on calorie_restriction_experiment.model_organism_id = model_organism.id
     JOIN sample on calorie_restriction_experiment.tissue_id = sample.id
     LEFT JOIN isoform on calorie_restriction_experiment.isoform_id = isoform.id
-    GROUP BY gene.id
+    
     """
+    # GROUP BY gene.id
