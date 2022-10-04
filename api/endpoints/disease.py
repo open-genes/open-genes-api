@@ -14,12 +14,6 @@ router = APIRouter()
 async def get_disease_list(
     input: DiseaseSearchInput = Depends(DiseaseSearchInput)
 ) -> List :
-
-    if not any((input.byGeneId, input.byGeneSymbol, input.bySuggestions)):
-        raise HTTPException(
-            status_code=400,
-            detail='At least one parameter shold be provided: byGeneId, byGeneSymbol, bySuggestions',
-        )
     
     if input.bySuggestions is not None:
         sls = GeneSuggestionDAO().search(input.bySuggestions, suggestHidden=0)
