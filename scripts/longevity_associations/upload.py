@@ -187,7 +187,9 @@ def replace_id_values(
     """Replace values from dataset with corresponding id value from Database"""
     mapping = {}
     id_col, name_col = list(df_with_ids.columns)
-    mapping = {row[name_col]: row[id_col] for _, row in df_with_ids.to_dict("index").items()}
+    mapping = {
+        row[name_col].strip(): row[id_col] for _, row in df_with_ids.to_dict("index").items()
+    }
 
     if origin_column == "sex_of_organism":
         df_origin[origin_column] = df_origin[origin_column].fillna(ORGANISM_SEX_NULL_VALUE)
@@ -228,6 +230,7 @@ def get_df_from_db(connection: MySQLConnection, table: str, columns: List) -> Da
     columns = ", ".join(columns)
     sql = f"SELECT {columns} FROM {table}"
     df = pd.read_sql(sql, con=connection)
+    df = df.dropna()
     return df
 
 
