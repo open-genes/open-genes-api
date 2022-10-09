@@ -1,10 +1,8 @@
 from pydantic import BaseModel
 
 
-
-
 class CalorieRestrictionExperiment(BaseModel):
-    id: int|None
+    id: int | None
     lexpressionChangeLogFc: float
     pValue: str
     result: str
@@ -22,7 +20,7 @@ class CalorieRestrictionExperiment(BaseModel):
     experimentGroupQuantity: str
     doi: str
     expressionChangePercent: str
-    isoform: str|None
+    isoform: str | None
 
     _name = 'calorie_restriction_experiment'
     _select = {
@@ -60,4 +58,3 @@ class CalorieRestrictionExperiment(BaseModel):
     LEFT JOIN isoform on calorie_restriction_experiment.isoform_id = isoform.id
     GROUP BY gene.id
     """
-

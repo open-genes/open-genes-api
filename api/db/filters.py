@@ -1,5 +1,3 @@
-FILTERS = {
-}
+FILTERS = {}
 
-FILTERS_JOIN = {
-}
+FILTERS_JOIN = {}
