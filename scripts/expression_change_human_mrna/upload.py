@@ -1,5 +1,3 @@
-# TODO black, isort, docstring, annotation
-# TODO ask migration
 import json
 import logging
 import os
@@ -34,7 +32,11 @@ LOGGER.addHandler(FILE_HANDLER)
 REDUNDANT_DATASET_COLUMNS = ["gene_id", "q-value", "fc"]
 ORGANISM_SEX_NULL_VALUE = "not specified"
 PREFIX = "_name"
-DbTable = namedtuple("DbTable", ["name", "columns", "dataset_column", "mapping", "has_created_date"], defaults=[False])
+DbTable = namedtuple(
+    "DbTable",
+    ["name", "columns", "dataset_column", "mapping", "has_created_date"],
+    defaults=[False],
+)
 TABLES_TO_READ = (
     DbTable(
         "gene",
@@ -47,21 +49,11 @@ TABLES_TO_READ = (
         ("id", "name_en"),
         "change_type",
         {"change_type": "age_related_change_type_id"},
-        True
+        True,
     ),
+    DbTable("sample", ("id", "name_en"), "sample", {"sample": "sample_id"}, True),
     DbTable(
-        "sample",
-        ("id", "name_en"),
-        "sample",
-        {"sample": "sample_id"},
-        True
-    ),
-    DbTable(
-        "model_organism",
-        ("id", "name_en"),
-        "organism",
-        {"organism": "model_organism_id"},
-        True
+        "model_organism", ("id", "name_en"), "organism", {"organism": "model_organism_id"}, True
     ),
     DbTable(
         "time_unit",
@@ -109,9 +101,9 @@ def upload_data(cursor: MySQLCursor, df: DataFrame, table_name: str):
     column_vars = ", ".join((f"%({col})s" for col in df.columns))
     data_to_load = df.to_dict("records")
     LOGGER.info("Number of rows to be uploaded: %s in table: %s", len(data_to_load), table_name)
-    # sql_query = f"INSERT IGNORE INTO {table_name}({column_names}) VALUES ({column_vars})"
-    # cursor.executemany(sql_query, data_to_load)
-    # LOGGER.info("Number of rows uploaded: %s in table: %s", cursor.rowcount, table_name)
+    sql_query = f"INSERT IGNORE INTO {table_name}({column_names}) VALUES ({column_vars})"
+    cursor.executemany(sql_query, data_to_load)
+    LOGGER.info("Number of rows uploaded: %s in table: %s", cursor.rowcount, table_name)
     LOGGER.info("Upload in table %s finished", table_name)
 
 
@@ -143,7 +135,7 @@ def add_new_data_to_db(cursor: MySQLCursor, df: DataFrame, table: namedtuple):
 
 def get_new_data(df: DataFrame, table: namedtuple) -> DataFrame:
     """Returns data that is present in dataset but not present in database"""
-    
+
     if table.mapping:
         df = df.rename(columns={table.mapping[table.dataset_column]: table.dataset_column})
 
@@ -161,29 +153,35 @@ def apply_structure(df: DataFrame, structure: dict) -> DataFrame:
     LOGGER.warning("No such columns in dataset, they will be null in database: %s", columns_missed)
     df = df[columns_to_select]
     dtypes = {col: dtypes[col] for col in columns_to_select}
-    
+
     try:
         df = df.astype(dtypes)
     except ValueError as err:
         LOGGER.error("Row will be skipped during upload, error message: %s", err)
-    
+
     return df
 
 
+# NOTE: watch out duplicates in name field
 def replace_id_values(
     df_origin: DataFrame, df_with_ids: DataFrame, origin_column: str, col_mapping: dict
 ) -> DataFrame:
     """Replace values from dataset with corresponding id value from Database"""
     mapping = {}
     id_col, name_col = list(df_with_ids.columns)
-    mapping = {row[name_col].upper().strip(): row[id_col] for _, row in df_with_ids.to_dict("index").items()}
+    mapping = {
+        row[name_col].upper().strip(): row[id_col]
+        for _, row in df_with_ids.to_dict("index").items()
+    }
 
     if origin_column == "sex":
-        # df_origin[origin_column] = df_origin[origin_column].replace("Woman", "female")
+        df_origin[origin_column] = df_origin[origin_column].replace("Woman", "female")
         df_origin[origin_column] = df_origin[origin_column].fillna(ORGANISM_SEX_NULL_VALUE)
 
     df_replaced = df_origin.rename(columns={origin_column: f"{origin_column}{PREFIX}"})
-    df_replaced[origin_column] = df_replaced[f"{origin_column}{PREFIX}"].str.upper().str.strip().map(mapping)
+    df_replaced[origin_column] = (
+        df_replaced[f"{origin_column}{PREFIX}"].str.upper().str.strip().map(mapping)
+    )
     log_values_without_id(df_replaced, origin_column)
     df_replaced = df_replaced.rename(columns=col_mapping)
     return df_replaced
@@ -238,19 +236,37 @@ def drop_redundant_data(df: DataFrame, existing_gene_symbols: List) -> DataFrame
     empty_gene_symbol_rows = df_changed[df_changed["gene_symbol"].isnull()].index.values
     empty_gene_symbol_rows = list(map(lambda x: x + 2, empty_gene_symbol_rows))
     df_changed = df_changed.dropna(subset=["gene_symbol"])
-    
+
     if empty_gene_symbol_rows:
-        LOGGER.info("Rows with empty gene_symbol (total %s): %s", len(empty_gene_symbol_rows), empty_gene_symbol_rows)
-    
+        LOGGER.info(
+            "Rows with empty gene_symbol (total %s): %s",
+            len(empty_gene_symbol_rows),
+            empty_gene_symbol_rows,
+        )
+
     dataset_gene_symbols = set(map(lambda x: x.upper().strip(), df_changed["gene_symbol"].tolist()))
     database_gene_symbols = set(map(lambda x: x.upper().strip(), existing_gene_symbols))
     unknown_gene_symbols = dataset_gene_symbols - database_gene_symbols
+    unknown_gene_symbol_rows = df_changed[
+        df_changed["gene_symbol"].str.upper().isin(unknown_gene_symbols)
+    ].index.values
+    unknown_gene_symbol_rows = list(map(lambda x: x + 2, unknown_gene_symbol_rows))
     df_changed = df_changed[~df_changed["gene_symbol"].str.upper().isin(unknown_gene_symbols)]
 
     if unknown_gene_symbols:
-        LOGGER.info("No such gene symbols in database (total %s): %s", len(unknown_gene_symbols), unknown_gene_symbols)
-    
+        LOGGER.info(
+            "Rows with unknown symbols (total %s): %s",
+            len(unknown_gene_symbol_rows),
+            unknown_gene_symbol_rows,
+        )
+        LOGGER.info(
+            "No such gene symbols in database (total %s): %s",
+            len(unknown_gene_symbols),
+            unknown_gene_symbols,
+        )
+
     return df_changed
+
 
 def read_structure_json(file_name: str) -> dict:
     """Read json file by provided file name"""
