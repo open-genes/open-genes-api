@@ -44,6 +44,9 @@ class FunctionalCluster(BaseModel):
     id: int
     name: str
 
+class ConfidenceLevel(BaseModel):
+    id: int
+    name: str
 
 class GeneCommon(BaseModel):
     id: int
@@ -60,7 +63,15 @@ class GeneCommon(BaseModel):
     methylationCorrelation: str | None
     aliases: List[str] | None
     expressionChange: int
-    confidenceLevel: str | None
+    confidenceLevel: None | List[
+        ogmodel(
+            ConfidenceLevel,
+            _select = {
+                'id': "confidence_level.id",
+                'name': "COALESCE(confidence_level.name_@LANG@,confidence_level.name_en)"
+            } 
+        )
+    ]
 
     origin: None | ogmodel(
         Phylum,
@@ -181,7 +192,6 @@ join functional_cluster on functional_cluster.id=gene_to_functional_cluster.func
         'methylationCorrelation': "gene.methylation_horvath",
         'aliases': "gene.aliases",
         'expressionChange': 'gene.expressionChange',
-        'confidenceLevel': "COALESCE(confidence_level.name_@LANG@,confidence_level.name_en)",
     }
 
 
