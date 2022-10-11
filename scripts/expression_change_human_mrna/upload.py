@@ -14,7 +14,7 @@ from mysql.connector.cursor import MySQLCursor
 from pandas import DataFrame
 
 # Create a custom logger
-LOGGER = logging.getLogger("longevity_associations_upload")
+LOGGER = logging.getLogger("expression_change_human_mrna_upload")
 LOGGER.setLevel(logging.INFO)
 HANDLER = logging.StreamHandler(sys.stdout)
 HANDLER.setLevel(logging.INFO)
