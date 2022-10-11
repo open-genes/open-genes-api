@@ -44,6 +44,9 @@ class FunctionalCluster(BaseModel):
     id: int
     name: str
 
+class ConfidenceLevel(BaseModel):
+    id: int
+    name: str
 
 class GeneCommon(BaseModel):
     id: int
@@ -60,6 +63,15 @@ class GeneCommon(BaseModel):
     methylationCorrelation: str | None
     aliases: List[str] | None
     expressionChange: int
+    confidenceLevel: None | List[
+        ogmodel(
+            ConfidenceLevel,
+            _select = {
+                'id': "confidence_level.id",
+                'name': "COALESCE(confidence_level.name_@LANG@,confidence_level.name_en)"
+            } 
+        )
+    ]
 
     origin: None | ogmodel(
         Phylum,
@@ -187,6 +199,8 @@ class GeneSearched(GeneCommon):
     _from = """
 FROM gene
 LEFT JOIN taxon ON gene.taxon_id = taxon.id
+LEFT JOIN gene_to_confidence_level ON gene.id = gene_to_confidence_level.gene_id
+LEFT JOIN confidence_level ON gene.confidence_level_id = confidence_level.id
 @JOINS@
 @FILTERING@
 @PAGING@
@@ -215,9 +229,10 @@ class GeneSearchInput(PaginationInput, LanguageInput, SortInput):
     byGeneSymbol: str = None
     bySuggestions: str = None
     byChromosomeNum: str = None
-    sortBy: Literal['criteriaQuantity', 'familyPhylum'] | None = None
+    sortBy: Literal['criteriaQuantity', 'familyPhylum', 'byConfidenceLevel'] | None = None
     researches: str = None
     isHidden: str = 1
+    confidenceLevel: str | None = None
     _filters = {
         'isHidden': [lambda value: 'gene.isHidden!=1', lambda value: []],
         'byGeneId': [
@@ -298,10 +313,17 @@ class GeneSearchInput(PaginationInput, LanguageInput, SortInput):
             + '))=%s',
             lambda value: value.split(',') + [len(value.split(','))],
         ],
+        'confidenceLevel': [
+            lambda value: 'gene.confidence_level_id in ('
+            + ','.join(['%s' for v in value.split(',')])
+            + ')',
+            lambda value: value.split(','),
+        ],
     }
     _sorts = {
         'criteriaQuantity': '(select count(*) from gene_to_comment_cause where gene_id=gene.id)',
         'familyPhylum': '(select `order` from phylum where phylum.id=family_phylum_id)',
+        'byConfidenceLevel': '(select id from confidence_level where confidence_level.id=gene.confidence_level_id)',
     }
 
 
@@ -424,6 +446,8 @@ class GeneSingle(GeneCommon):
     _from = """
 FROM gene
 LEFT JOIN taxon ON gene.taxon_id = taxon.id
+LEFT JOIN gene_to_confidence_level ON gene.id = gene_to_confidence_level.gene_id
+LEFT JOIN confidence_level ON gene.confidence_level_id = confidence_level.id
 @JOINS@
 @FILTERING@
 """
