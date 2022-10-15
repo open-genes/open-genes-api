@@ -15,7 +15,7 @@ class Phylum(BaseModel):
 class DiseaseCategory(BaseModel):
     id: int
     icdCode: str
-    icdCategoryName: str
+    icdCategoryName: str | None
 
 
 class Disease(BaseModel):
