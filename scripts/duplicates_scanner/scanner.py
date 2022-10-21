@@ -1,4 +1,5 @@
 import argparse
+import json
 
 from db_models import DbColumn
 from logger import LOGGER
@@ -34,7 +35,7 @@ def main():
     if args.output_format == "md":
         log_value_dups = db_column.duplicates.to_markdown(index=False)
     else:
-        log_value_dups = db_column.duplicates.to_dict('records')
+        log_value_dups = json.dumps(db_column.duplicates.to_dict('records'))
 
     LOGGER.info(
         "(%s.%s) Duplicates found (total %s): %s",
@@ -48,7 +49,7 @@ def main():
     if args.output_format == "md":
         log_value_spaces = db_column.trailing_spaces.to_markdown(index=False)
     else:
-        log_value_spaces = db_column.trailing_spaces.to_dict('records')
+        log_value_spaces = json.dumps(db_column.trailing_spaces.to_dict('records'))
 
     LOGGER.info(
         "(%s.%s) Trailing spaces found (total %s): %s",
