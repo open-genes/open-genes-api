@@ -75,4 +75,4 @@ class PaginatedOutput(BaseModel):
 
 class Timestamp(BaseModel):
     created: int | None = 0
-    changed: int
+    changed: int | None = 0

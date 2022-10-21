@@ -15,7 +15,7 @@ class Phylum(BaseModel):
 class DiseaseCategory(BaseModel):
     id: int
     icdCode: str
-    icdCategoryName: str
+    icdCategoryName: str | None
 
 
 class Disease(BaseModel):
@@ -44,9 +44,11 @@ class FunctionalCluster(BaseModel):
     id: int
     name: str
 
+
 class ConfidenceLevel(BaseModel):
     id: int
     name: str
+
 
 class GeneCommon(BaseModel):
     id: int
@@ -63,15 +65,14 @@ class GeneCommon(BaseModel):
     methylationCorrelation: str | None
     aliases: List[str] | None
     expressionChange: int
-    confidenceLevel: None | List[
-        ogmodel(
-            ConfidenceLevel,
-            _select = {
-                'id': "confidence_level.id",
-                'name': "COALESCE(confidence_level.name_@LANG@,confidence_level.name_en)"
-            } 
-        )
-    ]
+    confidenceLevel: None | ogmodel(
+        ConfidenceLevel,
+        _select={
+            'id': "confidence_level.id",
+            'name': "COALESCE(confidence_level.name_@LANG@,confidence_level.name_en)",
+        },
+        _join='LEFT JOIN confidence_level ON gene.confidence_level_id = confidence_level.id',
+    )
 
     origin: None | ogmodel(
         Phylum,
@@ -199,8 +200,6 @@ class GeneSearched(GeneCommon):
     _from = """
 FROM gene
 LEFT JOIN taxon ON gene.taxon_id = taxon.id
-LEFT JOIN gene_to_confidence_level ON gene.id = gene_to_confidence_level.gene_id
-LEFT JOIN confidence_level ON gene.confidence_level_id = confidence_level.id
 @JOINS@
 @FILTERING@
 @PAGING@
@@ -446,8 +445,6 @@ class GeneSingle(GeneCommon):
     _from = """
 FROM gene
 LEFT JOIN taxon ON gene.taxon_id = taxon.id
-LEFT JOIN gene_to_confidence_level ON gene.id = gene_to_confidence_level.gene_id
-LEFT JOIN confidence_level ON gene.confidence_level_id = confidence_level.id
 @JOINS@
 @FILTERING@
 """

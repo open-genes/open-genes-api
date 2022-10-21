@@ -350,7 +350,11 @@ def gene_common_fixer(r):
         r['origin'] = None
     if not r['familyOrigin']['id']:
         r['familyOrigin'] = None
-    r['aliases'] = [a for a in r['aliases'].split(' ') if a]
+
+    r['aliases'] = [a for a in r['aliases'].split(' ') if a] if r['aliases'] is not None else []
+
+    if not r['confidenceLevel']['id']:
+        r['confidenceLevel'] = None
 
     if 'studies' not in r or sum([len(i) for i in r['studies'].values()]) == 0:
         r['studies'] = None
