@@ -1,8 +1,31 @@
+import json
+from itertools import chain
 from typing import get_args, get_origin
 
 from config import CONFIG
 from db.suggestion_handler import suggestion_request_builder
 from entities import entities
+from models.gene import (
+    AgeRelatedChangeOfGeneResearched,
+    AgeRelatedChangeOfGeneResearchOutput,
+    AssociationsWithLifespanResearched,
+    AssociationsWithLifespanResearchedOutput,
+    AssociationWithAcceleratedAgingResearched,
+    AssociationWithAcceleratedAgingResearchedOutput,
+    CalorieExperimentOutput,
+    GeneActivityChangeImpactResearched,
+    GeneActivityChangeImpactResearchedOutput,
+    GeneRegulationResearched,
+    GeneRegulationResearchedOutput,
+    GeneSearched,
+    GeneSearchOutput,
+    GeneSingle,
+    IncreaseLifespanSearched,
+    IncreaseLifespanSearchOutput,
+    OtherEvidenceResearched,
+    OtherEvidenceResearchedOutput,
+)
+from models.various import ModelOrganismOutput
 from mysql import connector
 from pydantic import BaseModel
 
@@ -309,11 +332,6 @@ class BaseDAO:
         return root
 
 
-import json
-
-from models.gene import GeneSearched, GeneSearchOutput, GeneSingle
-
-
 def increase_lifespan_common_fixer(r):
     for i in r['interventions']['experiment'] + r['interventions']['controlAndExperiment']:
         i['tissueSpecific'] = i['tissueSpecific'] == 1
@@ -332,7 +350,11 @@ def gene_common_fixer(r):
         r['origin'] = None
     if not r['familyOrigin']['id']:
         r['familyOrigin'] = None
-    r['aliases'] = [a for a in r['aliases'].split(' ') if a]
+
+    r['aliases'] = [a for a in r['aliases'].split(' ') if a] if r['aliases'] is not None else []
+
+    if not r['confidenceLevel']['id']:
+        r['confidenceLevel'] = None
 
     if 'researches' not in r or sum([len(i) for i in r['researches'].values()]) == 0:
         r['researches'] = None
@@ -435,12 +457,8 @@ class GeneDAO(BaseDAO):
             for item in duplicates:
                 for gene_id in item['GENES'].split(',')[1::]:
                     cur.execute(
-                        '''
-                        UPDATE {table} SET gene_id = {main_gene}
-                            WHERE gene_id = {gene}
-                        '''.format(
-                            table=table, main_gene=item['MAIN_GENE'], gene=gene_id
-                        )
+                        f"UPDATE {table} SET gene_id = %(main_gene)s WHERE gene_id = %(gene)s",
+                        {"main_gene": item['MAIN_GENE'], "gene": gene_id},
                     )
         self.cnx.commit()
         return True
@@ -448,29 +466,20 @@ class GeneDAO(BaseDAO):
     def delete_duplicates(self, genes_to_delete):
         cur = self.cnx.cursor(dictionary=True)
         for gene_id in genes_to_delete:
-            cur.execute(
-                '''
-                DELETE gene
-                FROM gene
-                WHERE id = {gene_id}
-                    '''.format(
-                    gene_id=gene_id
-                )
-            )
+            cur.execute("DELETE gene FROM gene WHERE id = %(gene_id)s", {"gene_id": gene_id})
         self.cnx.commit()
         return True
 
     def get_source_gene(self, gene_symbol):
         cur = self.cnx.cursor(dictionary=True)
         cur.execute(
-            '''
-            SELECT s.name FROM
-            gene JOIN gene_to_source gts on gene.id = gts.gene_id
-            JOIN source s on gts.source_id = s.id
-            WHERE gene.symbol = "{}"
-            '''.format(
-                gene_symbol
-            )
+            (
+                "SELECT s.name FROM "
+                "gene JOIN gene_to_source gts on gene.id = gts.gene_id "
+                "JOIN source s on gts.source_id = s.id "
+                "WHERE gene.symbol = %(gene_symbol)s"
+            ),
+            {"gene_symbol": gene_symbol},
         )
         return cur.fetchone()
 
@@ -498,7 +507,7 @@ class GeneDAO(BaseDAO):
         gene: str,
     ) -> entities.Gene:
         cur = self.cnx.cursor(dictionary=True)
-        cur.execute("SELECT * FROM `gene` WHERE symbol='{}';".format(gene))
+        cur.execute("SELECT * FROM `gene` WHERE symbol=%(gene)s;", {"gene": gene})
         result = cur.fetchone()
         return result
 
@@ -513,7 +522,7 @@ class GeneDAO(BaseDAO):
         hugo_id = hugo_id if hugo_id.startswith('HGNC:') else f'HGNC:{hugo_id}'
 
         cur = self.cnx.cursor(dictionary=True)
-        cur.execute("SELECT * FROM `gene` WHERE hgnc_id='{}';".format(hugo_id))
+        cur.execute("SELECT * FROM `gene` WHERE hgnc_id=%(hugo_id)s;", {"hugo_id": hugo_id})
         result = cur.fetchone()
         return result
 
@@ -570,24 +579,6 @@ class GeneDAO(BaseDAO):
         cur = self.cnx.cursor()
         cur.execute('SELECT JSON_ARRAYAGG(g.symbol) FROM gene g WHERE g.isHidden != 1;')
         return cur.fetchone()
-
-
-from models.gene import (
-    AgeRelatedChangeOfGeneResearched,
-    AgeRelatedChangeOfGeneResearchOutput,
-    AssociationsWithLifespanResearched,
-    AssociationsWithLifespanResearchedOutput,
-    AssociationWithAcceleratedAgingResearched,
-    AssociationWithAcceleratedAgingResearchedOutput,
-    GeneActivityChangeImpactResearched,
-    GeneActivityChangeImpactResearchedOutput,
-    GeneRegulationResearched,
-    GeneRegulationResearchedOutput,
-    IncreaseLifespanSearched,
-    IncreaseLifespanSearchOutput,
-    OtherEvidenceResearched,
-    OtherEvidenceResearchedOutput,
-)
 
 
 class ResearchesDAO(BaseDAO):
@@ -733,7 +724,7 @@ class AgingMechanismDAO(BaseDAO):
 class SourceDAO(BaseDAO):
     def get_source(self, source: entities.Source):
         cur = self.cnx.cursor(dictionary=True)
-        cur.execute("SELECT source.id " "FROM source " "WHERE name='{}'".format(source.name))
+        cur.execute("SELECT source.id FROM source WHERE name='{}'".format(source.name))
         return cur.fetchone()
 
     def add_source(self, source: entities.Source):
@@ -868,6 +859,8 @@ class GeneSuggestionDAO(BaseDAO):
             if term
         ]
         re = {'items': [], 'found': [], 'notFound': terms}
+        parameters = {i: f"%{i}%" for i in chain(*terms)}
+
         if not terms:
             return re
 
@@ -876,7 +869,7 @@ class GeneSuggestionDAO(BaseDAO):
         for term in terms:
             word_checks = []
             for word in term:
-                word_checks.append(suggestion_request_builder.build(word))
+                word_checks.append(suggestion_request_builder.build(f"%({word})s"))
             term_checks.append(" AND ".join("(" + b + ")" for b in word_checks))
         where_block = " OR ".join("(" + t + ")" for t in term_checks)
 
@@ -908,13 +901,13 @@ class GeneSuggestionDAO(BaseDAO):
 
         # sql block
         sql = f"SELECT {names_block},isHidden FROM gene WHERE {where_block} {is_hidden_filter};"
-        self.fetch_all(sql, {"suggestHidden": suggestHidden}, consume_row)
+        self.fetch_all(sql, {**parameters, "suggestHidden": suggestHidden}, consume_row)
 
         re['notFound'] = [' '.join(t) for t in re['notFound']]
         return re
 
     def search_by_genes_id(self, byGeneId: str, suggestHidden: int):
-        is_hidden_filter = "AND isHidden = %(suggestHidden)s" if suggestHidden == 0 else ""
+        is_hidden_filter = "AND isHidden = %s" if suggestHidden == 0 else ""
         idls = [i.strip() for i in byGeneId.split(',') if i.strip().isdigit()]
         re = {'items': [], 'found': [], 'notFound': idls}
         if not idls:
@@ -935,16 +928,15 @@ class GeneSuggestionDAO(BaseDAO):
                     re['notFound'] = [t for t in re['notFound'] if t != gid]
 
         # sql block
-        idls_str = ','.join([str(i) for i in idls])
-        sql = (
-            f"SELECT {names_block},isHidden FROM gene WHERE id IN ({idls_str}) {is_hidden_filter};"
-        )
-        self.fetch_all(sql, {"suggestHidden": suggestHidden}, consume_row)
-
+        idls_tuple = tuple(idls)
+        idls_params = ','.join(["%s" for i in range(len(idls))])
+        sql = f"SELECT {names_block},isHidden FROM gene WHERE id IN ({idls_params}) {is_hidden_filter};"
+        parameters = (*idls_tuple, suggestHidden) if is_hidden_filter else idls_tuple
+        self.fetch_all(sql, parameters, consume_row)
         return re
 
     def search_by_genes_symbol(self, byGeneSmb: str, suggestHidden: int):
-        is_hidden_filter = "AND isHidden = %(suggestHidden)s" if suggestHidden == 0 else ""
+        is_hidden_filter = "AND isHidden = %s" if suggestHidden == 0 else ""
         symbols = [i.strip().upper() for i in byGeneSmb.split(',')]
         re = {'items': [], 'found': [], 'notFound': symbols}
         if not symbols:
@@ -965,10 +957,11 @@ class GeneSuggestionDAO(BaseDAO):
                     re['notFound'] = [t for t in re['notFound'] if t != gid]
 
         # sql block
-        idls_str = ','.join([f"'{i}'" for i in symbols])
-        sql = f"SELECT {names_block},isHidden FROM gene WHERE symbol IN ({idls_str}) {is_hidden_filter};"
-        self.fetch_all(sql, {"suggestHidden": suggestHidden}, consume_row)
-
+        symbols_tuple = tuple(symbols)
+        symbols_params = ','.join(["%s" for i in range(len(symbols))])
+        sql = f"SELECT {names_block},isHidden FROM gene WHERE symbol IN ({symbols_params}) {is_hidden_filter};"
+        parameters = (*symbols_tuple, suggestHidden) if is_hidden_filter else symbols_tuple
+        self.fetch_all(sql, parameters, consume_row)
         return re
 
 
@@ -1006,9 +999,6 @@ class PhylumDAO(BaseDAO):
         return cur.fetchall()
 
 
-from models.gene import CalorieExperiment, CalorieExperimentOutput
-
-
 class CalorieExperimentDAO(BaseDAO):
     """Calorie experiment Table fetcher."""
 
@@ -1030,7 +1020,7 @@ class WorkerStateDAO(BaseDAO):
 
     def get(self) -> str:
         cur = self.cnx.cursor(dictionary=True, buffered=True)
-        cur.execute(f"SELECT state FROM worker_state WHERE name = '{self.name}'")
+        cur.execute("SELECT state FROM worker_state WHERE name = %(name)s", {"name": self.name})
         wstate = cur.fetchone()
         cur.close()
         if wstate is None:
@@ -1042,7 +1032,11 @@ class WorkerStateDAO(BaseDAO):
     def set(self, st: str):
         cur = self.cnx.cursor(dictionary=True, buffered=True)
         cur.execute(
-            f"INSERT INTO worker_state(name,state) VALUES ('{self.name}','{st}') ON DUPLICATE KEY UPDATE state='{st}';"
+            (
+                "INSERT INTO worker_state(name,state) "
+                "VALUES (%(name)s,%(st)s) ON DUPLICATE KEY UPDATE state=%(st)s;"
+            ),
+            {"name": self.name, "st": st},
         )
         self.cnx.commit()
         cur.close()
@@ -1057,10 +1051,10 @@ class GeneGroupDAO(BaseDAO):
         ggid = self.cash.get(name)
         if ggid is None:
             cur = self.cnx.cursor(dictionary=True, buffered=True)
-            cur.execute(f"SELECT id FROM gene_group WHERE name = '{name}';")
+            cur.execute("SELECT id FROM gene_group WHERE name = %(name)s;", {"name": name})
             ggid = cur.fetchone()
             if ggid is None:
-                cur.execute(f"INSERT INTO gene_group(name) VALUES ('{name}');")
+                cur.execute("INSERT INTO gene_group(name) VALUES (%(name)s);", {"name": name})
                 self.cnx.commit()
                 ggid = cur.lastrowid
             else:
@@ -1079,11 +1073,13 @@ class LocuGroupDAO(BaseDAO):
         lgid = self.cash.get(name)
         if lgid is None:
             cur = self.cnx.cursor(dictionary=True, buffered=True)
-            cur.execute(f"SELECT id FROM gene_locus_group WHERE name = '{name}';")
+            cur.execute("SELECT id FROM gene_locus_group WHERE name = '%(name)s';", {"name": name})
             lgid = cur.fetchone()
 
             if lgid is None:
-                cur.execute(f"INSERT INTO gene_locus_group(name) VALUES ('{name}');")
+                cur.execute(
+                    "INSERT INTO gene_locus_group(name) VALUES (%(name)s);", {"name": name}
+                )
                 self.cnx.commit()
                 lgid = cur.lastrowid
             else:
@@ -1128,11 +1124,6 @@ class GeneTranscriptExonDAO(BaseDAO):
         return cur.lastrowid
 
 
-from typing import List
-
-from models.various import ModelOrganism, ModelOrganismOutput
-
-
 class ModelOrganismDAO(BaseDAO):
     def list(self, input):
         tables = self.prepare_tables(ModelOrganismOutput)
@@ -1147,15 +1138,23 @@ class OrthologDAO(BaseDAO):
     def get_id(self, symbol: str, model_organism: str, external_base_name: str, external_id: str):
         cur = self.cnx.cursor(dictionary=True, buffered=True)
         cur.execute(
-            f"SELECT o.id FROM ortholog o WHERE o.symbol = '{symbol}' AND o.external_base_name = '{external_base_name}';"
+            "SELECT o.id FROM ortholog o WHERE o.symbol = %(symbol)s AND o.external_base_name = %(external_base_name)s;",
+            {"symbol": symbol, "external_base_name": external_base_name},
         )
         orth_id = cur.fetchone()
 
         if orth_id is None:
-            ireq = f'''
-            INSERT INTO ortholog(symbol, model_organism_id, external_base_name, external_base_id)
-                VALUES ('{symbol}', (SELECT id FROM model_organism WHERE name_lat = '{model_organism}'), '{external_base_name}', '{external_id}') ;
-                    '''
+            ireq = (
+                "INSERT INTO ortholog(symbol, model_organism_id, external_base_name, external_base_id) "
+                "VALUES (%(symbol)s, (SELECT id FROM model_organism "
+                "WHERE name_lat = %(model_organism)s), %(external_base_name)s, %(external_id)s) ;",
+                {
+                    "symbol": symbol,
+                    "model_organism": model_organism,
+                    "external_base_name": external_base_name,
+                    "external_id": external_id,
+                },
+            )
             cur.execute(ireq)
             self.cnx.commit()
             orth_id = cur.lastrowid
@@ -1168,13 +1167,15 @@ class OrthologDAO(BaseDAO):
     def link_gene(self, gene_id: int, ortholog_id: int):
         cur = self.cnx.cursor(dictionary=True, buffered=True)
         cur.execute(
-            f"SELECT id FROM gene_to_ortholog WHERE gene_id = {gene_id} AND ortholog_id = {ortholog_id};"
+            "SELECT id FROM gene_to_ortholog WHERE gene_id = %(gene_id)s AND ortholog_id = %(ortholog_id)s;",
+            {"gene_id": gene_id, "ortholog_id": ortholog_id},
         )
         gto = cur.fetchone()
 
         if gto is None:
             cur.execute(
-                f"INSERT INTO gene_to_ortholog(gene_id, ortholog_id) VALUES ({gene_id},{ortholog_id});"
+                "INSERT INTO gene_to_ortholog(gene_id, ortholog_id) VALUES (%(gene_id)s,%(ortholog_id)s);",
+                {"gene_id": gene_id, "ortholog_id": ortholog_id},
             )
             self.cnx.commit()
 

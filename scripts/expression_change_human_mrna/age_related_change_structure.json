@@ -1,0 +1,101 @@
+{
+    "tableName": "age_related_change",
+    "columns": [
+        {
+            "columnName": "gene_id",
+            "columnType": "Int32"
+        },
+        {
+            "columnName": "age_related_change_type_id",
+            "columnType": "Int32"
+        },
+        {
+            "columnName": "sample_id",
+            "columnType": "Int32"
+        },
+        {
+            "columnName": "model_organism_id",
+            "columnType": "Int32"
+        },
+        {
+            "columnName": "organism_line_id",
+            "columnType": "Int32"
+        },
+        {
+            "columnName": "mean_age_of_controls",
+            "columnType": "float"
+        },
+        {
+            "columnName": "mean_age_of_experiment",
+            "columnType": "float"
+        },
+        {
+            "columnName": "reference",
+            "columnType": "string"
+        },
+        {
+            "columnName": "comment_en",
+            "columnType": "string"
+        },
+        {
+            "columnName": "comment_ru",
+            "columnType": "string"
+        },
+        {
+            "columnName": "age_unit_id",
+            "columnType": "Int32"
+        },
+        {
+            "columnName": "expression_evaluation_by_id",
+            "columnType": "Int32"
+        },
+        {
+            "columnName": "pmid",
+            "columnType": "string"
+        },
+        {
+            "columnName": "min_age_of_controls",
+            "columnType": "float"
+        },
+        {
+            "columnName": "max_age_of_controls",
+            "columnType": "float"
+        },
+        {
+            "columnName": "min_age_of_experiment",
+            "columnType": "float"
+        },
+        {
+            "columnName": "max_age_of_experiment",
+            "columnType": "float"
+        },
+        {
+            "columnName": "n_of_controls",
+            "columnType": "float"
+        },
+        {
+            "columnName": "n_of_experiment",
+            "columnType": "float"
+        },
+        {
+            "columnName": "measurement_method_id",
+            "columnType": "Int32"
+        },
+        {
+            "columnName": "statistical_method_id",
+            "columnType": "Int32"
+        },
+        {
+            "columnName": "p_value",
+            "columnType": "string"
+        },
+        {
+            "columnName": "sex",
+            "columnType": "Int32"
+        },
+        {
+            "columnName": "change_value",
+            "columnType": "float"
+        }
+    ]
+}
