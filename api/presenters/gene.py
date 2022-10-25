@@ -1,3 +1,4 @@
+
 from typing import List, Optional
 
 from presenters.aging_mechanism import AgingMechanism
@@ -61,7 +62,8 @@ class GeneSuggestionOutput:
 
 @dataclass
 class GeneSymbolsOutput:
-    items: List[str]
+    id: Optional[int]
+    symbol: Optional[str]
 
 
 @dataclass
