@@ -1,4 +1,5 @@
 from typing import List
+from models.myresearch import MyIncreaseLifespanSearchInput, MyIncreaseLifespanSearchOutput
 
 from db.dao import ResearchesDAO
 from fastapi import APIRouter, Depends
@@ -15,6 +16,13 @@ from models.researches import (
 )
 
 router = APIRouter()
+
+
+@router.get('/research/lifespan-change/my', response_model=MyIncreaseLifespanSearchOutput)
+async def increase_lifespan_search(
+    input: MyIncreaseLifespanSearchInput = Depends(MyIncreaseLifespanSearchInput),
+) -> List:
+    return ResearchesDAO().my_increase_lifespan_search(input)
 
 
 @router.get('/research/lifespan-change', response_model=IncreaseLifespanSearchOutput)
