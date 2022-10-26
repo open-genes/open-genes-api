@@ -579,7 +579,6 @@ class GeneDAO(BaseDAO):
         cur = self.cnx.cursor()
         cur.execute('SELECT id, symbol FROM gene WHERE gene.isHidden != 1;')
         res = cur.fetchall()
-        print(res)
         return res
 
 
