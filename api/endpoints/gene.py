@@ -57,13 +57,12 @@ async def get_gene_suggestions(
 
 @router.get(
     '/gene/symbols',
-    response_model=GeneSymbolsOutput,
+    response_model=List[GeneSymbolsOutput],
 )
 async def get_gene_symbols():
     req = GeneDAO().get_symbols()
-    ls = json.loads(req[0]) if req else []
-    re = {'items': ls}
-    return re
+    rs = [{'id': data[0], 'symbol': data[1]} for data in req]
+    return rs
 
 
 @router.get(

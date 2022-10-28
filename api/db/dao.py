@@ -577,8 +577,9 @@ class GeneDAO(BaseDAO):
 
     def get_symbols(self):
         cur = self.cnx.cursor()
-        cur.execute('SELECT JSON_ARRAYAGG(g.symbol) FROM gene g WHERE g.isHidden != 1;')
-        return cur.fetchone()
+        cur.execute('SELECT id, symbol FROM gene WHERE gene.isHidden != 1;')
+        res = cur.fetchall()
+        return res
 
 
 class ResearchesDAO(BaseDAO):
