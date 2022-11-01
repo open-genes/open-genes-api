@@ -389,7 +389,7 @@ class GOTerm(BaseModel):
     _select = {
         'id': 'gene_ontology.id',
         'GOId': 'gene_ontology.ontology_identifier',
-        'term': 'gene_ontology.name_@LANG@',
+        'term': 'COALESCE(gene_ontology.name_@LANG@,gene_ontology.name_en)',
     }
     _from = """
 from gene
