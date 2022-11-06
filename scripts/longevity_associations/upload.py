@@ -257,7 +257,7 @@ def read_structure_json(file_name: str) -> dict:
 
 def main():
     LOGGER.info("========== Upload script started ==========")
-    longevity_associations_df = get_df_from_csv("longevity-associations.csv")
+    longevity_associations_df = get_df_from_csv("06-11-2022-missing-items-associations.csv")
     structure = read_structure_json("gene_to_longevity_effect_structure.json")
 
     with dao.BaseDAO().cnx as cnx:
