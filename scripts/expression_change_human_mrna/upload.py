@@ -278,7 +278,7 @@ def read_structure_json(file_name: str) -> dict:
 
 def main():
     LOGGER.info("========== Upload script started ==========")
-    dataset_df = get_df_from_csv("expression-change-human-mrna.csv")
+    dataset_df = get_df_from_csv("06-11-2022-missing-items-human-mrna.csv")
     structure = read_structure_json("age_related_change_structure.json")
 
     with dao.BaseDAO().cnx as cnx:
