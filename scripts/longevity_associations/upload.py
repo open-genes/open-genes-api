@@ -261,7 +261,7 @@ def main():
     with dao.BaseDAO().cnx as cnx:
         cnx.autocommit = True
         cur = cnx.cursor(dictionary=True)
-        delete_experiments(cur, structure["tableName"])
+        # delete_experiments(cur, structure["tableName"])
 
         for table in TABLES_TO_READ:
             id_values_df = get_df_from_db(cnx, table.name, table.columns)
