@@ -118,9 +118,7 @@ def add_new_data_to_db(cursor: MySQLCursor, df: DataFrame, table: namedtuple):
     new_data_df = new_data_df.rename(columns={f"{table.dataset_column}{PREFIX}": "name_en"})
 
     if table.has_created_date:
-        created_at = time.time()
-        new_data_df["created_at"] = created_at
-        new_data_df["updated_at"] = new_data_df["created_at"]
+        new_data_df["updated_at"] = time.time()
 
     count_rows = new_data_df.shape[0]
     column_names = ', '.join(new_data_df.columns)
