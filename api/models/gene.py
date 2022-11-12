@@ -154,10 +154,11 @@ join disease disease_category on disease_category.icd_code=disease.icd_code_visi
                 'name': 'coalesce(aging_mechanism.name_@LANG@,aging_mechanism.name_en)',
             },
             _from="""
-FROM gene
-LEFT JOIN `gene_to_ontology` ON gene_to_ontology.gene_id = gene.id
-LEFT JOIN `gene_ontology_to_aging_mechanism_visible` ON gene_to_ontology.gene_ontology_id = gene_ontology_to_aging_mechanism_visible.gene_ontology_id
-INNER JOIN `aging_mechanism` ON gene_ontology_to_aging_mechanism_visible.aging_mechanism_id = aging_mechanism.id AND aging_mechanism.name_en != '' """,
+FROM gene g
+LEFT JOIN gene_to_ontology gto ON g.id = gto.gene_id
+LEFT JOIN gene_ontology_to_aging_mechanism_visible gotamv ON gto.gene_ontology_id = gotamv.gene_ontology_id
+INNER JOIN aging_mechanism am ON gotamv.aging_mechanism_id = aging_mechanism.id
+GROUP BY aging_mechanism.id;
         )
     ]
 
