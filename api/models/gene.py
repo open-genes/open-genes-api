@@ -158,7 +158,7 @@ FROM gene g
 LEFT JOIN gene_to_ontology gto ON g.id = gto.gene_id
 LEFT JOIN gene_ontology_to_aging_mechanism_visible gotamv ON gto.gene_ontology_id = gotamv.gene_ontology_id
 INNER JOIN aging_mechanism am ON gotamv.aging_mechanism_id = aging_mechanism.id
-GROUP BY aging_mechanism.id;
+GROUP BY aging_mechanism.id;'',""",
         )
     ]
 
