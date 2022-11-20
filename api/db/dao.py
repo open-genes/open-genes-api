@@ -356,13 +356,13 @@ def gene_common_fixer(r):
     if not r['confidenceLevel']['id']:
         r['confidenceLevel'] = None
 
-    if 'researches' not in r or sum([len(i) for i in r['researches'].values()]) == 0:
-        r['researches'] = None
-    if not r['researches']:
+    if 'studies' not in r or sum([len(i) for i in r['studies'].values()]) == 0:
+        r['studies'] = None
+    if not r['studies']:
         return r
-    for a in r['researches']['ageRelatedChangesOfGene']:
+    for a in r['studies']['ageRelatedChangesOfGene']:
         a['value'] = str(a['value']) + '%' if a['value'] else a['value']
-    for g in r['researches']['geneAssociatedWithLongevityEffects']:
+    for g in r['studies']['geneAssociatedWithLongevityEffects']:
         g['dataType'] = {
             '1en': 'genomic',
             '2en': 'transcriptomic',
@@ -371,7 +371,7 @@ def gene_common_fixer(r):
             '2ru': 'транскриптомные',
             '3ru': 'протеомные',
         }.get(g['dataType'])
-    for i in r['researches']['increaseLifespan']:
+    for i in r['studies']['increaseLifespan']:
         i = increase_lifespan_common_fixer(i)
 
     return r
@@ -386,7 +386,7 @@ class GeneDAO(BaseDAO):
     """Gene Table fetcher."""
 
     def search(self, input):
-        GeneSearched.__fields__['researches'].type_._supress = not input.researches == '1'
+        GeneSearched.__fields__['studies'].type_._supress = not input.studies == '1'
         # mangle aliases type to string, to manually split it into list in fixer
         GeneSearched.__fields__['aliases'].outer_type_ = str
 
@@ -395,7 +395,7 @@ class GeneDAO(BaseDAO):
         return self.read_query(query, params, tables, process=gene_common_fixer)
 
     def single(self, input):
-        GeneSingle.__fields__['researches'].type_._supress = not input.researches == '1'
+        GeneSingle.__fields__['studies'].type_._supress = not input.studies == '1'
         # mangle aliases type to string, to manually split it into list in fixer
         GeneSingle.__fields__['aliases'].outer_type_ = str
 
@@ -579,7 +579,7 @@ class GeneDAO(BaseDAO):
         return res
 
 
-class ResearchesDAO(BaseDAO):
+class StudiesDAO(BaseDAO):
     def increase_lifespan_search(self, input):
         IncreaseLifespanSearched.__fields__['geneAliases'].outer_type_ = str
 
