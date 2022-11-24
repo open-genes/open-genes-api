@@ -1,9 +1,7 @@
 import json
 from itertools import chain
 from typing import get_args, get_origin
-#--------------------------------------------------------------------------------------------------
-from models.myresearch import MyIncreaseLifespanSearched, MyIncreaseLifespanSearchOutput
-#--------------------------------------------------------------------------------------------------
+
 from config import CONFIG
 from db.suggestion_handler import suggestion_request_builder
 from entities import entities
@@ -580,23 +578,6 @@ class GeneDAO(BaseDAO):
 
 
 class ResearchesDAO(BaseDAO):
-
-#--------------------------------------------------------------------------------
-    def my_increase_lifespan_search(self, input):
-        # MyIncreaseLifespanSearched.__fields__['geneAliases'].outer_type_ = str
-
-        tables = self.prepare_tables(MyIncreaseLifespanSearchOutput)
-        query, params = self.prepare_query(tables, input)
-        print(query)
-        print(params)
-
-        def fixer(r):
-            r['geneAliases'] = [a for a in r['geneAliases'].split(' ') if a]
-            return increase_lifespan_common_fixer(r)
-
-        # return self.read_query(query, params, tables, process=fixer)
-        return self.read_query(query, params, tables)
-#-------------------------------------------------------------------------------
 
     def increase_lifespan_search(self, input):
         IncreaseLifespanSearched.__fields__['geneAliases'].outer_type_ = str
