@@ -1,5 +1,8 @@
 # Open Genes Python API
 
+[![API CI](https://github.com/open-genes/open-genes-api/actions/workflows/api.yml/badge.svg?branch=master)](https://github.com/open-genes/open-genes-api/actions/workflows/api.yml)
+[![CodeQL](https://github.com/open-genes/open-genes-api/actions/workflows/codeql-analysis.yml/badge.svg?branch=master)](https://github.com/open-genes/open-genes-api/actions/workflows/codeql-analysis.yml)
+
 ## Architecture
 
 - **api** - API application root
