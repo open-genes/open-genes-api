@@ -1,7 +1,9 @@
-# Open Genes Python API
+# Open Genes API
 
 [![API CI](https://github.com/open-genes/open-genes-api/actions/workflows/api.yml/badge.svg?branch=master)](https://github.com/open-genes/open-genes-api/actions/workflows/api.yml)
 [![CodeQL](https://github.com/open-genes/open-genes-api/actions/workflows/codeql-analysis.yml/badge.svg?branch=master)](https://github.com/open-genes/open-genes-api/actions/workflows/codeql-analysis.yml)
+
+Open Genes API is based on [FastAPI](https://fastapi.tiangolo.com/) framework and provides data for genes and experiments in Open Genes database.
 
 ## Architecture
 
@@ -19,6 +21,8 @@
   - *uniprot* -
 
 ## Development
+
+
 
 ### Build local development image
 
