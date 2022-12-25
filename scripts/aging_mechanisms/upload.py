@@ -7,13 +7,16 @@ from api.db import dao
 cur_dir = os.path.dirname(os.path.abspath(__file__))
 go_and_mechanisms = pd.read_table(os.path.join(cur_dir, 'go_and_mechanisms.tsv'))
 
+# Every row in tsv dataset is an individual aging mechanism
 for _, row in go_and_mechanisms.iterrows():
     cnx = dao.BaseDAO().cnx
     cur = cnx.cursor(dictionary=True)
+    # Check if aging mechanism already exists in DB
     check = f"SELECT * FROM aging_mechanism WHERE name_en = \'{row['name_en']}\' OR name_ru = \'{row['name_ru']}\'"
     cur.execute(check)
     result = cur.fetchall()
     aging_mechanism_id = cur.lastrowid
+    # Create if not:
     if not result:
         query = f"INSERT INTO aging_mechanism (name_en, name_ru) VALUES (\'{row['name_en']}\', \'{row['name_ru']}\')"
         cur.execute(query)
@@ -25,8 +28,10 @@ for _, row in go_and_mechanisms.iterrows():
         aging_mechanism_id = result[0]['id']
         cnx.close
 
+    # For every aging mechanism make a query to API
+    # Try changing the limit if there are few results
     for go_term_name in ast.literal_eval(row['go_terms']):
-        url = f'https://www.ebi.ac.uk/QuickGO/services/ontology/go/search?query={go_term_name}&limit=5&page=1'
+        url = f'https://www.ebi.ac.uk/QuickGO/services/ontology/go/search?query={go_term_name}&limit=100&page=1'
         response = requests.get(url, headers={"Accept": "application/json"}).json()
         for result in response['results']:
             if result['name'] in go_term_name and not result['isObsolete']:
@@ -48,7 +53,7 @@ for _, row in go_and_mechanisms.iterrows():
                     go_id = cur.lastrowid
                     cnx.commit()
                     cnx.close()
-                    print('ADD GO: ', result['id'], result['name'])
+                    print('Added GO term: ', result['id'], result['name'])
                 else:
                     go_id = db_result[0]['id']
                     cnx.close()
@@ -64,10 +69,12 @@ for _, row in go_and_mechanisms.iterrows():
                 if not result:
                     query = f"""
                     INSERT INTO aging_mechanism_to_gene_ontology (gene_ontology_id, aging_mechanism_id)
-                    VALUES (\'{go_id}\', \'{aging_mechanism_id}\')
+                    VALUES (\'{go_id}\', \'{row['name_en']}\')
                     """
                     cur.execute(query)
                     cnx.commit()
                     cnx.close()
-                    print(f"BIND: {go_id}, {aging_mechanism_id}")
+                    print(f"Bound: {go_id} to {row['name_en']}")
+            else:
+                print(f"Didn't find any GO term to bind to {aging_mechanism_id}")
 print('DONE')
