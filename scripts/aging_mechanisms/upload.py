@@ -15,7 +15,6 @@ for _, row in go_and_mechanisms.iterrows():
     check = f"SELECT * FROM aging_mechanism WHERE name_en = \'{row['name_en']}\' OR name_ru = \'{row['name_ru']}\'"
     cur.execute(check)
     result = cur.fetchall()
-    aging_mechanism_id = cur.lastrowid
     if not result:
         query = f"INSERT INTO aging_mechanism (name_en, name_ru) VALUES (\'{row['name_en']}\', \'{row['name_ru']}\')"
         cur.execute(query)
@@ -23,6 +22,9 @@ for _, row in go_and_mechanisms.iterrows():
         cnx.commit()
         cnx.close()
         print('Created new aging mechanism: ', row['name_en'], row['name_ru'])
+    else:
+        aging_mechanism_id = result[0]['id']
+        cnx.close
 
     for go_term_name in ast.literal_eval(row['go_terms']):
         url = f'https://www.ebi.ac.uk/QuickGO/services/ontology/go/search?query={go_term_name}&limit=5&page=1'
