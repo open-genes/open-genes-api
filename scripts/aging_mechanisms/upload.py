@@ -1,9 +1,7 @@
 import os
 import ast
-
 import requests
 import pandas as pd
-
 from api.db import dao
 
 cur_dir = os.path.dirname(os.path.abspath(__file__))
@@ -15,6 +13,7 @@ for _, row in go_and_mechanisms.iterrows():
     check = f"SELECT * FROM aging_mechanism WHERE name_en = \'{row['name_en']}\' OR name_ru = \'{row['name_ru']}\'"
     cur.execute(check)
     result = cur.fetchall()
+    aging_mechanism_id = cur.lastrowid
     if not result:
         query = f"INSERT INTO aging_mechanism (name_en, name_ru) VALUES (\'{row['name_en']}\', \'{row['name_ru']}\')"
         cur.execute(query)
@@ -55,12 +54,20 @@ for _, row in go_and_mechanisms.iterrows():
                     cnx.close()
                 cnx = dao.BaseDAO().cnx
                 cur = cnx.cursor(dictionary=True)
-                query = f"""
-                INSERT INTO aging_mechanism_to_gene_ontology (gene_ontology_id, aging_mechanism_id)
-                VALUES (\'{go_id}\', \'{aging_mechanism_id}\')
+                check_for_exists = f"""
+                SELECT *
+                FROM aging_mechanism_to_gene_ontology
+                WHERE gene_ontology_id = \'{go_id}\' AND aging_mechanism_id = \'{aging_mechanism_id}\'
                 """
-                cur.execute(query)
-                cnx.commit()
-                cnx.close()
-                print(f"BIND: {result['name']}, {row['name_en']}")
+                cur.execute(check_for_exists)
+                result = cur.fetchall()
+                if not result:
+                    query = f"""
+                    INSERT INTO aging_mechanism_to_gene_ontology (gene_ontology_id, aging_mechanism_id)
+                    VALUES (\'{go_id}\', \'{aging_mechanism_id}\')
+                    """
+                    cur.execute(query)
+                    cnx.commit()
+                    cnx.close()
+                    print(f"BIND: {result['name']}, {row['name_en']}")
 print('DONE')
