@@ -69,5 +69,5 @@ for _, row in go_and_mechanisms.iterrows():
                     cur.execute(query)
                     cnx.commit()
                     cnx.close()
-                    print(f"BIND: {result[0]['name']}, {row['name_en']}")
+                    print(f"BIND: {go_id}, {aging_mechanism_id}")
 print('DONE')
