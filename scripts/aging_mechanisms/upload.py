@@ -15,6 +15,7 @@ for _, row in go_and_mechanisms.iterrows():
     check = f"SELECT * FROM aging_mechanism WHERE name_en = \'{row['name_en']}\' OR name_ru = \'{row['name_ru']}\'"
     cur.execute(check)
     result = cur.fetchall()
+    aging_mechanism_id = cur.lastrowid
     if not result:
         query = f"INSERT INTO aging_mechanism (name_en, name_ru) VALUES (\'{row['name_en']}\', \'{row['name_ru']}\')"
         cur.execute(query)
