@@ -158,7 +158,6 @@ FROM gene
 LEFT JOIN gene_to_ontology ON gene.id = gene_to_ontology.gene_id
 LEFT JOIN gene_ontology_to_aging_mechanism_visible ON gene_to_ontology.gene_ontology_id = gene_ontology_to_aging_mechanism_visible.gene_ontology_id
 INNER JOIN aging_mechanism ON gene_ontology_to_aging_mechanism_visible.aging_mechanism_id = aging_mechanism.id AND aging_mechanism.name_en != ''
-GROUP BY aging_mechanism.id
 """,
         )
     ]
