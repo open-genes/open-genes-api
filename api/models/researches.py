@@ -600,11 +600,17 @@ class IncreaseLifespanSearchInput(PaginationInput, LanguageInput, SortInput):
             lambda value: value.split(',') + [len(value.split(','))],
         ],
         'bySpecies': [
-            lambda value: '(select count(distinct model_organism_id) from lifespan_experiment where lifespan_experiment.gene_id=gene.id and model_organism_id in ('
+            lambda value: 'model_organism.id in ('
             + ','.join(['%s' for v in value.split(',')])
-            + '))=%s',
-            lambda value: value.split(',') + [len(value.split(','))],
+            + ')',
+            lambda value: value.split(','),
         ],
+        # 'bySpecies': [
+        #     lambda value: '(select count(distinct model_organism_id) from lifespan_experiment where lifespan_experiment.gene_id=gene.id and model_organism_id in ('
+        #     + ','.join(['%s' for v in value.split(',')])
+        #     + '))=%s',
+        #     lambda value: value.split(',') + [len(value.split(','))],
+
         'byOrigin': [
             lambda value: '(select count(*) from phylum where gene.phylum_id=phylum.id and phylum.name_phylo in ('
             + ','.join(['%s' for v in value.split(',')])
@@ -662,6 +668,7 @@ left join statistical_significance as ssmin on ssmin.id = general_lifespan_exper
 left join statistical_significance as ssmean on ssmean.id = general_lifespan_experiment.lifespan_mean_change_stat_sign_id
 left join statistical_significance as ssmedian on ssmedian.id = general_lifespan_experiment.lifespan_median_change_stat_sign_id
 left join statistical_significance as ssmax on ssmax.id = general_lifespan_experiment.lifespan_max_change_stat_sign_id
+left join model_organism on model_organism.id = general_lifespan_experiment.model_organism_id
 @FILTERING@
 @PAGING@
 """

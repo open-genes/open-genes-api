@@ -580,6 +580,7 @@ class GeneDAO(BaseDAO):
 
 
 class ResearchesDAO(BaseDAO):
+
     def increase_lifespan_search(self, input):
         IncreaseLifespanSearched.__fields__['geneAliases'].outer_type_ = str
 
