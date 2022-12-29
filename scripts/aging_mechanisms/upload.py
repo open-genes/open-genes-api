@@ -28,7 +28,7 @@ for _, row in go_and_mechanisms.iterrows():
         aging_mechanism_id = result[0]['id']
         cnx.close
 
-    # For every aging mechanism make a query to API
+    # For every aging mechanism make a query to API substituting every associated GO term to query
     # Try changing the limit if there are few results
     for go_term_name in ast.literal_eval(row['go_terms']):
         url = f'https://www.ebi.ac.uk/QuickGO/services/ontology/go/search?query={go_term_name}&limit=100&page=1'
@@ -59,13 +59,16 @@ for _, row in go_and_mechanisms.iterrows():
                     cnx.close()
                 cnx = dao.BaseDAO().cnx
                 cur = cnx.cursor(dictionary=True)
-                check_for_exists = f"""
+
+                # Check if a particular aging mechanism is already bound to this GO term
+                check_if_exists = f"""
                 SELECT *
                 FROM aging_mechanism_to_gene_ontology
                 WHERE gene_ontology_id = \'{go_id}\' AND aging_mechanism_id = \'{aging_mechanism_id}\'
                 """
-                cur.execute(check_for_exists)
+                cur.execute(check_if_exists)
                 result = cur.fetchall()
+                # If not, then bind:
                 if not result:
                     query = f"""
                     INSERT INTO aging_mechanism_to_gene_ontology (gene_ontology_id, aging_mechanism_id)
@@ -76,5 +79,5 @@ for _, row in go_and_mechanisms.iterrows():
                     cnx.close()
                     print(f"Bound: {go_id} to {row['name_en']}")
             else:
-                print(f"Didn't find any GO term to bind to {aging_mechanism_id}")
+                print(f"Didn't find any GO term to bind to {row['name_en']}")
 print('DONE')
