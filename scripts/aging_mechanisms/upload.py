@@ -72,7 +72,7 @@ for _, row in go_and_mechanisms.iterrows():
                 if not result:
                     query = f"""
                     INSERT INTO aging_mechanism_to_gene_ontology (gene_ontology_id, aging_mechanism_id)
-                    VALUES (\'{go_id}\', \'{row['name_en']}\')
+                    VALUES (\'{go_id}\', \'{aging_mechanism_id}\')
                     """
                     cur.execute(query)
                     cnx.commit()
