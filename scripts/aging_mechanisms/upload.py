@@ -31,10 +31,10 @@ for _, row in go_and_mechanisms.iterrows():
     # For every aging mechanism make a query to API substituting every associated GO term to query
     # Try changing the limit if there are few results
     for go_term_name in ast.literal_eval(row['go_terms']):
-        url = f'https://www.ebi.ac.uk/QuickGO/services/ontology/go/search?query={go_term_name}&limit=100&page=1'
+        url = f'https://www.ebi.ac.uk/QuickGO/services/ontology/go/search?query={go_term_name}&limit=10&page=1'
         response = requests.get(url, headers={"Accept": "application/json"}).json()
         for result in response['results']:
-            if result['name'] in go_term_name and not result['isObsolete']:
+            if result['name'] == go_term_name and not result['isObsolete']:
                 cnx = dao.BaseDAO().cnx
                 cur = cnx.cursor(dictionary=True)
                 query = f"""
