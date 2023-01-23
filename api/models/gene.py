@@ -142,7 +142,7 @@ join disease disease_category on disease_category.icd_code=disease.icd_code_visi
             ProteinClass,
             _select={
                 'id': "protein_class.id",
-                'name': "COALESCE(protein_class.name_en,protein_class.name_en)",
+                'name': "COALESCE(protein_class.name_@LANG@, protein_class.name_en)",
             },
             _from="from gene join gene_to_protein_class on gene_to_protein_class.gene_id=gene.id join  protein_class on protein_class.id=gene_to_protein_class.protein_class_id",
         )
@@ -153,7 +153,7 @@ join disease disease_category on disease_category.icd_code=disease.icd_code_visi
             AgingMechanism,
             _select={
                 'id': 'aging_mechanism.id',
-                'name': 'coalesce(aging_mechanism.name_@LANG@)',
+                'name': 'coalesce(aging_mechanism.name_@LANG@, aging_mechanism.name_ru)',
                 'uuid': 'NULL'
             },
             _from="""
@@ -163,7 +163,7 @@ LEFT JOIN gene_ontology_relation ON gene_to_ontology.gene_ontology_id = gene_ont
 LEFT JOIN gene_ontology_to_aging_mechanism_visible ON gene_to_ontology.gene_ontology_id = gene_ontology_to_aging_mechanism_visible.gene_ontology_id
 INNER JOIN aging_mechanism ON gene_ontology_to_aging_mechanism_visible.aging_mechanism_id = aging_mechanism.id AND aging_mechanism.name_en != ''
 UNION 
-SELECT aging_mechanism.name_en, NULL, aging_mechanism.name_@LANG@, aging_mechanism_to_gene.uuid
+SELECT 'dummy_constant', NULL, COALESCE(aging_mechanism.name_@LANG@, aging_mechanism.name_en), aging_mechanism_to_gene.uuid
 FROM aging_mechanism
 JOIN aging_mechanism_to_gene ON aging_mechanism.id = aging_mechanism_to_gene.aging_mechanism_id
 JOIN gene ON aging_mechanism_to_gene.gene_id = gene.id
