@@ -2,7 +2,7 @@ import json
 from typing import List
 
 from config import Language
-from db.dao import GeneDAO, GeneSuggestionDAO
+from db.dao import GeneDAO, GeneSuggestionDAO, TaxonDAO
 from fastapi import APIRouter, Depends, HTTPException, Query
 from models.gene import GeneSearchInput, GeneSearchOutput, GeneSingle, GeneSingleInput
 from presenters.gene import (
@@ -13,6 +13,9 @@ from presenters.gene import (
     GeneSymbolsOutput,
     GeneWithResearches,
 )
+from presenters.taxon import TaxonOutput
+from json import loads
+
 
 router = APIRouter()
 
@@ -125,6 +128,11 @@ async def get_gene_by_expression_change(expression_change: str, lang: Language =
     return GeneDAO().get()
 
 
+@router.get('/gene/taxon', response_model=List[TaxonOutput])
+async def get_taxon():
+    return loads(TaxonDAO().get_all()[0]['jsonobj'])
+
+
 @router.get('/gene/{id_or_symbol}', response_model=GeneSingle)
 async def gene_search(
     id_or_symbol: int | str, input: GeneSingleInput = Depends(GeneSingleInput)
@@ -197,3 +205,6 @@ async def get_gene_by_id(ncbi_id: int, lang: Language = Language.en):
 )
 async def get_gene_by_id(ncbi_id: int, lang: Language = Language.en):
     return 'dummy'
+
+
+
