@@ -2,6 +2,7 @@ import json
 from typing import List
 
 from config import Language
+import pandas as pd
 from db.dao import GeneDAO, GeneSuggestionDAO
 from fastapi import APIRouter, Depends, HTTPException, Query
 from models.gene import GeneSearchInput, GeneSearchOutput, GeneSingle, GeneSingleInput
@@ -29,7 +30,12 @@ async def gene_search(input: GeneSearchInput = Depends(GeneSearchInput)) -> List
         input.bySuggestions = None
         input.byGeneId = suggfilter
 
-    return GeneDAO().search(input)
+    search_result = GeneDAO().search(input)
+
+    for item in search_result.get("items", []):
+        item["agingMechanisms"] = pd.DataFrame(item["agingMechanisms"], dtype=object).drop_duplicates().to_dict('records')
+
+    return search_result
 
 
 @router.get(
