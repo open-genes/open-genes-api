@@ -6,13 +6,13 @@ from fastapi_cache.decorator import cache
 
 router = APIRouter()
 
-from config import Cache
+from config import cache_if_enabled
 from models import LanguageInput
 from models.various import ModelOrganismOutput
 
 
 @router.get('/model-organism', response_model=ModelOrganismOutput)
-@cache(expire=int(Cache.expire), namespace=Cache.namespace)
+@cache_if_enabled
 async def model_organism(input: LanguageInput = Depends(LanguageInput)) -> List:
 
     return ModelOrganismDAO().list(input)

@@ -1,9 +1,8 @@
 from typing import List
 
-from config import Cache
+from config import cache_if_enabled
 from db.dao import ResearchesDAO
 from fastapi import APIRouter, Depends
-from fastapi_cache.decorator import cache
 from models.gene import GeneSearchInput
 from models.researches import (
     AgeRelatedChangeOfGeneResearchOutput,
@@ -20,7 +19,7 @@ router = APIRouter()
 
 
 @router.get('/research/lifespan-change', response_model=IncreaseLifespanSearchOutput)
-@cache(expire=int(Cache.expire), namespace=Cache.namespace)
+@cache_if_enabled
 async def increase_lifespan_search(
     input: IncreaseLifespanSearchInput = Depends(IncreaseLifespanSearchInput),
 ) -> List:
@@ -28,7 +27,7 @@ async def increase_lifespan_search(
 
 
 @router.get('/research/age-related-changes', response_model=AgeRelatedChangeOfGeneResearchOutput)
-@cache(expire=int(Cache.expire), namespace=Cache.namespace)
+@cache_if_enabled
 async def age_related_changes_search(input: GeneSearchInput = Depends(GeneSearchInput)) -> List:
     return ResearchesDAO().age_related_changes(input)
 
@@ -36,13 +35,13 @@ async def age_related_changes_search(input: GeneSearchInput = Depends(GeneSearch
 @router.get(
     '/research/gene-activity-change-impact', response_model=GeneActivityChangeImpactResearchedOutput
 )
-@cache(expire=int(Cache.expire), namespace=Cache.namespace)
+@cache_if_enabled
 async def gene_activity_change_impact(input: GeneSearchInput = Depends(GeneSearchInput)) -> List:
     return ResearchesDAO().gene_activity_change_impact(input)
 
 
 @router.get('/research/gene-regulation', response_model=GeneRegulationResearchedOutput)
-@cache(expire=int(Cache.expire), namespace=Cache.namespace)
+@cache_if_enabled
 async def gene_regulation(input: GeneSearchInput = Depends(GeneSearchInput)) -> List:
     return ResearchesDAO().gene_regulation(input)
 
@@ -51,7 +50,7 @@ async def gene_regulation(input: GeneSearchInput = Depends(GeneSearchInput)) -> 
     '/research/association-with-accelerated-aging',
     response_model=AssociationWithAcceleratedAgingResearchedOutput,
 )
-@cache(expire=int(Cache.expire), namespace=Cache.namespace)
+@cache_if_enabled
 async def association_with_accelerated_aging(
     input: GeneSearchInput = Depends(GeneSearchInput),
 ) -> List:
@@ -61,12 +60,12 @@ async def association_with_accelerated_aging(
 @router.get(
     '/research/associations-with-lifespan', response_model=AssociationsWithLifespanResearchedOutput
 )
-@cache(expire=int(Cache.expire), namespace=Cache.namespace)
+@cache_if_enabled
 async def associations_with_lifespan(input: GeneSearchInput = Depends(GeneSearchInput)) -> List:
     return ResearchesDAO().associations_with_lifespan(input)
 
 
 @router.get('/research/other-evidence', response_model=OtherEvidenceResearchedOutput)
-@cache(expire=int(Cache.expire), namespace=Cache.namespace)
+@cache_if_enabled
 async def other_evidence(input: GeneSearchInput = Depends(GeneSearchInput)) -> List:
     return ResearchesDAO().other_evidence(input)
