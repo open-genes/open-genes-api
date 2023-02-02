@@ -32,7 +32,12 @@ async def gene_search(input: GeneSearchInput = Depends(GeneSearchInput)) -> List
         input.bySuggestions = None
         input.byGeneId = suggfilter
 
-    return GeneDAO().search(input)
+    search_result = GeneDAO().search(input)
+
+    for item in search_result.get("items", []):
+        item["agingMechanisms"] = pd.DataFrame(item["agingMechanisms"], dtype=object).drop_duplicates().sort_values(by=['id', 'uuid'], ascending=True).to_dict('records')
+
+    return search_result
 
 
 @router.get(
@@ -141,13 +146,14 @@ async def gene_search(
         input.byGeneId = id_or_symbol
     if isinstance(id_or_symbol, str):
         input.bySymbol = id_or_symbol
-    re = GeneDAO().single(input)
-    if not re:
+    search_result = GeneDAO().single(input)
+    if not search_result:
         raise HTTPException(
             status_code=404,
             detail='Gene not found',
         )
-    return re
+    search_result["agingMechanisms"] = pd.DataFrame(search_result["agingMechanisms"], dtype=object).drop_duplicates().sort_values(by=['id', 'uuid'], ascending=True).to_dict('records')
+    return search_result
 
 
 @router.get(
