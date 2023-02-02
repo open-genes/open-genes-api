@@ -1179,3 +1179,22 @@ class OrthologDAO(BaseDAO):
             self.cnx.commit()
 
         cur.close()
+
+
+class TaxonDAO(BaseDAO):
+    def get_all(self):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute('SET SESSION group_concat_max_len = 100000;')
+        cur.execute(
+            '''
+            SELECT CAST(CONCAT('[', GROUP_CONCAT(
+            distinct JSON_OBJECT(
+                'id', taxon.id,
+                'name', taxon.name_en
+            )
+            ORDER BY taxon.id
+            SEPARATOR ","), ']') AS JSON) AS jsonobj
+            FROM taxon
+            '''
+        )
+        return cur.fetchall()
