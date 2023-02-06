@@ -1,3 +1,4 @@
+from typing import Any, Optional, Type, Union
 from models import *
 from models.calorie_experiment import CalorieRestrictionExperiment
 from models.location import *
@@ -36,8 +37,9 @@ class ProteinClass(BaseModel):
 
 
 class AgingMechanism(BaseModel):
-    id: int
+    id: Optional[int] = None
     name: str
+    uuid: Optional[str] = None
 
 
 class FunctionalCluster(BaseModel):
@@ -140,7 +142,7 @@ join disease disease_category on disease_category.icd_code=disease.icd_code_visi
             ProteinClass,
             _select={
                 'id': "protein_class.id",
-                'name': "COALESCE(protein_class.name_en,protein_class.name_en)",
+                'name': "COALESCE(protein_class.name_@LANG@, protein_class.name_en)",
             },
             _from="from gene join gene_to_protein_class on gene_to_protein_class.gene_id=gene.id join  protein_class on protein_class.id=gene_to_protein_class.protein_class_id",
         )
@@ -151,14 +153,20 @@ join disease disease_category on disease_category.icd_code=disease.icd_code_visi
             AgingMechanism,
             _select={
                 'id': 'aging_mechanism.id',
-                'name': 'coalesce(aging_mechanism.name_@LANG@,aging_mechanism.name_en)',
+                'name': 'coalesce(aging_mechanism.name_@LANG@, aging_mechanism.name_ru)',
+                'uuid': 'NULL'
             },
             _from="""
-FROM gene
-LEFT JOIN `gene_to_ontology` ON gene_to_ontology.gene_id = gene.id
-LEFT JOIN `gene_ontology_relation` ON gene_to_ontology.gene_ontology_id = gene_ontology_parent_id
-LEFT JOIN `gene_ontology_to_aging_mechanism_visible` ON gene_to_ontology.gene_ontology_id = gene_ontology_to_aging_mechanism_visible.gene_ontology_id
-INNER JOIN `aging_mechanism` ON gene_ontology_to_aging_mechanism_visible.aging_mechanism_id = aging_mechanism.id AND aging_mechanism.name_en != ''
+FROM gene 
+LEFT JOIN gene_to_ontology ON gene_to_ontology.gene_id = gene.id
+LEFT JOIN gene_ontology_relation ON gene_to_ontology.gene_ontology_id = gene_ontology_parent_id
+LEFT JOIN gene_ontology_to_aging_mechanism_visible ON gene_to_ontology.gene_ontology_id = gene_ontology_to_aging_mechanism_visible.gene_ontology_id
+INNER JOIN aging_mechanism ON gene_ontology_to_aging_mechanism_visible.aging_mechanism_id = aging_mechanism.id AND aging_mechanism.name_en != ''
+UNION 
+SELECT 'dummy_constant', NULL, COALESCE(aging_mechanism.name_@LANG@, aging_mechanism.name_en), aging_mechanism_to_gene.uuid
+FROM aging_mechanism
+JOIN aging_mechanism_to_gene ON aging_mechanism.id = aging_mechanism_to_gene.aging_mechanism_id
+JOIN gene ON aging_mechanism_to_gene.gene_id = gene.id
 """,
         )
     ]
@@ -221,6 +229,7 @@ class GeneSearchInput(PaginationInput, LanguageInput, SortInput):
     byExpressionChange: str = None
     bySelectionCriteria: str = None
     byAgingMechanism: str = None
+    byAgingMechanismUUID: str = None
     byProteinClass: str = None
     bySpecies: str = None
     byOrigin: str = None
@@ -279,7 +288,23 @@ class GeneSearchInput(PaginationInput, LanguageInput, SortInput):
             lambda value: value.split(',') + [len(value.split(','))],
         ],
         'byAgingMechanism': [
-            lambda value: '(select count(distinct aging_mechanism_id) from gene_to_ontology o join gene_ontology_to_aging_mechanism_visible a on a.gene_ontology_id=o.gene_ontology_id where o.gene_id=gene.id and aging_mechanism_id in ('
+            lambda value: '''
+            (SELECT COUNT(distinct aging_mechanism_id)
+            FROM gene_to_ontology AS o
+            JOIN gene_ontology_to_aging_mechanism_visible AS a
+            ON a.gene_ontology_id=o.gene_ontology_id
+            WHERE o.gene_id=gene.id AND aging_mechanism_id in (
+            '''
+            + ','.join(['%s' for v in value.split(',')])
+            + '))=%s',
+            lambda value: value.split(',') + [len(value.split(','))],
+        ],
+        'byAgingMechanismUUID': [
+            lambda value: '''
+            (SELECT COUNT(distinct uuid)
+            FROM aging_mechanism_to_gene AS amtg
+            WHERE amtg.gene_id=gene.id AND uuid in (
+            '''
             + ','.join(['%s' for v in value.split(',')])
             + '))=%s',
             lambda value: value.split(',') + [len(value.split(','))],

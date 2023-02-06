@@ -1,8 +1,9 @@
 import json
 from typing import List
 
-from config import cache_if_enabled, Language
-from db.dao import GeneDAO, GeneSuggestionDAO
+from config import Language
+from db.dao import GeneDAO, GeneSuggestionDAO, TaxonDAO
+
 from fastapi import APIRouter, Depends, HTTPException, Query
 from models.gene import GeneSearchInput, GeneSearchOutput, GeneSingle, GeneSingleInput
 from presenters.gene import (
@@ -13,6 +14,9 @@ from presenters.gene import (
     GeneSymbolsOutput,
     GeneWithResearches,
 )
+from presenters.taxon import TaxonOutput
+from json import loads
+
 
 router = APIRouter()
 
@@ -30,7 +34,12 @@ async def gene_search(input: GeneSearchInput = Depends(GeneSearchInput)) -> List
         input.bySuggestions = None
         input.byGeneId = suggfilter
 
-    return GeneDAO().search(input)
+    search_result = GeneDAO().search(input)
+
+    for item in search_result.get("items", []):
+        item["agingMechanisms"] = pd.DataFrame(item["agingMechanisms"], dtype=object).drop_duplicates().sort_values(by=['id', 'uuid'], ascending=True).to_dict('records')
+
+    return search_result
 
 
 @router.get(
@@ -128,6 +137,11 @@ async def get_gene_by_expression_change(expression_change: str, lang: Language =
     return GeneDAO().get()
 
 
+@router.get('/gene/taxon', response_model=List[TaxonOutput])
+async def get_taxon():
+    return loads(TaxonDAO().get_all()[0]['jsonobj'])
+
+
 @router.get('/gene/{id_or_symbol}', response_model=GeneSingle)
 @cache_if_enabled
 async def gene_search(
@@ -137,13 +151,14 @@ async def gene_search(
         input.byGeneId = id_or_symbol
     if isinstance(id_or_symbol, str):
         input.bySymbol = id_or_symbol
-    re = GeneDAO().single(input)
-    if not re:
+    search_result = GeneDAO().single(input)
+    if not search_result:
         raise HTTPException(
             status_code=404,
             detail='Gene not found',
         )
-    return re
+    search_result["agingMechanisms"] = pd.DataFrame(search_result["agingMechanisms"], dtype=object).drop_duplicates().sort_values(by=['id', 'uuid'], ascending=True).to_dict('records')
+    return search_result
 
 
 @router.get(
@@ -201,3 +216,6 @@ async def get_gene_by_id(ncbi_id: int, lang: Language = Language.en):
 )
 async def get_gene_by_id(ncbi_id: int, lang: Language = Language.en):
     return 'dummy'
+
+
+

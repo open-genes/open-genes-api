@@ -21,7 +21,7 @@ Open Genes API is based on [FastAPI](https://fastapi.tiangolo.com/) framework an
   - *uniprot* -
 
 ## Development
-
+Before you start working on a project, you need a database dump which you can [download from our website](https://open-genes.com/open_genes_sql_dump.zip) or you can roll up a test database in Docker container from [this repository](https://github.com/open-genes/open-genes-cms).
 
 
 ### Build local development image
