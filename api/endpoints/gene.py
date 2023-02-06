@@ -1,4 +1,4 @@
-import json
+import pandas as pd
 from typing import List
 
 from config import Language
