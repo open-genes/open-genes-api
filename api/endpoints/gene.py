@@ -35,8 +35,9 @@ async def gene_search(input: GeneSearchInput = Depends(GeneSearchInput)) -> List
     search_result = GeneDAO().search(input)
 
     for item in search_result.get("items", []):
-        item["agingMechanisms"] = pd.DataFrame(item["agingMechanisms"], dtype=object).drop_duplicates().sort_values(by=['id', 'uuid'], ascending=True).to_dict('records')
-
+        if item["agingMechanisms"]:
+            item["agingMechanisms"] = pd.DataFrame(item["agingMechanisms"], dtype=object).drop_duplicates().sort_values(by=['id', 'uuid'], ascending=True).to_dict('records')
+    
     return search_result
 
 
