@@ -1008,6 +1008,89 @@ class CalorieExperimentDAO(BaseDAO):
 
         return self.read_query(query, params, tables)
 
+    def add_experiment(self, experiment: entities.CalorieRestrictionExperiment):
+        experiment_dict = experiment.dict(exclude_none=True)
+
+        query = f"INSERT INTO calorie_restriction_experiment ({', '.join(experiment_dict.keys())}) "
+        subs = ', '.join([f'%({k})s' for k in experiment_dict.keys()])
+        query += f"VALUES ({subs});"
+
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute(query, experiment_dict)
+        self.cnx.commit()
+
+        cur.execute(
+            "SELECT * FROM calorie_restriction_experiment WHERE ID=%(id)s;",
+            {'id': cur.lastrowid},
+        )
+        result = cur.fetchone()
+
+        return result
+
+    def get_measurement_method(self, name):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute(
+            "SELECT id FROM measurement_method WHERE name_en='{}';".format(name)
+        )
+        return cur.fetchone()
+
+    def get_measurement_type(self, name):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute(
+            "SELECT id FROM measurement_type WHERE name_en='{}';".format(name)
+        )
+        return cur.fetchone()
+
+    def get_model_organism(self, name):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute(
+            "SELECT id FROM model_organism WHERE name_en='{}';".format(name)
+        )
+        return cur.fetchone()
+
+    def get_organism_sex(self, name):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute(
+            "SELECT id FROM organism_sex WHERE name_en='{}';".format(name)
+        )
+        return cur.fetchone()
+
+    def get_organism_line(self, name):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute(
+            "SELECT id FROM organism_line WHERE name_en='{}';".format(name)
+        )
+        return cur.fetchone()
+
+    def get_sample(self, name):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute(
+            "SELECT id FROM sample WHERE name_en='{}';".format(name)
+        )
+        return cur.fetchone()
+
+    def get_isoform(self, name):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute(
+            "SELECT id FROM isoform WHERE name_en='{}';".format(name)
+        )
+        return cur.fetchone()
+
+    def get_treatment_time(self, name):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute(
+            "SELECT id FROM treatment_time_unit WHERE name_en='{}';".format(name)
+        )
+        return cur.fetchone()
+
+    def add_treatment_time(self, name):
+        cur = self.cnx.cursor(dictionary=True)
+        cur.execute(
+            "INSERT INTO treatment_time_unit(name_en) VALUES ('{}');".format(name)
+        )
+        self.cnx.commit()
+        return cur.fetchone()
+
 
 class WorkerStateDAO(BaseDAO):
     """Worker state Table fetcher."""
