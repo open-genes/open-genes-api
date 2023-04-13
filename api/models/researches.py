@@ -638,6 +638,21 @@ class IncreaseLifespanSearchInput(PaginationInput, LanguageInput, SortInput):
     }
 
 
+class StudySearchByExperimentInput(LanguageInput, PaginationInput):
+    id: int
+    isHidden: str = 1
+    _filters = {
+        'id': None,
+        'general_lifespan_experiment_id':[lambda value: 'general_lifespan_experiment.id=%s', lambda value: [value]],
+        'age_related_change_id':[lambda value: 'age_related_change.id=%s', lambda value: [value]],
+        'gene_intervention_to_vital_process_id':[lambda value: 'gene_intervention_to_vital_process.id=%s', lambda value: [value]],
+        'protein_activity_id':[lambda value: 'protein_activity.id=%s', lambda value: [value]],
+        'progeria_syndrome_id':[lambda value: 'progeria_syndrome.id=%s', lambda value: [value]],
+        'longevity_effect_id':[lambda value: 'longevity_effect.id=%s', lambda value: [value]],
+        'gene_to_additional_evidence_id':[lambda value: 'gene_to_additional_evidence.id=%s', lambda value: [value]],
+    }
+
+
 class IncreaseLifespanSearched(IncreaseLifespan):
     geneId: int
     geneNcbiId: int | None
