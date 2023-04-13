@@ -60,7 +60,8 @@ def assembling_endpoints(app: FastAPI):
     )
     app.include_router(
         research.router,
-        tags=["research"],
+        prefix='/study',
+        tags=["study"],
     )
 
 
