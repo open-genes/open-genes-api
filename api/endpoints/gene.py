@@ -153,7 +153,8 @@ async def gene_search(
             status_code=404,
             detail='Gene not found',
         )
-    search_result["agingMechanisms"] = pd.DataFrame(search_result["agingMechanisms"], dtype=object).drop_duplicates().sort_values(by=['id', 'uuid'], ascending=True).to_dict('records')
+    if search_result["agingMechanisms"]:
+        search_result["agingMechanisms"] = pd.DataFrame(search_result["agingMechanisms"], dtype=object).drop_duplicates().sort_values(by=['id', 'uuid'], ascending=True).to_dict('records')
     return search_result
 
 
