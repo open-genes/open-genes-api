@@ -5,7 +5,7 @@ AKT1	highest
 GH1	highest
 GHR	highest
 GHRHR	highest
-GRN	highest
+HSPA1A	highest
 HTT	highest
 IGF1R	highest
 INSR	highest
@@ -48,8 +48,8 @@ G6PD	high
 GDF15	high
 GHRH	high
 GPX4	high
+GRN	high
 GSTA4	high
-HSPA1A	high
 HSPA1B	high
 IGF1	high
 IGFBP2	high
@@ -83,7 +83,7 @@ ADAMTS20	moderate
 AKT3	moderate
 ATP5O	moderate
 ATR	moderate
-BCL2L1	moderate
+BCL2L2	moderate
 BUB3	moderate
 CHRNA7	moderate
 CLU	moderate
@@ -93,8 +93,7 @@ DUSP10	moderate
 E2F1	moderate
 EEF1A1	moderate
 EEF2	moderate
-EGR1	moderate
-EIF5A2	moderate
+EIF5A	moderate
 ERCC4	moderate
 EZH2	moderate
 FOXO1	moderate
@@ -119,15 +118,12 @@ INS	moderate
 ITGB1	moderate
 JAK1	moderate
 JAK2	moderate
-LMNA	moderate
-LMNB1	moderate
 MAPK10	moderate
 MAPK14	moderate
 MAPK8	moderate
 MAPK9	moderate
 MRPS5	moderate
 MSRA	moderate
-MT-CO1	moderate
 MXD1	moderate
 NFE2L1	moderate
 NOTCH1	moderate
@@ -204,6 +200,7 @@ DBN1	low
 DMD	low
 EEF1E1	low
 EFEMP1	low
+EIF5A2	low
 EGFR	low
 EIF4EBP1	low
 ELN	low
@@ -211,6 +208,7 @@ ERBB2	low
 ERCC1	low
 ERCC2	low
 ERCC5	low
+ERCC8	low
 ESR1	low
 FADS1	low
 FBN1	low
@@ -244,6 +242,8 @@ IL6R	low
 IL7	low
 ITGB3	low
 JUND	low
+LMNA	low
+LMNB1	low
 LOX	low
 MAP3K5	low
 MDM2	low
@@ -279,6 +279,7 @@ POLG	low
 PON1	low
 PPARA	low
 PPM1D	low
+PPP1CA	low
 PRKCB	low
 PRKCD	low
 PRKCH	low
@@ -304,6 +305,7 @@ SLC19A1	low
 SOCS2	low
 SOD3	low
 STAT3	low
+STAT5B	low
 SUB1	low
 TERC	low
 TERF1	low
