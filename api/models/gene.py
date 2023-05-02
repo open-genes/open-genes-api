@@ -239,7 +239,7 @@ class GeneSearchInput(PaginationInput, LanguageInput, SortInput):
     byGeneSymbol: str = None
     bySuggestions: str = None
     byChromosomeNum: str = None
-    sortBy: Literal['criteriaQuantity', 'familyPhylum', 'byConfidenceLevel'] | None = None
+    sortBy: Literal['criteriaQuantity', 'familyPhylum', 'byConfidenceLevel', 'symbol'] | None = None
     researches: str = None
     isHidden: str = 1
     confidenceLevel: str | None = None
@@ -350,6 +350,7 @@ class GeneSearchInput(PaginationInput, LanguageInput, SortInput):
         'criteriaQuantity': '(select count(*) from gene_to_comment_cause where gene_id=gene.id)',
         'familyPhylum': '(select `order` from phylum where phylum.id=family_phylum_id)',
         'byConfidenceLevel': '(select id from confidence_level where confidence_level.id=gene.confidence_level_id)',
+        'symbol': 'gene.symbol',
     }
 
 
