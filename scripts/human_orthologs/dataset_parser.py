@@ -16,6 +16,10 @@ def parser():
     source = Source(name='calorie_restriction')
     result = dao.SourceDAO().get_source(source=source)
     calorie_dao = dao.CalorieExperimentDAO()
+    correspond_measurement_method = {
+        'RNAseq': 'RNA-Seq',
+        'Microarray and qRT-PCR': 'microarray, qPCR',
+    }
     if result:
         source_id = result['id']
     else:
@@ -77,13 +81,12 @@ def parser():
             source_id=source_id,
         )
         dao.SourceDAO().add_relation(gene_to_source=gene_to_source)
-        if (
-            row['measurementMethod'] == "chromatography, mass_spectrometry"
-            or row['measurementMethod'] == "mass_spectrometry"
-        ):
+        if row['measurementMethod'] in ("chromatography, mass_spectrometry", "mass_spectrometry",):
             measurement_method_str = row['measurementMethod']
         else:
-            measurement_method_str = row['measurementMethod'].lower().replace('_', ' ')
+            measurement_method_str = correspond_measurement_method[
+                row['measurementMethod']
+            ]  
         measurement_method_id = calorie_dao.get_measurement_method(name=measurement_method_str)[
             'id'
         ]
