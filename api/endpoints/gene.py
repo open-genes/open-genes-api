@@ -3,6 +3,7 @@ from typing import List
 
 from config import Language
 from db.dao import GeneDAO, GeneSuggestionDAO, TaxonDAO
+
 from fastapi import APIRouter, Depends, HTTPException, Query
 from models.gene import GeneSearchInput, GeneSearchOutput, GeneSingle, GeneSingleInput
 from presenters.gene import (
@@ -21,6 +22,7 @@ router = APIRouter()
 
 
 @router.get('/gene/search', response_model=GeneSearchOutput)
+@cache_if_enabled
 async def gene_search(input: GeneSearchInput = Depends(GeneSearchInput)) -> List:
 
     if input.bySuggestions is not None:
@@ -45,6 +47,7 @@ async def gene_search(input: GeneSearchInput = Depends(GeneSearchInput)) -> List
     '/gene/suggestions',
     response_model=GeneSuggestionOutput,
 )
+@cache_if_enabled
 async def get_gene_suggestions(
     input: str = None,
     byGeneId: str = None,
@@ -68,6 +71,7 @@ async def get_gene_suggestions(
     '/gene/symbols',
     response_model=List[GeneSymbolsOutput],
 )
+@cache_if_enabled
 async def get_gene_symbols():
     req = GeneDAO().get_symbols()
     rs = [{'id': data[0], 'symbol': data[1]} for data in req]
@@ -140,6 +144,7 @@ async def get_taxon():
 
 
 @router.get('/gene/{id_or_symbol}', response_model=GeneSingle)
+@cache_if_enabled
 async def gene_search(
     id_or_symbol: int | str, input: GeneSingleInput = Depends(GeneSingleInput)
 ) -> GeneSingle:
