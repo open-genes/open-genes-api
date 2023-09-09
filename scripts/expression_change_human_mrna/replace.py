@@ -1,13 +1,8 @@
-import json
 import logging
 import os
 import sys
-import time
 from collections import namedtuple
-from typing import List
-
 import numpy as np
-import pandas as pd
 from mysql.connector import MySQLConnection, cursor
 from pandas import DataFrame
 
@@ -26,7 +21,6 @@ FILE_HANDLER.setFormatter(FORMAT)
 LOGGER.addHandler(HANDLER)
 LOGGER.addHandler(FILE_HANDLER)
 
-REDUNDANT_DATASET_COLUMNS = ["gene_id", "q-value", "fc"]
 ORGANISM_SEX_NULL_VALUE = "not specified"
 PREFIX = "_name"
 DbTable = namedtuple(
@@ -84,6 +78,7 @@ TABLES_TO_READ = (
     ),
 )
 
+
 def upload_data(cursor: cursor, df: DataFrame, table_name: str):
     try:
         df = df.replace({np.nan: None})
@@ -95,19 +90,21 @@ def upload_data(cursor: cursor, df: DataFrame, table_name: str):
     except Exception as e:
         LOGGER.error("Error while uploading data to %s: %s", table_name, str(e))
 
+
 def delete_existing_records(cursor: cursor, df: DataFrame, table_name: str):
     try:
         for index, row in df.iterrows():
             doi = row["doi"]
-            gene_id = row["gene_id"]
-            cursor.execute(f"DELETE FROM {table_name} WHERE doi = %s AND gene_id = %s", (doi, gene_id))
+            gene_symbol = row["gene_symbol"]
+            cursor.execute(f"DELETE FROM {table_name} WHERE doi = %s AND gene_symbol = %s" , (doi, gene_symbol))
     except Exception as e:
         LOGGER.error("Error while deleting existing records from %s: %s", table_name, str(e))
 
+
 def main():
     LOGGER.info("========== Upload script started ==========")
-    dataset_df = get_df_from_csv("scripts/expression_change_human_mrna/expression-change-human-mrna.csv")
-    
+    dataset_df = get_df_from_csv("scripts/expression_change_human_mrna/08-09-2023-update-items-human-mrna.csv")
+
     for table in TABLES_TO_READ:
         id_values_df = get_df_from_db(cnx, table.name, table.columns)
         dataset_df = replace_id_values(
@@ -134,6 +131,7 @@ def main():
     upload_data(cur, dataset_df, "age_related_change")
     cur.close()
     LOGGER.info("========== Upload script finished ==========\n")
+
 
 if __name__ == "__main__":
     main()
