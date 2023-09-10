@@ -118,11 +118,22 @@ def upload_data(cursor: MySQLCursor, df: DataFrame, table_name: str):
 def delete_existing_records(cursor: MySQLCursor, df: DataFrame, table_name: str):
     try:
         for index, row in df.iterrows():
-            doi = row["doi"]
+            reference = row["reference"]
             gene_symbol = row["gene_symbol"]
-            cursor.execute(f"DELETE FROM {table_name} WHERE doi = %s AND gene_symbol = %s", (doi, gene_symbol))
+
+            # Get the corresponding gene_id from the "gene" table
+            cursor.execute("SELECT id FROM gene WHERE symbol = %s", (gene_symbol,))
+            result = cursor.fetchone()
+            if result is not None:
+                gene_id = result["id"]
+
+                # Delete the record using gene_id and reference
+                cursor.execute(f"DELETE FROM {table_name} WHERE reference = %s AND gene_id = %s", (reference, gene_id))
+            else:
+                LOGGER.warning("No matching gene_id found for gene_symbol='%s'", gene_symbol)
     except Exception as e:
         LOGGER.error("Error while deleting existing records from %s: %s", table_name, str(e))
+
 
 def add_new_data_to_db(cursor: MySQLCursor, df: DataFrame, table: namedtuple):
     """Uploads new values in Database
