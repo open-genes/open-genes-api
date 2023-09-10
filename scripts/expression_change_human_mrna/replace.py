@@ -128,20 +128,13 @@ def main():
     LOGGER.info("========== Upload script started ==========")
     dataset_df = get_df_from_csv("08-09-2023-update-items-human-mrna.csv")
 
-    for table in TABLES_TO_READ:
-        id_values_df = get_df_from_db(cnx, table.name, table.columns)
-        dataset_df = replace_id_values(
-            dataset_df,
-            id_values_df,
-            origin_column=table.dataset_column,
-            col_mapping=table.mapping,
-        )
-        data_to_upload = get_new_data(dataset_df, table)
+    with dao.BaseDAO().cnx as cnx:
+        cnx.autocommit = True
+        cur = cnx.cursor(dictionary=True)
+        gene_df = get_df_from_db(cnx, "gene", ["id", "symbol"])
+        gene_df = gene_df.dropna(subset=["symbol"])
 
-        if not data_to_upload.empty:
-            add_new_data_to_db(cur, data_to_upload, table)
-            dataset_df = dataset_df.drop(columns=[table.dataset_column])
-            dataset_df = dataset_df.rename(columns={f"{table.dataset_column}{PREFIX}": table.dataset_column})
+        for table in TABLES_TO_READ:
             id_values_df = get_df_from_db(cnx, table.name, table.columns)
             dataset_df = replace_id_values(
                 dataset_df,
@@ -149,11 +142,24 @@ def main():
                 origin_column=table.dataset_column,
                 col_mapping=table.mapping,
             )
+            data_to_upload = get_new_data(dataset_df, table)
 
-    delete_existing_records(cur, dataset_df, "age_related_change")
-    upload_data(cur, dataset_df, "age_related_change")
-    cur.close()
-    LOGGER.info("========== Upload script finished ==========\n")
+            if not data_to_upload.empty:
+                add_new_data_to_db(cur, data_to_upload, table)
+                dataset_df = dataset_df.drop(columns=[table.dataset_column])
+                dataset_df = dataset_df.rename(columns={f"{table.dataset_column}{PREFIX}": table.dataset_column})
+                id_values_df = get_df_from_db(cnx, table.name, table.columns)
+                dataset_df = replace_id_values(
+                    dataset_df,
+                    id_values_df,
+                    origin_column=table.dataset_column,
+                    col_mapping=table.mapping,
+                )
+
+        delete_existing_records(cur, dataset_df, "age_related_change")
+        upload_data(cur, dataset_df, "age_related_change")
+        cur.close()
+        LOGGER.info("========== Upload script finished ==========\n")
 
 
 if __name__ == "__main__":
