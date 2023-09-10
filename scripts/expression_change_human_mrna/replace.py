@@ -82,6 +82,14 @@ TABLES_TO_READ = (
     ),
 )
 
+def get_df_from_db(connection: MySQLConnection, table: str, columns: List) -> DataFrame:
+    """Read data from Database from provided table with provided columns"""
+    columns = ", ".join(columns)
+    sql = f"SELECT {columns} FROM {table}"
+    df = pd.read_sql(sql, con=connection)
+    df = df.dropna()
+    return df
+
 def get_df_from_csv(file_name: str) -> DataFrame:
     """Read csv file by provided file name"""
     cur_dir = os.path.dirname(os.path.abspath(__file__))
