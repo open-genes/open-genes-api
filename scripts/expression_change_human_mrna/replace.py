@@ -103,7 +103,7 @@ def delete_existing_records(cursor: cursor, df: DataFrame, table_name: str):
 
 def main():
     LOGGER.info("========== Upload script started ==========")
-    dataset_df = get_df_from_csv("scripts/expression_change_human_mrna/08-09-2023-update-items-human-mrna.csv")
+    dataset_df = get_df_from_csv("08-09-2023-update-items-human-mrna.csv")
 
     for table in TABLES_TO_READ:
         id_values_df = get_df_from_db(cnx, table.name, table.columns)
