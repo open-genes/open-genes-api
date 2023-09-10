@@ -1,4 +1,3 @@
-import json
 import logging
 import os
 import sys
@@ -105,7 +104,7 @@ def get_df_from_csv(file_name: str) -> DataFrame:
 
     return df
 
-def upload_data(cursor: cursor, df: DataFrame, table_name: str):
+def upload_data(cursor: MySQLCursor, df: DataFrame, table_name: str):
     try:
         df = df.replace({np.nan: None})
         df = df.dropna(subset=["gene_id"])
@@ -116,16 +115,90 @@ def upload_data(cursor: cursor, df: DataFrame, table_name: str):
     except Exception as e:
         LOGGER.error("Error while uploading data to %s: %s", table_name, str(e))
 
-
-def delete_existing_records(cursor: cursor, df: DataFrame, table_name: str):
+def delete_existing_records(cursor: MySQLCursor, df: DataFrame, table_name: str):
     try:
         for index, row in df.iterrows():
             doi = row["doi"]
             gene_symbol = row["gene_symbol"]
-            cursor.execute(f"DELETE FROM {table_name} WHERE doi = %s AND gene_symbol = %s" , (doi, gene_symbol))
+            cursor.execute(f"DELETE FROM {table_name} WHERE doi = %s AND gene_symbol = %s", (doi, gene_symbol))
     except Exception as e:
         LOGGER.error("Error while deleting existing records from %s: %s", table_name, str(e))
 
+def add_new_data_to_db(cursor: MySQLCursor, df: DataFrame, table: namedtuple):
+    """Uploads new values in Database
+
+    New values - dataset column values that don't have id association in Database
+    """
+    LOGGER.info("Upload in table %s started", table.name)
+    new_data_df = df[[f"{table.dataset_column}{PREFIX}"]]
+    new_data_df = new_data_df.drop_duplicates()
+    new_data_df = new_data_df.rename(columns={f"{table.dataset_column}{PREFIX}": "name_en"})
+
+    if table.has_created_date:
+        new_data_df["updated_at"] = time.time()
+
+    count_rows = new_data_df.shape[0]
+    column_names = ', '.join(new_data_df.columns)
+    column_vars = ', '.join(map(lambda x: f'%({x})s', new_data_df.columns))
+    LOGGER.info("Number of rows to be uploaded: %s in table: %s", count_rows, table.name)
+    sql_query = f"INSERT INTO {table.name} ({column_names}) VALUES ({column_vars})"
+    cursor.executemany(sql_query, new_data_df.to_dict("records"))
+    row_count = cursor.rowcount if not new_data_df.empty else 0
+    LOGGER.info("Number of rows uploaded: %s in table: %s", row_count, table.name)
+    LOGGER.info("Upload in table %s finished", table.name)
+
+def get_new_data(df: DataFrame, table: namedtuple) -> DataFrame:
+    """Returns data that is present in the dataset but not present in the database"""
+
+    if table.mapping:
+        df = df.rename(columns={table.mapping[table.dataset_column]: table.dataset_column})
+
+    new_data_df = df[df[table.dataset_column].isnull()]
+    new_data_df = new_data_df[new_data_df[f"{table.dataset_column}{PREFIX}"].notnull()]
+    return new_data_df
+
+def replace_id_values(
+    df_origin: DataFrame, df_with_ids: DataFrame, origin_column: str, col_mapping: dict
+) -> DataFrame:
+    """Replace values from the dataset with corresponding id value from the Database"""
+    mapping = {}
+    id_col, name_col = list(df_with_ids.columns)
+    mapping = {
+        row[name_col].upper().strip(): row[id_col]
+        for _, row in df_with_ids.to_dict("index").items()
+    }
+
+    if origin_column == "sex":
+        df_origin[origin_column] = df_origin[origin_column].replace("Woman", "female")
+        df_origin[origin_column] = df_origin[origin_column].fillna(ORGANISM_SEX_NULL_VALUE)
+
+    df_replaced = df_origin.rename(columns={origin_column: f"{origin_column}{PREFIX}"})
+    df_replaced[origin_column] = (
+        df_replaced[f"{origin_column}{PREFIX}"].str.upper().str.strip().map(mapping)
+    )
+    log_values_without_id(df_replaced, origin_column)
+    df_replaced = df_replaced.rename(columns=col_mapping)
+    return df_replaced
+
+def log_values_without_id(df: DataFrame, id_column: str):
+    """Log values from the dataset which don't have id association in the Database"""
+    value_column = f"{id_column}{PREFIX}"
+    gene_column = "gene_symbol" if "gene_symbol" in df.columns else f"gene_symbol{PREFIX}"
+    columns = [value_column, gene_column, "reference"]
+
+    empty_id_df = df[df[id_column].isnull() & df[value_column].notnull()]
+    not_matched_df = empty_id_df[columns].drop_duplicates()
+
+    for _, not_matched in not_matched_df.iterrows():
+        LOGGER.info(
+            "Not found %s='%s' for %s='%s', %s='%s'",
+            id_column,
+            not_matched[value_column],
+            "gene_symbol",
+            not_matched[gene_column],
+            "reference",
+            not_matched["reference"],
+        )
 
 def main():
     LOGGER.info("========== Upload script started ==========")
@@ -163,7 +236,6 @@ def main():
         upload_data(cur, dataset_df, "age_related_change")
         cur.close()
         LOGGER.info("========== Upload script finished ==========\n")
-
 
 if __name__ == "__main__":
     main()
