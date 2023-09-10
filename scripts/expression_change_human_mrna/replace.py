@@ -5,9 +5,12 @@ import sys
 import time
 from collections import namedtuple
 from typing import List
+
 import numpy as np
 import pandas as pd
-from mysql.connector import MySQLConnection, cursor
+from db import dao
+from mysql.connector import MySQLConnection
+from mysql.connector.cursor import MySQLCursor
 from pandas import DataFrame
 
 LOGGER = logging.getLogger("expression_change_human_mrna_upload")
