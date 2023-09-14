@@ -2,7 +2,7 @@ import json
 from itertools import chain
 from typing import get_args, get_origin
 
-from config import CONFIG
+from config import CONFIG, cache_if_enabled
 from db.suggestion_handler import suggestion_request_builder
 from entities import entities
 from models.gene import (
