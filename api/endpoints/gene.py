@@ -1,7 +1,7 @@
 import pandas as pd
 from typing import List
 
-from config import Language
+from config import Language, cache_if_enabled
 from db.dao import GeneDAO, GeneSuggestionDAO, TaxonDAO
 
 from fastapi import APIRouter, Depends, HTTPException, Query
