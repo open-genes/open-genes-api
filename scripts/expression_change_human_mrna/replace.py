@@ -200,6 +200,7 @@ def apply_structure(df: DataFrame, structure: dict) -> DataFrame:
     return df
 
 
+# NOTE: watch out duplicates in name field
 def replace_id_values(
         df_origin: DataFrame, df_with_ids: DataFrame, origin_column: str, col_mapping: dict
 ) -> DataFrame:
@@ -302,7 +303,7 @@ def main():
         dataset_df = apply_structure(dataset_df, structure)
 
         delete_existing_records(cur, dataset_df, "age_related_change")
-        upload_data(cur, dataset_df, "age_related_change")
+        upload_data(cur, dataset_df, structure["tableName"])
         cur.close()
 
         LOGGER.info("========== Upload script finished ==========\n")
