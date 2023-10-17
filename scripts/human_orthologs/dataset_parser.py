@@ -11,7 +11,7 @@ from mysql.connector.errors import DataError
 
 def parser():
     cur_dir = os.path.dirname(os.path.abspath(__file__))
-    calory_restrictions = open(os.path.join(cur_dir, 'Calory_restriction_datasets-2 - Sheet1.csv'))
+    calory_restrictions = open(os.path.join(cur_dir, 'calorie_restriction.csv'))
     reader = csv.DictReader(calory_restrictions)
     source = Source(name='calorie_restriction')
     result = dao.SourceDAO().get_source(source=source)

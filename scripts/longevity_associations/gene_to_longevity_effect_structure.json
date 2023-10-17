@@ -6,84 +6,52 @@
             "columnType": "Int32"
         },
         {
-            "columnName": "longevity_effect_id",
+            "columnName": "age_related_change_type_id",
             "columnType": "Int32"
         },
         {
-            "columnName": "polymorphism_id",
+            "columnName": "sample_id",
             "columnType": "Int32"
         },
         {
-            "columnName": "sex_of_organism",
+            "columnName": "model_organism_id",
             "columnType": "Int32"
+        },
+        {
+            "columnName": "organism_line_id",
+            "columnType": "Int32"
+        },
+        {
+            "columnName": "mean_age_of_controls",
+            "columnType": "float"
+        },
+        {
+            "columnName": "mean_age_of_experiment",
+            "columnType": "float"
         },
         {
             "columnName": "reference",
-            "columnType": "string"
+            "columnType": "Varchar(255)"
         },
         {
             "columnName": "comment_en",
             "columnType": "string"
         },
         {
-            "columnName": "allele_variant",
+            "columnName": "comment_ru",
             "columnType": "string"
         },
         {
-            "columnName": "data_type",
-            "columnType": "Int8"
+            "columnName": "age_unit_id",
+            "columnType": "Int32"
         },
         {
-            "columnName": "age_related_change_type_id",
+            "columnName": "expression_evaluation_by_id",
             "columnType": "Int32"
         },
         {
             "columnName": "pmid",
-            "columnType": "string"
-        },
-        {
-            "columnName": "nucleotide_change",
-            "columnType": "string"
-        },
-        {
-            "columnName": "amino_acid_change",
-            "columnType": "string"
-        },
-        {
-            "columnName": "polymorphism_other",
-            "columnType": "string"
-        },
-        {
-            "columnName": "position_id",
-            "columnType": "Int32"
-        },
-        {
-            "columnName": "polymorphism_type_id",
-            "columnType": "Int32"
-        },
-        {
-            "columnName": "non_associated_allele",
-            "columnType": "string"
-        },
-        {
-            "columnName": "frequency_controls",
-            "columnType": "float"
-        },
-        {
-            "columnName": "frequency_experiment",
-            "columnType": "float"
-        },
-        {
-            "columnName": "significance",
-            "columnType": "string"
-        },
-        {
-            "columnName": "n_of_controls",
-            "columnType": "Int32"
-        },
-        {
-            "columnName": "n_of_experiment",
-            "columnType": "Int32"
+            "columnType": "Varchar(255)"
         },
         {
             "columnName": "min_age_of_controls",
@@ -91,10 +59,6 @@
         },
         {
             "columnName": "max_age_of_controls",
-            "columnType": "float"
-        },
-        {
-            "columnName": "mean_age_of_controls",
             "columnType": "float"
         },
         {
@@ -106,20 +70,32 @@
             "columnType": "float"
         },
         {
-            "columnName": "mean_age_of_experiment",
+            "columnName": "n_of_controls",
             "columnType": "float"
         },
         {
-            "columnName": "ethnicity_id",
+            "columnName": "n_of_experiment",
+            "columnType": "float"
+        },
+        {
+            "columnName": "measurement_method_id",
             "columnType": "Int32"
         },
         {
-            "columnName": "study_type_id",
+            "columnName": "statistical_method_id",
             "columnType": "Int32"
         },
         {
             "columnName": "p_value",
-            "columnType": "string"
+            "columnType": "Varchar(255)"
+        },
+        {
+            "columnName": "sex",
+            "columnType": "Int32"
+        },
+        {
+            "columnName": "change_value",
+            "columnType": "float"
         }
     ]
 }
