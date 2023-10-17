@@ -188,16 +188,32 @@ def apply_structure(df: DataFrame, structure: dict) -> DataFrame:
     dtypes = {col["columnName"]: col["columnType"] for col in structure["columns"]}
     columns_to_select = set(df.columns).intersection(set(columns))
     columns_missed = set(columns).difference(set(df.columns))
-    LOGGER.warning("No such columns in dataset, they will be null in database: %s", columns_missed)
+    LOGGER.warning("No such columns in the dataset, they will be null in the database: %s", columns_missed)
     df = df[columns_to_select]
-    dtypes = {col: dtypes[col] for col in columns_to_select}
+
+    # Create a list to store the values that couldn't be converted
+    values_could_not_convert = []
 
     try:
-        df = df.astype(dtypes)
+        for col, dtype in dtypes.items():
+            try:
+                df[col] = df[col].astype(dtype)
+            except ValueError as err:
+                LOGGER.error(f"Column '{col}' cannot be be converted to '{dtype}': {err}")
+
+                # Add the problematic values to the list
+                problematic_values = df.loc[df[col].apply(lambda x: not isinstance(x, (int, np.integer)))]
+                values_could_not_convert.extend(problematic_values[col].tolist())
     except ValueError as err:
-        LOGGER.error("Row will be skipped during upload, error message: %s", err)
+        LOGGER.error("An error occurred while applying data types: %s", err)
+
+    # Log the values that couldn't be converted
+    if values_could_not_convert:
+        LOGGER.warning(f"Values that couldn't be converted: {values_could_not_convert}")
 
     return df
+
+
 
 
 # NOTE: watch out duplicates in name field
